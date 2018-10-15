@@ -13,4 +13,5 @@ lazy val root = (project in file("."))
 lazy val ingest = project
   .settings(commonSettings)
   .settings(libraryDependencies ++= Seq(
+    "com.sksamuel.elastic4s" %% "elastic4s-core" % "6.3.7"
   ))

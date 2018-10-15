@@ -3,7 +3,7 @@ version: '3'
 services:
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
     container_name: employability-elasticsearch
     ports: ["9200:9200", "9300:9300"]
     environment:
