@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    container_name: employability-elasticsearch
+    ports: ["9200:9200", "9300:9300"]
+    environment:
+      - discovery.type=single-node
+      - cluster.name=employability
+    volumes:
+      - "data-elasticsearch:/usr/share/elasticsearch/data"
+
+  postgres:
+    image: postgres:10
+    container_name: employability-postgres
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_USER: employability
+      POSTGRES_PASSWORD: employability
+    volumes:
+      - "data-postgres:/var/lib/postgresql"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.4.2
+    container_name: employability-kibana
+    ports: ["5601:5601"]
+    environment:
+      - xpack.monitoring.enabled=true
+      - server.name=employability
+
+volumes:
+  data-elasticsearch:
+  data-postgres:
