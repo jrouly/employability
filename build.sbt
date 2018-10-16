@@ -1,3 +1,5 @@
+import Dependencies._
+
 name := "employability"
 
 lazy val commonSettings = Seq(
@@ -12,6 +14,5 @@ lazy val root = (project in file("."))
 
 lazy val ingest = project
   .settings(commonSettings)
-  .settings(libraryDependencies ++= Seq(
-    "com.sksamuel.elastic4s" %% "elastic4s-core" % "6.3.7"
-  ))
+  .settings(libraryDependencies ++= elasticsearch)
+  .settings(libraryDependencies ++= logging)

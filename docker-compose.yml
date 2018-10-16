@@ -23,7 +23,7 @@ services:
       - "data-postgres:/var/lib/postgresql"
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.4.2
+    image: docker.elastic.co/kibana/kibana:6.3.2
     container_name: employability-kibana
     ports: ["5601:5601"]
     environment:
