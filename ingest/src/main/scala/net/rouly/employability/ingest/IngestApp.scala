@@ -38,12 +38,9 @@ object IngestApp extends App with StrictLogging {
   lazy val elasticsearch: ElasticsearchModule = wire[ElasticsearchModule]
   lazy val dataWorld: DataWorldModule = wire[DataWorldModule]
 
-  val sink = Streams
-    .recordCountingFlow("elasticsearch")
-    .to(Sink.fromSubscriber(elasticsearch.subscriber[JobPosting]))
-
-  val graph = dataWorld.publisher
-    .alsoTo(sink)
+  val graph = dataWorld.source
+    .via(Streams.recordCountingFlow("elasticsearch"))
+    .alsoTo(elasticsearch.sink[JobPosting])
     .runWith(Sink.ignore)
 
   logger.info("Start.")

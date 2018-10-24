@@ -1,12 +1,13 @@
 package net.rouly.employability.ingest.elasticsearch
 
+import akka.NotUsed
 import akka.actor.ActorSystem
+import akka.stream.scaladsl.Sink
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.streams.ReactiveElastic._
 import com.sksamuel.elastic4s.streams.RequestBuilder
 import com.softwaremill.macwire.Module
 import net.rouly.common.config.Configuration
-import org.reactivestreams.Subscriber
 
 @Module
 class ElasticsearchModule(configuration: Configuration)(implicit actorSystem: ActorSystem) {
@@ -16,8 +17,8 @@ class ElasticsearchModule(configuration: Configuration)(implicit actorSystem: Ac
   private lazy val properties: ElasticProperties = ElasticProperties(baseUrl)
   private lazy val client: ElasticClient = ElasticClient(properties)
 
-  def subscriber[T: RequestBuilder]: Subscriber[T] = client.subscriber[T]()
-
   def close(): Unit = client.close()
+
+  def sink[T: RequestBuilder]: Sink[T, NotUsed] = Sink.fromSubscriber(client.subscriber[T]())
 
 }
