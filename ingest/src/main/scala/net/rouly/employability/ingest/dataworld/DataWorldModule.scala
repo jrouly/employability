@@ -2,7 +2,9 @@ package net.rouly.employability.ingest.dataworld
 
 import akka.stream.scaladsl._
 import com.softwaremill.macwire.wire
+import com.typesafe.scalalogging.StrictLogging
 import net.rouly.common.config.Configuration
+import net.rouly.employability.ingest.dataworld.csv.Extractor
 import net.rouly.employability.ingest.models.JobPosting
 import play.api.libs.ws.StandaloneWSClient
 
@@ -11,33 +13,21 @@ import scala.concurrent.ExecutionContext
 class DataWorldModule(
   configuration: Configuration,
   wsClient: StandaloneWSClient
-)(implicit ec: ExecutionContext) {
+)(implicit ec: ExecutionContext) extends StrictLogging {
 
   private lazy val client: DataWorldClient = wire[DataWorldClient]
+  private lazy val reader: DataWorldDataSetReader = wire[DataWorldDataSetReader]
 
-  // https://data.world/promptcloud/us-jobs-on-dice-com
-  lazy val usJobs: Source[JobPosting, _] = {
-    implicit val extractor: csv.Extractor[JobPosting] = csv.jobPosting("us-jobs", "jobdescription", "jobtitle", Some("skills"))
-    client.getCsv[JobPosting]("7gstuwsabsqxrwni4cxsbcmuv5rzbn")
+  private lazy val dataSets = reader.all.map { dataset =>
+    implicit val extractor: Extractor[JobPosting] = csv.jobPosting(dataset)
+    logger.info(dataset.displayName)
+    client.getCsv[JobPosting](dataset)
   }
 
-  // https://data.world/promptcloud/50000-job-board-records-from-reed-uk
-  lazy val reedUk: Source[JobPosting, _] = {
-    implicit val extractor: csv.Extractor[JobPosting] = csv.jobPosting("reed-uk", "job_description", "job_title", Some("job_requirements"))
-    client.getCsv[JobPosting]("l7rmmscfypoofjwulzkykg3hgqn5zg")
+  lazy val source: Source[JobPosting, _] = dataSets match {
+    case Nil => Source.empty
+    case sole :: Nil => sole
+    case first :: second :: rest => Source.combine(first, second, rest: _*)(Concat(_))
   }
-
-  // https://data.world/promptcloud/30000-job-postings-from-seek-australia
-  lazy val seekAus: Source[JobPosting, _] = {
-    implicit val extractor: csv.Extractor[JobPosting] = csv.jobPosting("seek-aus", "job_description", "job_title")
-    client.getCsv[JobPosting]("75iczjrunbdiuxytp2aywuh5hdlgdz")
-  }
-
-  def publisher: Source[JobPosting,_] =
-    Source.combine(
-      usJobs,
-      reedUk,
-      seekAus
-    )(Concat(_))
 
 }

@@ -2,6 +2,7 @@ package net.rouly.employability.ingest
 
 import java.util.UUID
 
+import net.rouly.employability.ingest.dataworld.model.DataWorldDataSet
 import net.rouly.employability.ingest.models.JobPosting
 
 import scala.util.Try
@@ -15,18 +16,16 @@ package object dataworld {
     /**
       * Build a [[JobPosting]] from a CSV map.
       */
-    def jobPosting(
-      dataSet: String,
-      descriptionColumn: String,
-      titleColumn: String,
-      skillsColumn: Option[String] = None
-    ): Extractor[JobPosting] = data => Try(JobPosting(
-      id = UUID.nameUUIDFromBytes(data.values.mkString.getBytes),
-      dataSet = dataSet,
-      description = data(descriptionColumn),
-      title = data(titleColumn).emptyToNone,
-      skills = skillsColumn.flatMap(data(_).emptyToNone)
-    ))
+    def jobPosting(dataSet: DataWorldDataSet): Extractor[JobPosting] = {
+      record =>
+        Try(JobPosting(
+          id = UUID.nameUUIDFromBytes(record.values.mkString.getBytes),
+          dataSet = dataSet.displayName,
+          description = record(dataSet.dictionary("description")),
+          title = record(dataSet.dictionary("title")).emptyToNone,
+          skills = dataSet.dictionary.get("skills").flatMap(record(_).emptyToNone)
+        ))
+    }
 
   }
 

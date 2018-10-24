@@ -5,6 +5,7 @@ import akka.stream.scaladsl.{Flow, Source}
 import com.typesafe.scalalogging.StrictLogging
 import net.rouly.common.config.Configuration
 import net.rouly.employability.ingest.Streams
+import net.rouly.employability.ingest.dataworld.model.DataWorldDataSet
 import play.api.libs.ws.{StandaloneWSClient, StandaloneWSResponse}
 
 import scala.concurrent.duration._
@@ -17,15 +18,13 @@ private[dataworld] class DataWorldClient(
 )(implicit ec: ExecutionContext)
   extends StrictLogging {
 
-  private val baseUrl = configuration.get("data.world.baseurl", "https://query.data.world/s")
-
-  private def dataSetUrl(id: String): String = s"$baseUrl/$id"
+  private val baseUrl: String = configuration.get("data.world.baseurl", "https://query.data.world/s")
 
   /**
     * Retrieve a raw data.world dataset.
     */
-  def getDataSet(id: String): Future[StandaloneWSResponse] = wsClient
-    .url(dataSetUrl(id))
+  def getDataSet(dataSet: DataWorldDataSet): Future[StandaloneWSResponse] = wsClient
+    .url(s"$baseUrl/${dataSet.token}")
     .withFollowRedirects(true)
     .withRequestTimeout(5.minutes)
     .stream()
@@ -33,17 +32,17 @@ private[dataworld] class DataWorldClient(
   /**
     * Retrieve a data.world csv, parsed as an expected type.
     */
-  def getCsv[T](id: String)(implicit extract: csv.Extractor[T]): Source[T, _] = Source
-    .fromFutureSource(getDataSet(id).map(_.bodyAsSource))
+  def getCsv[T](dataSet: DataWorldDataSet)(implicit extract: csv.Extractor[T]): Source[T, _] = Source
+    .fromFutureSource(getDataSet(dataSet).map(_.bodyAsSource))
     .via(CsvParsing.lineScanner(escapeChar = CsvParsing.DoubleQuote))
     .via(CsvToMap.toMap())
     .map(_.mapValues(_.utf8String))
     .via(Flow.fromFunction(extract))
     .recover {
       case ex =>
-        logger.error("Error: unable to fully parse CSV. Data may be missing.", ex)
+        logger.error(s"[${dataSet.displayName}] Error: unable to fully parse CSV. Data may be missing.", ex)
         Failure(ex)
     }
     .collect { case Success(t) => t }
-    .via(Streams.recordCountingFlow(id))
+    .via(Streams.recordCountingFlow(dataSet.displayName))
 }

@@ -1,0 +1,10 @@
+{
+  "name": "30000-job-postings-from-seek-australia",
+  "organization": "promptcloud",
+  "dictionary": {
+    "description": "job_description",
+    "title": "job_title"
+  },
+  "token": "y5ikttdd7cvhfzaukrviv7v5qmjbda",
+  "url": "https://data.world/promptcloud/30000-job-postings-from-seek-australia"
+}
