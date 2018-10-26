@@ -1,32 +1,42 @@
+import Bintray._
+import Dependencies._
+
 name := "employability"
 
 lazy val root = (project in file("."))
-  .aggregate(ingest, web)
+  .aggregate(ingest, analysis, web)
 
 lazy val commonSettings = Seq(
   licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
-  logLevel := Level.Warn,
   organization := "net.rouly",
-  scalaVersion := "2.12.2",
+  scalaVersion := "2.11.12",
   name := s"employability-${name.value}"
-)
+) ++ bintraySettings
 
 lazy val ingest = project
   .settings(commonSettings)
   .settings(libraryDependencies ++= Seq(
-    Dependencies.libCommon,
-    Dependencies.Akka.streams,
-    Dependencies.Alpakka.csv,
-    Dependencies.Elasticsearch.elastic4sCore,
-    Dependencies.Elasticsearch.elastic4sHttp,
-    Dependencies.Elasticsearch.elastic4sStreams,
-    Dependencies.Elasticsearch.elastic4sPlayJson,
-    Dependencies.Logging.logback,
-    Dependencies.Logging.scalaLogging,
-    Dependencies.Macwire.macros,
-    Dependencies.Macwire.util,
-    Dependencies.Play.json,
-    Dependencies.Play.ws
+    libCommon,
+    Akka.streams,
+    Alpakka.csv,
+    Elasticsearch.elastic4sCore,
+    Elasticsearch.elastic4sHttp,
+    Elasticsearch.elastic4sStreams,
+    Elasticsearch.elastic4sPlayJson,
+    Logging.logback,
+    Logging.scalaLogging,
+    Macwire.macros,
+    Macwire.util,
+    Play26.json,
+    Play26.ws
+  ))
+
+lazy val analysis = project
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Seq(
+    Logging.logback,
+    Logging.scalaLogging,
+    Spark.core
   ))
 
 lazy val web = project
@@ -36,16 +46,18 @@ lazy val web = project
   .settings(dockerRepository := Some("jrouly"))
   .settings(dockerUpdateLatest := true)
   .settings(libraryDependencies ++= Seq(
-    Dependencies.Elasticsearch.elastic4sCore,
-    Dependencies.Elasticsearch.elastic4sHttp,
-    Dependencies.Elasticsearch.elastic4sStreams,
-    Dependencies.Elasticsearch.elastic4sPlayJson,
-    Dependencies.Logging.logback,
-    Dependencies.Logging.scalaLogging,
-    Dependencies.Macwire.macros,
-    Dependencies.Macwire.util,
-    Dependencies.Play.json,
-    Dependencies.Play.test,
-    Dependencies.Play.server,
-    Dependencies.Play.libServer
+    Elasticsearch.elastic4sCore,
+    Elasticsearch.elastic4sHttp,
+    Elasticsearch.elastic4sStreams,
+    Elasticsearch.elastic4sPlayJson,
+    Logging.logback,
+    Logging.scalaLogging,
+    Macwire.macros,
+    Macwire.util,
+    Play26.json,
+    Play26.test,
+    Play26.server,
+    Play26.libServer
   ))
+
+resolvers += Resolver.bintrayRepo("jrouly", "sbt-release")

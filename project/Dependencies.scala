@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
 
-  private val roulyNetVersion = "0.0.12"
+  private val roulyNetVersion = "0.0.14"
   lazy val libCommon = "net.rouly" %% "lib-common" % roulyNetVersion
 
   object Akka {
@@ -38,14 +38,20 @@ object Dependencies {
     lazy val util = "com.softwaremill.macwire" %% "util" % version
   }
 
-  object Play {
-    private val playVersion = "2.6.9"
+  object Play26 {
+    private val version = "2.6.9"
 
-    lazy val json = "com.typesafe.play" %% "play-json" % playVersion
-    lazy val test = "com.typesafe.play" %% "play-test" % playVersion % "test"
-    lazy val server = "com.typesafe.play" %% "play-server" % playVersion
+    lazy val json = "com.typesafe.play" %% "play-json" % version
+    lazy val test = "com.typesafe.play" %% "play-test" % version % "test"
+    lazy val server = "com.typesafe.play" %% "play-server" % version
     lazy val ws = "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.1.10"
     lazy val libServer = "net.rouly" %% "lib-common-server-play26" % roulyNetVersion
+  }
+
+  object Spark {
+    private val version = "2.3.2"
+
+    lazy val core = "org.apache.spark" %% "spark-core" % version
   }
 
 }
