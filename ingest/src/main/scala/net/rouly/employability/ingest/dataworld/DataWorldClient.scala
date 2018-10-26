@@ -4,8 +4,8 @@ import akka.stream.alpakka.csv.scaladsl.{CsvParsing, CsvToMap}
 import akka.stream.scaladsl.{Flow, Source}
 import com.typesafe.scalalogging.StrictLogging
 import net.rouly.common.config.Configuration
-import net.rouly.employability.ingest.Streams
 import net.rouly.employability.ingest.dataworld.model.DataWorldDataSet
+import net.rouly.employability.ingest.streams._
 import play.api.libs.ws.{StandaloneWSClient, StandaloneWSResponse}
 
 import scala.concurrent.duration._
@@ -44,5 +44,5 @@ private[dataworld] class DataWorldClient(
         Failure(ex)
     }
     .collect { case Success(t) => t }
-    .via(Streams.recordCountingFlow(dataSet.displayName))
+    .via(Flow.recordCountingFlow(dataSet.displayName))
 }

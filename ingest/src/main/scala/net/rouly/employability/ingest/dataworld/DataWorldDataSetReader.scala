@@ -18,7 +18,7 @@ class DataWorldDataSetReader extends StrictLogging {
   }
 
   private def readFiles: List[DataWorldDataSet] = {
-    val path = getClass.getResource("/datasets/jobs")
+    val path = getClass.getResource("/datasets/data.world/jobs")
     val folder = new File(path.getPath)
     if (folder.exists() && folder.isDirectory)
       folder

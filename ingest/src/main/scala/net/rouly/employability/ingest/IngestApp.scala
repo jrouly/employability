@@ -10,6 +10,7 @@ import net.rouly.common.config.Configuration
 import net.rouly.employability.ingest.dataworld.DataWorldModule
 import net.rouly.employability.ingest.elasticsearch._
 import net.rouly.employability.ingest.models.JobPosting
+import net.rouly.employability.ingest.streams._
 import play.api.libs.ws.StandaloneWSClient
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
@@ -39,7 +40,7 @@ object IngestApp extends App with StrictLogging {
   lazy val dataWorld: DataWorldModule = wire[DataWorldModule]
 
   val graph = dataWorld.source
-    .via(Streams.recordCountingFlow("elasticsearch"))
+    .via(Flow.recordCountingFlow("elasticsearch"))
     .alsoTo(elasticsearch.sink[JobPosting])
     .runWith(Sink.ignore)
 

@@ -6,6 +6,7 @@ import com.typesafe.scalalogging.StrictLogging
 import net.rouly.common.config.Configuration
 import net.rouly.employability.ingest.dataworld.csv.Extractor
 import net.rouly.employability.ingest.models.JobPosting
+import net.rouly.employability.ingest.streams._
 import play.api.libs.ws.StandaloneWSClient
 
 import scala.concurrent.ExecutionContext
@@ -24,10 +25,6 @@ class DataWorldModule(
     client.getCsv[JobPosting](dataset)
   }
 
-  lazy val source: Source[JobPosting, _] = dataSets match {
-    case Nil => Source.empty
-    case sole :: Nil => sole
-    case first :: second :: rest => Source.combine(first, second, rest: _*)(Concat(_))
-  }
+  lazy val source: Source[JobPosting, _] = Source.multi(dataSets)
 
 }
