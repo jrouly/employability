@@ -3,7 +3,7 @@ package net.rouly.employability.ingest
 import java.util.UUID
 
 import net.rouly.employability.ingest.dataworld.model.DataWorldDataSet
-import net.rouly.employability.ingest.models.JobPosting
+import net.rouly.employability.models.JobPosting
 
 import scala.util.Try
 

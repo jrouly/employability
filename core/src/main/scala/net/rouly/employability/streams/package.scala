@@ -1,4 +1,4 @@
-package net.rouly.employability.ingest
+package net.rouly.employability
 
 import java.util.concurrent.atomic.AtomicInteger
 

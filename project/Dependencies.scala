@@ -34,7 +34,7 @@ object Dependencies {
   object Macwire {
     private val version = "2.3.1"
 
-    lazy val macros = "com.softwaremill.macwire" %% "macros" % version % "provided"
+    lazy val macros = "com.softwaremill.macwire" %% "macros" % version
     lazy val util = "com.softwaremill.macwire" %% "util" % version
   }
 
@@ -48,10 +48,18 @@ object Dependencies {
     lazy val libServer = "net.rouly" %% "lib-common-server-play26" % roulyNetVersion
   }
 
+  object Postgres {
+    lazy val libCommonDatabase = "net.rouly" %% "lib-common-database" % roulyNetVersion
+    lazy val postgres = "org.postgresql" % "postgresql" % "42.2.1"
+    lazy val slick = "com.typesafe.slick" %% "slick" % "3.2.1"
+    lazy val slickPostgres = "com.github.tminglei" %% "slick-pg" % "0.15.7"
+  }
+
   object Spark {
     private val version = "2.3.2"
 
     lazy val core = "org.apache.spark" %% "spark-core" % version
+    lazy val mllib = "org.apache.spark" %% "spark-mllib" % version
   }
 
 }

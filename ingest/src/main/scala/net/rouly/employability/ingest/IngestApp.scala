@@ -1,48 +1,37 @@
 package net.rouly.employability.ingest
 
-import akka.actor.ActorSystem
-import akka.stream.Supervision.Decider
 import akka.stream.scaladsl._
-import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 import com.softwaremill.macwire.wire
 import com.typesafe.scalalogging.StrictLogging
-import net.rouly.common.config.Configuration
+import net.rouly.employability.EmployabilityApp
+import net.rouly.employability.elasticsearch.ElasticsearchModule
 import net.rouly.employability.ingest.dataworld.DataWorldModule
-import net.rouly.employability.ingest.elasticsearch._
-import net.rouly.employability.ingest.models.JobPosting
-import net.rouly.employability.ingest.streams._
+import net.rouly.employability.models.JobPosting
+import net.rouly.employability.streams._
 import play.api.libs.ws.StandaloneWSClient
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
+import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.concurrent.{Await, ExecutionContext}
 
-object IngestApp extends App with StrictLogging {
-
-  implicit val actorSystem: ActorSystem = ActorSystem()
-  implicit val executionContext: ExecutionContext = actorSystem.dispatcher
-
-  private val loggingResumingDecider: Decider = { e =>
-    logger.warn(s"Error encountered. Continuing.", e)
-    Supervision.Resume
-  }
-
-  private val settings: ActorMaterializerSettings =
-    ActorMaterializerSettings(actorSystem)
-      .withSupervisionStrategy(loggingResumingDecider)
-
-  implicit val materializer: ActorMaterializer = ActorMaterializer(settings)
+object IngestApp
+  extends App
+  with EmployabilityApp
+  with StrictLogging {
 
   val wsClient: StandaloneWSClient = StandaloneAhcWSClient()
-  val configuration: Configuration = Configuration.default
 
-  lazy val elasticsearch: ElasticsearchModule = wire[ElasticsearchModule]
+  lazy val elasticsearch: ElasticsearchModule = new ElasticsearchModule(configuration)
   lazy val dataWorld: DataWorldModule = wire[DataWorldModule]
 
-  val graph = dataWorld.source
-    .via(Flow.recordCountingFlow("elasticsearch"))
-    .alsoTo(elasticsearch.sink[JobPosting])
-    .runWith(Sink.ignore)
+  val graph = {
+    import elasticsearch.mapping._
+
+    dataWorld.source
+      .via(Flow.recordCountingFlow("elasticsearch"))
+      .alsoTo(elasticsearch.streams.sink[JobPosting])
+      .runWith(Sink.ignore)
+  }
 
   logger.info("Start.")
 

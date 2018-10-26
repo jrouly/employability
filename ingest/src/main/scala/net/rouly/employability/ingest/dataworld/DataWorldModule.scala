@@ -5,8 +5,8 @@ import com.softwaremill.macwire.wire
 import com.typesafe.scalalogging.StrictLogging
 import net.rouly.common.config.Configuration
 import net.rouly.employability.ingest.dataworld.csv.Extractor
-import net.rouly.employability.ingest.models.JobPosting
-import net.rouly.employability.ingest.streams._
+import net.rouly.employability.models.JobPosting
+import net.rouly.employability.streams._
 import play.api.libs.ws.StandaloneWSClient
 
 import scala.concurrent.ExecutionContext

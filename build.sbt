@@ -3,9 +3,6 @@ import Dependencies._
 
 name := "employability"
 
-lazy val root = (project in file("."))
-  .aggregate(ingest, analysis, web)
-
 lazy val commonSettings = Seq(
   licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
   organization := "net.rouly",
@@ -13,47 +10,66 @@ lazy val commonSettings = Seq(
   name := s"employability-${name.value}"
 ) ++ bintraySettings
 
-lazy val ingest = project
+lazy val root = (project in file("."))
+  .aggregate(core, elasticsearch, postgres, ingest, analysis, web)
+
+lazy val core = project
   .settings(commonSettings)
   .settings(libraryDependencies ++= Seq(
     libCommon,
     Akka.streams,
-    Alpakka.csv,
-    Elasticsearch.elastic4sCore,
-    Elasticsearch.elastic4sHttp,
-    Elasticsearch.elastic4sStreams,
-    Elasticsearch.elastic4sPlayJson,
     Logging.logback,
     Logging.scalaLogging,
     Macwire.macros,
-    Macwire.util,
+    Macwire.util
+  ))
+
+lazy val elasticsearch = project
+  .dependsOn(core)
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Seq(
+    Elasticsearch.elastic4sCore,
+    Elasticsearch.elastic4sHttp,
+    Elasticsearch.elastic4sStreams,
+    Elasticsearch.elastic4sPlayJson
+  ))
+
+lazy val postgres = project
+  .dependsOn(core)
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Seq(
+    Postgres.libCommonDatabase,
+    Postgres.postgres,
+    Postgres.slick,
+    Postgres.slickPostgres
+  ))
+
+lazy val ingest = project
+  .dependsOn(elasticsearch)
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Seq(
+    Alpakka.csv,
     Play26.json,
     Play26.ws
   ))
 
 lazy val analysis = project
+  .dependsOn(elasticsearch, postgres)
   .settings(commonSettings)
   .settings(libraryDependencies ++= Seq(
-    Logging.logback,
-    Logging.scalaLogging,
-    Spark.core
+    Play26.json,
+    Spark.core,
+    Spark.mllib
   ))
 
 lazy val web = project
   .enablePlugins(PlayScala, DockerPlugin)
+  .dependsOn(postgres)
   .settings(commonSettings)
   .settings(dockerBaseImage := "openjdk:8-jre")
   .settings(dockerRepository := Some("jrouly"))
   .settings(dockerUpdateLatest := true)
   .settings(libraryDependencies ++= Seq(
-    Elasticsearch.elastic4sCore,
-    Elasticsearch.elastic4sHttp,
-    Elasticsearch.elastic4sStreams,
-    Elasticsearch.elastic4sPlayJson,
-    Logging.logback,
-    Logging.scalaLogging,
-    Macwire.macros,
-    Macwire.util,
     Play26.json,
     Play26.test,
     Play26.server,

@@ -5,7 +5,7 @@ import akka.stream.scaladsl.{Flow, Source}
 import com.typesafe.scalalogging.StrictLogging
 import net.rouly.common.config.Configuration
 import net.rouly.employability.ingest.dataworld.model.DataWorldDataSet
-import net.rouly.employability.ingest.streams._
+import net.rouly.employability.streams._
 import play.api.libs.ws.{StandaloneWSClient, StandaloneWSResponse}
 
 import scala.concurrent.duration._
