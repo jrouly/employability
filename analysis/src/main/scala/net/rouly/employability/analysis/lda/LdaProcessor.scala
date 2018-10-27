@@ -10,7 +10,15 @@ class LdaProcessor(
 )(implicit actorSystem: ActorSystem) {
 
   protected def readData: DataFrame = {
-    spark.read.format("libsvm").load("sample_lda_libsvm_data.txt")
+    spark.read
+      .format("jdbc")
+      .option("url", config.jdbcUrl)
+      .option("dbtable", config.jdbcTable)
+      .option("user", config.jdbcUser)
+      .option("password", config.jdbcPassword)
+      .load()
+      .withColumnRenamed("id", "label")
+      .withColumnRenamed("content", "features")
   }
 
   def execute(): Unit = {

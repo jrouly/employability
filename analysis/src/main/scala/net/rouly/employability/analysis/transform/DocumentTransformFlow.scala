@@ -5,10 +5,10 @@ import java.util.UUID
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
 import com.sksamuel.elastic4s.http.search.SearchHit
-import net.rouly.employability.analysis.models.Document
+import net.rouly.employability.models.Document
 
 /**
-  * Transform structured ES [[SearchHit]] results into a [[Document]] model.
+  * Transform structured ES [[SearchHit]] results into a [[net.rouly.employability.models.Document]] model.
   */
 object DocumentTransformFlow {
 

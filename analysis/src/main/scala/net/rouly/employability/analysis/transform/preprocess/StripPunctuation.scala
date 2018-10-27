@@ -1,6 +1,6 @@
 package net.rouly.employability.analysis.transform.preprocess
 
-import net.rouly.employability.analysis.models.Document
+import net.rouly.employability.models.Document
 
 private[transform] object StripPunctuation extends (Document[String] => Document[String]) {
 

@@ -1,4 +1,4 @@
-package net.rouly.employability.analysis.models
+package net.rouly.employability.models
 
 import java.util.UUID
 
