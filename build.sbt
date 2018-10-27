@@ -15,6 +15,7 @@ lazy val root = (project in file("."))
   .aggregate(core, elasticsearch, postgres, ingest, analysis, web)
 
 lazy val core = project
+  .disablePlugins(BackgroundRunPlugin)
   .settings(commonSettings)
   .settings(libraryDependencies ++= Seq(
     libCommon,
@@ -59,7 +60,10 @@ lazy val analysis = project
   .dependsOn(elasticsearch, postgres)
   .settings(commonSettings)
   .settings(libraryDependencies ++= Seq(
+    Apache.openNlp,
+    Apache.sparkAkka,
     Play26.json,
+    Play26.ws,
     Spark.core,
     Spark.mllib
   ))

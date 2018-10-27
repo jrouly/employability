@@ -17,7 +17,6 @@ object IngestApp
   with StrictLogging {
 
   val wsClient: StandaloneWSClient = StandaloneAhcWSClient()
-  actorSystem.registerOnTermination(() => wsClient.close())
 
   lazy val elasticsearch: ElasticsearchModule = new ElasticsearchModule(configuration)
   lazy val dataWorld: DataWorldModule = wire[DataWorldModule]
@@ -27,7 +26,7 @@ object IngestApp
 
     dataWorld.source
       .alsoTo(elasticsearch.streams.sink[JobPosting])
-      .via(Flow.recordCountingFlow("elasticsearch"))
+      .wireTap(BookKeepingWireTap("elasticsearch"))
       .runWith(Sink.ignore)
   }
 

@@ -18,6 +18,11 @@ object Dependencies {
     lazy val slick = "com.lightbend.akka" %% "akka-stream-alpakka-slick" % version
   }
 
+  object Apache {
+    lazy val openNlp = "org.apache.opennlp" % "opennlp-tools" % "1.9.0"
+    lazy val sparkAkka = "org.apache.bahir" %% "spark-sql-streaming-akka" % "2.2.1"
+  }
+
   object Elasticsearch {
     private val version = "6.3.7"
 

@@ -10,6 +10,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
 
 trait EmployabilityApp {
+
   self: StrictLogging =>
 
   implicit val actorSystem: ActorSystem = ActorSystem()

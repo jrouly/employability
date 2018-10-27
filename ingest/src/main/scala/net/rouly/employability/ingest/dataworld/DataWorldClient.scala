@@ -44,5 +44,5 @@ private[dataworld] class DataWorldClient(
         Failure(ex)
     }
     .collect { case Success(t) => t }
-    .via(Flow.recordCountingFlow(dataSet.displayName))
+    .wireTap(BookKeepingWireTap(dataSet.displayName))
 }
