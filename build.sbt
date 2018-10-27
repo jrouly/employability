@@ -39,6 +39,7 @@ lazy val postgres = project
   .dependsOn(core)
   .settings(commonSettings)
   .settings(libraryDependencies ++= Seq(
+    Alpakka.slick,
     Postgres.libCommonDatabase,
     Postgres.postgres,
     Postgres.slick,

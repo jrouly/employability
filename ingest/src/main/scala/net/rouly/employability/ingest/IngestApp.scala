@@ -11,15 +11,13 @@ import net.rouly.employability.streams._
 import play.api.libs.ws.StandaloneWSClient
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
-import scala.concurrent.Await
-import scala.concurrent.duration._
-
 object IngestApp
   extends App
   with EmployabilityApp
   with StrictLogging {
 
   val wsClient: StandaloneWSClient = StandaloneAhcWSClient()
+  actorSystem.registerOnTermination(() => wsClient.close())
 
   lazy val elasticsearch: ElasticsearchModule = new ElasticsearchModule(configuration)
   lazy val dataWorld: DataWorldModule = wire[DataWorldModule]
@@ -28,22 +26,14 @@ object IngestApp
     import elasticsearch.mapping._
 
     dataWorld.source
-      .via(Flow.recordCountingFlow("elasticsearch"))
       .alsoTo(elasticsearch.streams.sink[JobPosting])
+      .via(Flow.recordCountingFlow("elasticsearch"))
       .runWith(Sink.ignore)
   }
 
-  logger.info("Start.")
-
-  graph.onComplete { _ =>
+  run(graph) {
     wsClient.close()
     elasticsearch.close()
-    materializer.shutdown()
-    actorSystem.terminate()
   }
-
-  Await.result(graph, 5.minutes)
-
-  logger.info("Done.")
 
 }

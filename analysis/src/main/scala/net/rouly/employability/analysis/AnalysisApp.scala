@@ -4,13 +4,12 @@ import akka.stream.scaladsl._
 import com.softwaremill.macwire.wire
 import com.typesafe.scalalogging.StrictLogging
 import net.rouly.employability.EmployabilityApp
-import net.rouly.employability.analysis.postgres.PostgresModule
+import net.rouly.employability.analysis.transform.SearchHitTransform
 import net.rouly.employability.elasticsearch.ElasticsearchModule
+import net.rouly.employability.models.JobPosting
+import net.rouly.employability.postgres._
 import net.rouly.employability.streams._
 import org.apache.spark.sql.SparkSession
-
-import scala.concurrent.Await
-import scala.concurrent.duration._
 
 object AnalysisApp
   extends App
@@ -22,24 +21,24 @@ object AnalysisApp
 
   lazy val spark = SparkSession
     .builder()
+    .config("spark.master", "local")
     .getOrCreate()
 
-  val graph = elasticsearch.streams.source
-    .via(Flow.recordCountingFlow("postgres"))
-    .alsoTo(postgres.streams.sink)
-    .runWith(Sink.ignore)
+  actorSystem.registerOnTermination(() => spark.close())
 
-  logger.info("Start.")
+  val graph = {
+    import postgres.mapping._
 
-  graph.onComplete { _ =>
-    elasticsearch.close()
-    materializer.shutdown()
-    actorSystem.terminate()
-    spark.close()
+    elasticsearch.streams.source
+      .via(SearchHitTransform.JobPosting.flow)
+      .alsoTo(postgres.streams.sink[JobPosting])
+      .via(Flow.recordCountingFlow("postgres", n = 1000))
+      .runWith(Sink.ignore)
   }
 
-  Await.result(graph, 5.minutes)
-
-  logger.info("Done.")
+  run(graph) {
+    spark.close()
+    postgres.close()
+  }
 
 }

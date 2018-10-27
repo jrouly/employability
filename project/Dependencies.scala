@@ -12,9 +12,10 @@ object Dependencies {
   }
 
   object Alpakka {
-    private val version = "0.8"
+    private val version = "0.20"
 
-    lazy val csv = "com.lightbend.akka" %% "akka-stream-alpakka-csv" % "0.8"
+    lazy val csv = "com.lightbend.akka" %% "akka-stream-alpakka-csv" % version
+    lazy val slick = "com.lightbend.akka" %% "akka-stream-alpakka-slick" % version
   }
 
   object Elasticsearch {

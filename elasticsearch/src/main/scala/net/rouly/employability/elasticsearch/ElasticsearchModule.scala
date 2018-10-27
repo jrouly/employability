@@ -15,6 +15,8 @@ class ElasticsearchModule(configuration: Configuration)(implicit actorSystem: Ac
   lazy val mapping: ElasticsearchMapping = wire[ElasticsearchMapping]
   lazy val streams: ElasticsearchStreams = wire[ElasticsearchStreams]
 
-  def close(): Unit = client.close()
+  def close(): Unit = {
+    client.close()
+  }
 
 }

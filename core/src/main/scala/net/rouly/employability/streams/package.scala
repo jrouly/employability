@@ -9,10 +9,10 @@ import com.typesafe.scalalogging.StrictLogging
 package object streams extends StrictLogging {
 
   implicit class FlowExtension(val flow: Flow.type) extends AnyVal {
-    def recordCountingFlow[T](id: String): Flow[T, T, NotUsed] = {
+    def recordCountingFlow[T](id: String, n: Int = 100): Flow[T, T, NotUsed] = {
       val counter = new AtomicInteger()
       Flow.fromFunction { t =>
-        if (counter.intValue() % 100 == 0) logger.info(s"[$id] Processed ${counter.getAndIncrement()} units.")
+        if (counter.intValue() % n == 0) logger.info(s"[$id] Processed ${counter.getAndIncrement()} units.")
         else counter.incrementAndGet()
         t
       }
