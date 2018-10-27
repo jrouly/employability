@@ -4,6 +4,7 @@ import Dependencies._
 name := "employability"
 
 lazy val commonSettings = Seq(
+  resolvers += Resolver.bintrayRepo("jrouly", "sbt-release"),
   licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
   organization := "net.rouly",
   scalaVersion := "2.11.12",
@@ -75,5 +76,3 @@ lazy val web = project
     Play26.server,
     Play26.libServer
   ))
-
-resolvers += Resolver.bintrayRepo("jrouly", "sbt-release")
