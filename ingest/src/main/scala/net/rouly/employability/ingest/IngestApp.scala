@@ -11,6 +11,9 @@ import net.rouly.employability.streams._
 import play.api.libs.ws.StandaloneWSClient
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
+import scala.concurrent.Await
+import scala.concurrent.duration._
+
 object IngestApp
   extends App
   with EmployabilityApp
@@ -30,9 +33,14 @@ object IngestApp
       .runWith(Sink.ignore)
   }
 
-  run(graph) {
-    wsClient.close()
-    elasticsearch.close()
-  }
+  logger.info("Start.")
+  Await.result(graph, 5.minutes)
+  logger.info("Done.")
+
+  Await.result(actorSystem.terminate(), 5.minutes)
+
+  materializer.shutdown()
+  elasticsearch.close()
+  wsClient.close()
 
 }

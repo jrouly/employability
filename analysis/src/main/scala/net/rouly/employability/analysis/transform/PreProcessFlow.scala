@@ -15,7 +15,7 @@ object PreProcessFlow {
     tokenizer: Tokenizer,
     normalizer: CharSequenceNormalizer,
     stemmer: Stemmer
-  ): Flow[Document[String], Document[Seq[String]], NotUsed] = {
+  ): Flow[Document[String], Document[String], NotUsed] = {
     Flow.fromFunction(
       initialize
         andThen StripPunctuation // strip out non-letters
@@ -25,10 +25,11 @@ object PreProcessFlow {
         andThen lift { _.filter(_.length > 3) } // drop short tokens
         andThen lift { _.map(stemmer.stem) } // reduce tokens to stems
         andThen lift { _.toSeq.map(_.toString) } // reshape as Seq[String]
+        andThen lift { _.mkString(" ") } // untokenize
     )
   }
 
-  def apply(models: AnalysisOpenNlpModels): Flow[Document[String], Document[Seq[String]], NotUsed] = {
+  def apply(models: AnalysisOpenNlpModels): Flow[Document[String], Document[String], NotUsed] = {
     val tokenizer = new TokenizerME(new TokenizerModel(models.tokenizerModel.stream))
     val normalizer = new AggregateCharSequenceNormalizer(
       new NumberCharSequenceNormalizer,

@@ -9,29 +9,23 @@ class LdaProcessor(
   config: LdaConfig
 )(implicit actorSystem: ActorSystem) {
 
-  protected def streamingDataFrame: DataFrame = {
-    spark
-      .readStream
-      .format("org.apache.bahir.sql.streaming.akka.AkkaStreamSourceProvider")
-      .option("urlOfPublisher", config.publisherUrl)
-      .load()
+  protected def readData: DataFrame = {
+    spark.read.format("libsvm").load("sample_lda_libsvm_data.txt")
   }
 
-  def execute: DataFrame = {
-    val dataset = streamingDataFrame
+  def execute(): Unit = {
     lazy val model = new LDA()
       .setK(config.numberTopics)
       .setMaxIter(config.maxIterations)
-      .fit(dataset)
+      .fit(readData)
 
     // TODO: What is this?
     // val transformed: DataFrame = model.transform(dataset)
 
     // Return topics.
-    // model.describeTopics(config.wordsPerTopic)
+    val topics = model.describeTopics(config.wordsPerTopic)
 
-    println(dataset)
-    dataset
+    topics.show()
   }
 
 }

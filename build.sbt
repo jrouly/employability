@@ -60,8 +60,8 @@ lazy val analysis = project
   .dependsOn(elasticsearch, postgres)
   .settings(commonSettings)
   .settings(libraryDependencies ++= Seq(
+    Apache.bahirAkka,
     Apache.openNlp,
-    Apache.sparkAkka,
     Play26.json,
     Play26.ws,
     Spark.core,

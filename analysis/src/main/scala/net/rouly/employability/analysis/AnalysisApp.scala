@@ -36,9 +36,9 @@ object AnalysisApp
     tokenizerModel = Await.result(opennlp.reader.getModel("en-token.bin"), 2.minutes)
   )
 
-  lazy val spark = SparkSession
+  val spark = SparkSession
     .builder()
-    .master("local")
+    .master("local[12]")
     .getOrCreate()
 
   val graph = elasticsearch.streams.source
@@ -50,11 +50,18 @@ object AnalysisApp
     .alsoTo(Sink.actorRef(lda.actor, Done))
     .runWith(Sink.ignore)
 
-  run(graph) {
-    elasticsearch.close()
-    wsClient.close()
-    spark.close()
-    postgres.close()
-  }
+  logger.info("Start.")
+  Await.result(graph, 5.minutes)
+  logger.info("Done.")
+
+  lda.processor.execute()
+
+  Await.result(actorSystem.terminate(), 5.minutes)
+
+  materializer.shutdown()
+  elasticsearch.close()
+  wsClient.close()
+  spark.close()
+  postgres.close()
 
 }
