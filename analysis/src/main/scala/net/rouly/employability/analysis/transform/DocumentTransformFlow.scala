@@ -34,7 +34,11 @@ object DocumentTransformFlow {
         for {
           id <- source.get(idField)
           content <- source.get(contentField)
-        } yield Document(UUID.fromString(id.toString), content.toString)
+        } yield Document(
+          id = UUID.fromString(id.toString),
+          raw = content.toString,
+          content = content.toString
+        )
       }
     }
   }

@@ -7,6 +7,7 @@ private[transform] object StripPunctuation extends (Document[String] => Document
   override def apply(document: Document[String]): Document[String] = {
     Document(
       id = document.id,
+      raw = document.raw,
       content = document.content
         // Replace fancy quotes.
         .replaceAll("[\\u2018\\u2019]", "'")

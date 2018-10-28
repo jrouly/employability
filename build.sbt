@@ -81,3 +81,5 @@ lazy val web = project
     Play26.server,
     Play26.libServer
   ))
+
+fork := true
