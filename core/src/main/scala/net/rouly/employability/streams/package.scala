@@ -10,7 +10,7 @@ package object streams extends StrictLogging {
       sources.toList match {
         case Nil => Source.empty
         case sole :: Nil => sole
-        case first :: second :: rest => Source.combine(first, second, rest: _*)(Concat(_))
+        case first :: second :: rest => Source.combine(first, second, rest: _*)(Merge(_))
       }
     }
   }
