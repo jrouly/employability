@@ -34,7 +34,10 @@ private[dataworld] class DataWorldClient(
     */
   def getCsv[T](dataSet: DataWorldDataSet)(implicit extract: csv.Extractor[T]): Source[T, _] = Source
     .fromFutureSource(getDataSet(dataSet).map(_.bodyAsSource))
-    .via(CsvParsing.lineScanner(escapeChar = CsvParsing.DoubleQuote))
+    .via(CsvParsing.lineScanner(
+      escapeChar = CsvParsing.DoubleQuote,
+      maximumLineLength = 100 * 1024
+    ))
     .via(CsvToMap.toMap())
     .map(_.mapValues(_.utf8String))
     .via(Flow.fromFunction(extract))
