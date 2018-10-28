@@ -48,7 +48,7 @@ object AnalysisApp
     import postgres.mapping._
 
     elasticsearch.streams.source
-      .take(500) // TODO: DELETEME
+      .take(10000) // TODO: DELETEME
       .wireTap(BookKeepingWireTap("elasticsearch"))
       .via(DocumentTransformFlow())
       .via(PreProcessFlow(openNlpModels))
