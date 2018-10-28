@@ -1,6 +1,6 @@
 # milestone 1
 
-Screen recording: [milestone-1.gif](https://michel.rouly.net/public/employability/milestone-1.gif)
+Screen recording: [milestone-1.mp4](https://michel.rouly.net/public/employability/milestone-1.mp4)
 
 The video above demonstrates execution of the ingestion pipeline (downloading thousands of documents from the Internet) and the analysis pipeline (preprocessing, cleaning, and topic modeling a subset of the documents).
 The commands issued are:
