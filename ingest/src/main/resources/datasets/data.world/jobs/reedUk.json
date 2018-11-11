@@ -1,11 +1,10 @@
 {
   "name": "50000-job-board-records-from-reed-uk",
   "organization": "promptcloud",
+  "fileName": "reed_uk.csv",
   "dictionary": {
     "description": "job_description",
     "title": "job_title",
     "skills": "job_requirements"
-  },
-  "token": "g6sxe5ebjdpyh3q5aqtrlj45vv42kv",
-  "url": "https://data.world/promptcloud/50000-job-board-records-from-reed-uk"
+  }
 }

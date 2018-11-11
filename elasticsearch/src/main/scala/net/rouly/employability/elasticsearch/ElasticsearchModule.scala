@@ -8,8 +8,9 @@ import net.rouly.common.config.Configuration
 @Module
 class ElasticsearchModule(configuration: Configuration)(implicit actorSystem: ActorSystem) {
 
-  private lazy val esConfig: ElasticsearchConfig = wire[ElasticsearchConfig]
-  private lazy val properties: ElasticProperties = ElasticProperties(esConfig.baseUrl)
+  lazy val config: ElasticsearchConfig = wire[ElasticsearchConfig]
+
+  private lazy val properties: ElasticProperties = ElasticProperties(config.baseUrl)
   private lazy val client: ElasticClient = ElasticClient(properties)
 
   lazy val mapping: ElasticsearchMapping = wire[ElasticsearchMapping]

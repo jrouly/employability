@@ -12,7 +12,7 @@ class ElasticsearchMapping(config: ElasticsearchConfig) {
   implicit val jobPostingFormat: Format[JobPosting] = Json.format[JobPosting]
 
   implicit val jobPostingRequestBuilder: RequestBuilder[JobPosting] = new RequestBuilder[JobPosting] {
-    override def request(t: JobPosting): BulkCompatibleRequest = indexInto(config.index / "job")
+    override def request(t: JobPosting): BulkCompatibleRequest = indexInto(config.jobPostingIndex / "doc")
       .id(t.id.toString)
       .source(t)
   }

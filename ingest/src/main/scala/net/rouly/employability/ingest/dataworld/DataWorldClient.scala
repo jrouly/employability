@@ -18,13 +18,15 @@ private[dataworld] class DataWorldClient(
 )(implicit ec: ExecutionContext)
   extends StrictLogging {
 
-  private val baseUrl: String = configuration.get("data.world.baseurl", "https://query.data.world/s")
+  private val baseUrl: String = configuration.get("data.world.baseurl", "https://api.data.world/v0")
+  private val apiToken: String = configuration.get("data.world.api.token", "dw_api_token")
 
   /**
-    * Retrieve a raw data.world dataset.
+    * Retrieve a file from a data.world dataset.
     */
-  def getDataSet(dataSet: DataWorldDataSet): Future[StandaloneWSResponse] = wsClient
-    .url(s"$baseUrl/${dataSet.token}")
+  def downloadFile(organization: String, name: String, fileName: String): Future[StandaloneWSResponse] = wsClient
+    .url(s"$baseUrl/file_download/$organization/$name/$fileName")
+    .withHttpHeaders("authorization" -> s"Bearer $apiToken")
     .withFollowRedirects(true)
     .withRequestTimeout(5.minutes)
     .stream()
@@ -33,7 +35,7 @@ private[dataworld] class DataWorldClient(
     * Retrieve a data.world csv, parsed as an expected type.
     */
   def getCsv[T](dataSet: DataWorldDataSet)(implicit extract: csv.Extractor[T]): Source[T, _] = Source
-    .fromFutureSource(getDataSet(dataSet).map(_.bodyAsSource))
+    .fromFutureSource(downloadFile(dataSet.organization, dataSet.name, dataSet.fileName).map(_.bodyAsSource))
     .via(CsvParsing.lineScanner(
       escapeChar = CsvParsing.DoubleQuote,
       maximumLineLength = 100 * 1024

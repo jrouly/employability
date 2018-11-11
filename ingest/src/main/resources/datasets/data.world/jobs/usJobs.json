@@ -1,11 +1,10 @@
 {
   "name": "us-jobs-on-dice-com",
   "organization": "promptcloud",
+  "fileName": "dice_com-job_us_sample.csv",
   "dictionary": {
     "description": "jobdescription",
     "title": "jobtitle",
     "skills": "skills"
-  },
-  "token": "vdzz7fhg656njthujua7nvf2tcsj7m",
-  "url": "https://data.world/promptcloud/us-jobs-on-dice-com"
+  }
 }

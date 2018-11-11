@@ -47,8 +47,9 @@ object AnalysisApp
   val graph = {
     import postgres.mapping._
 
-    elasticsearch.streams.source
-      .take(10000) // TODO: DELETEME
+    elasticsearch.streams
+      .source(elasticsearch.config.jobPostingIndex)
+      .take(100) // TODO: DELETEME
       .wireTap(BookKeepingWireTap("elasticsearch"))
       .via(DocumentTransformFlow())
       .via(PreProcessFlow(openNlpModels))
@@ -60,7 +61,7 @@ object AnalysisApp
   Await.result(graph, 5.minutes)
   logger.info("Done.")
 
-  lda.processor.execute()
+  //  lda.processor.execute()
 
   Await.result(actorSystem.terminate(), 5.minutes)
 
