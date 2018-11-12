@@ -3,7 +3,7 @@ import bintray.BintrayKeys._
 
 object Bintray {
 
-  lazy val bintraySettings = Seq(
+  lazy val settings = Seq(
     bintrayPackageLabels := Seq("scala"),
     bintrayRepository := "sbt-release"
   )

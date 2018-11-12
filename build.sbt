@@ -1,4 +1,3 @@
-import Bintray._
 import Dependencies._
 
 name := "employability"
@@ -9,10 +8,10 @@ lazy val commonSettings = Seq(
   organization := "net.rouly",
   scalaVersion := "2.11.12",
   name := s"employability-${name.value}"
-) ++ bintraySettings
+) ++ Bintray.settings
 
 lazy val root = (project in file("."))
-  .aggregate(core, elasticsearch, postgres, ingest, analysis, web)
+  .aggregate(core, elasticsearch, postgres, ingest, preprocess, analysis, web)
 
 lazy val core = project
   .disablePlugins(BackgroundRunPlugin)
