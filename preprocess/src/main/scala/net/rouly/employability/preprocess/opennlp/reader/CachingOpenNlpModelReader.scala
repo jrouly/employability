@@ -1,12 +1,12 @@
-package net.rouly.employability.analysis.opennlp.reader
+package net.rouly.employability.preprocess.opennlp.reader
 
 import java.io.{File, FileInputStream}
 import java.nio.file.Files
 
 import com.typesafe.scalalogging.StrictLogging
 import net.rouly.common.config.Configuration
-import net.rouly.employability.analysis.opennlp.OpenNlpModel
-import net.rouly.employability.analysis.opennlp.reader.CachingOpenNlpModelReader.Cache
+import net.rouly.employability.preprocess.opennlp.OpenNlpModel
+import net.rouly.employability.preprocess.opennlp.reader.CachingOpenNlpModelReader.Cache
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Success, Try}

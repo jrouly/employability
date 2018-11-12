@@ -1,11 +1,13 @@
 package net.rouly.employability.analysis.lda
 
 import akka.actor.ActorSystem
-import net.rouly.employability.analysis.models.{ModeledDocument, Topic}
+import net.rouly.employability.models.{ModeledDocument, Topic}
 import org.apache.spark.ml.clustering.{LDA, LDAModel}
 import org.apache.spark.ml.feature._
 import org.apache.spark.ml.linalg
 import org.apache.spark.sql._
+
+import scala.util.control.NonFatal
 
 class LdaProcessor(
   spark: SparkSession,
@@ -77,7 +79,7 @@ class LdaProcessor(
           .map(vocabulary.apply)
           .zip(termWeightsSeq)
           .toMap
-        Topic(id, wordFrequency)
+        Topic(id.toString, wordFrequency)
       case _ =>
         throw new Exception("Unable to parse topics.")
     }
@@ -96,7 +98,7 @@ class LdaProcessor(
           topicWeight = distribution
             .toArray
             .zipWithIndex
-            .map { case (weight, topic) => topic -> weight }
+            .map { case (weight, topic) => topic.toString -> weight }
             .toMap
         )
       case _ =>
@@ -108,20 +110,35 @@ class LdaProcessor(
     * Perform LDA topic modeling on the input corpus.
     */
   def execute(): Unit = {
-    val (df, vocabulary) = vectorize(readData)
+    try {
 
-    val lda = new LDA()
-      .setK(config.numberTopics)
-      .setMaxIter(config.maxIterations)
+      // Perform vectorization.
+      val (df, vocabulary) = vectorize(readData)
 
-    // Execute LDA.
-    val model = lda.fit(df)
-    val modeled = model.transform(df)
+      // Set up LDA.
+      val lda = new LDA()
+        .setK(config.numberTopics)
+        .setMaxIter(config.maxIterations)
 
-    // TODO: Poop these into a database for visualization.
-    val topics = getTopics(model, vocabulary)
-    val modeledDocuments = getModeledDocuments(modeled)
+      // Execute LDA.
+      val model = lda.fit(df)
+      val modeled = model.transform(df)
 
+      // Extract results.
+      val topics = getTopics(model, vocabulary)
+      val modeledDocuments = getModeledDocuments(modeled)
+
+      // Emit results.
+      topics.foreach(topic => LdaQueues.emit(topic))
+      modeledDocuments.foreach(document => LdaQueues.emit(document))
+
+      // Return.
+      ()
+
+    } catch {
+      case NonFatal(e) => // catch-all
+        e.printStackTrace()
+    }
   }
 
 }

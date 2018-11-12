@@ -1,4 +1,4 @@
-package net.rouly.employability.analysis.opennlp
+package net.rouly.employability.preprocess.opennlp
 
 import net.rouly.common.config.Configuration
 import play.api.libs.ws.{StandaloneWSClient, StandaloneWSResponse}

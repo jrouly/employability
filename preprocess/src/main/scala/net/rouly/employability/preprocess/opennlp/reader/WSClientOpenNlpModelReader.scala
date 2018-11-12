@@ -1,10 +1,10 @@
-package net.rouly.employability.analysis.opennlp.reader
+package net.rouly.employability.preprocess.opennlp.reader
 
 import akka.stream.Materializer
 import akka.stream.scaladsl.StreamConverters
 import com.softwaremill.macwire.wire
 import net.rouly.common.config.Configuration
-import net.rouly.employability.analysis.opennlp.{OpenNlpModel, OpenNlpModelClient}
+import net.rouly.employability.preprocess.opennlp.{OpenNlpModel, OpenNlpModelClient}
 import play.api.libs.ws.StandaloneWSClient
 
 import scala.concurrent.{ExecutionContext, Future}

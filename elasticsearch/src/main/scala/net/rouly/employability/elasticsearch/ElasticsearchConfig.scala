@@ -10,5 +10,6 @@ class ElasticsearchConfig(configuration: Configuration) {
   // Index names.
   val jobPostingIndex: String = configuration.get("elasticsearch.index", "job-postings")
   val topicIndex: String = configuration.get("elasticsearch.index", "topics")
+  val modeledDocumentIndex: String = configuration.get("elasticsearch.modeled.document.index", "modeled-documents")
 
 }

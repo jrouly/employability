@@ -1,4 +1,4 @@
-package net.rouly.employability.analysis.opennlp
+package net.rouly.employability.preprocess.opennlp
 
 class AnalysisOpenNlpModels(
   val placeNameModel: OpenNlpModel,

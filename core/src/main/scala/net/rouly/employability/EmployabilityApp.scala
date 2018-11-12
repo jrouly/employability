@@ -8,9 +8,11 @@ import net.rouly.common.config.Configuration
 
 import scala.concurrent.ExecutionContext
 
+/**
+  * Entry-level app mixin.
+  */
 trait EmployabilityApp {
-
-  self: StrictLogging =>
+  self: App with StrictLogging =>
 
   implicit val actorSystem: ActorSystem = ActorSystem()
   implicit val executionContext: ExecutionContext = actorSystem.dispatcher

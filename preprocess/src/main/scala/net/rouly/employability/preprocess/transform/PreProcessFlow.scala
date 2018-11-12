@@ -1,10 +1,10 @@
-package net.rouly.employability.analysis.transform
+package net.rouly.employability.preprocess.transform
 
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
-import net.rouly.employability.analysis.opennlp.AnalysisOpenNlpModels
-import net.rouly.employability.analysis.transform.preprocess._
 import net.rouly.employability.models.Document
+import net.rouly.employability.preprocess.opennlp.AnalysisOpenNlpModels
+import net.rouly.employability.preprocess.transform.preprocess.StripPunctuation
 import opennlp.tools.stemmer.{PorterStemmer, Stemmer}
 import opennlp.tools.tokenize._
 import opennlp.tools.util.normalizer._

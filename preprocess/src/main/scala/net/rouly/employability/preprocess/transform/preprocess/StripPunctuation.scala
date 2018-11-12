@@ -1,4 +1,4 @@
-package net.rouly.employability.analysis.transform.preprocess
+package net.rouly.employability.preprocess.transform.preprocess
 
 import net.rouly.employability.models.Document
 

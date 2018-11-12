@@ -1,9 +1,9 @@
-package net.rouly.employability.analysis.opennlp
+package net.rouly.employability.preprocess.opennlp
 
 import akka.stream.Materializer
 import com.softwaremill.macwire.{Module, wire}
 import net.rouly.common.config.Configuration
-import net.rouly.employability.analysis.opennlp.reader.{CachingOpenNlpModelReader, OpenNlpModelReader, WSClientOpenNlpModelReader}
+import net.rouly.employability.preprocess.opennlp.reader._
 import play.api.libs.ws.StandaloneWSClient
 
 import scala.concurrent.ExecutionContext

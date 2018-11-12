@@ -19,7 +19,6 @@ object Dependencies {
   }
 
   object Apache {
-    lazy val bahirAkka = "org.apache.bahir" %% "spark-streaming-akka" % "2.2.1"
     lazy val openNlp = "org.apache.opennlp" % "opennlp-tools" % "1.9.0"
   }
 

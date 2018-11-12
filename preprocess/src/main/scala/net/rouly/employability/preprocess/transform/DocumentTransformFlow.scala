@@ -1,4 +1,4 @@
-package net.rouly.employability.analysis.transform
+package net.rouly.employability.preprocess.transform
 
 import java.util.UUID
 
@@ -19,7 +19,7 @@ object DocumentTransformFlow {
     }
     .collect { case Some(doc) => doc }
 
-  private object JobPostingSearchHit extends SearchHitExtractor("job", "id", "description")
+  private object JobPostingSearchHit extends SearchHitExtractor("doc", "id", "description")
 
   private abstract class SearchHitExtractor(
     `type`: String,

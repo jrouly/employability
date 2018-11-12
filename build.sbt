@@ -56,14 +56,19 @@ lazy val ingest = project
     Play26.ws
   ))
 
+lazy val preprocess = project
+  .dependsOn(elasticsearch, postgres)
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Seq(
+    Apache.openNlp,
+    Play26.json,
+    Play26.ws
+  ))
+
 lazy val analysis = project
   .dependsOn(elasticsearch, postgres)
   .settings(commonSettings)
   .settings(libraryDependencies ++= Seq(
-    Apache.bahirAkka,
-    Apache.openNlp,
-    Play26.json,
-    Play26.ws,
     Spark.core,
     Spark.mllib
   ))

@@ -1,13 +1,10 @@
 package net.rouly.employability.ingest
 
-import akka.stream.scaladsl._
 import com.softwaremill.macwire.wire
 import com.typesafe.scalalogging.StrictLogging
 import net.rouly.employability.EmployabilityApp
 import net.rouly.employability.elasticsearch.ElasticsearchModule
 import net.rouly.employability.ingest.dataworld.DataWorldModule
-import net.rouly.employability.models.JobPosting
-import net.rouly.employability.streams._
 import play.api.libs.ws.StandaloneWSClient
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
@@ -23,18 +20,10 @@ object IngestApp
 
   lazy val elasticsearch: ElasticsearchModule = new ElasticsearchModule(configuration)
   lazy val dataWorld: DataWorldModule = wire[DataWorldModule]
-
-  val graph = {
-    import elasticsearch.mapping._
-
-    dataWorld.source
-      .alsoTo(elasticsearch.streams.sink[JobPosting])
-      .wireTap(BookKeepingWireTap("elasticsearch"))
-      .runWith(Sink.ignore)
-  }
+  lazy val streams: IngestStreams = wire[IngestStreams]
 
   logger.info("Start.")
-  Await.result(graph, 5.minutes)
+  Await.result(streams.ingestGraph, 5.minutes)
   logger.info("Done.")
 
   Await.result(actorSystem.terminate(), 5.minutes)
