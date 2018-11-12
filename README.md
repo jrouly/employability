@@ -23,10 +23,11 @@ Using `docker-compose`, start the background services:
 
     docker-compose up -d
 
-Using `sbt`, execute the ingestion pipeline followed by the analysis pipeline.
+Using `sbt`, execute the data pipelines.
 
-    sbt ingest/run
-    sbt analysis/run
+    sbt ingest/run      # ingest raw data
+    sbt preprocess/run  # prepare the data for LDA
+    sbt analysis/run    # perform topic modeling
 
 Start up the visualization server to interact with the inferred topics.
 
@@ -36,6 +37,11 @@ Start up the visualization server to interact with the inferred topics.
 
 Data sources can be defined in `ingest/src/main/resources/datasets/`.
 Currently, only `csv` data sourced from [`data.world`](https://data.world) are supported, but extending the ingestion pipeline to additional data sources is straightforward.
+
+Register for an account at [`data.world`](https://data.world) to get an [API token](https://data.world/settings/advanced).
+Export the API token as an environment variable prior to ingestion.
+
+    export DATA_WORLD_API_TOKEN=...
 
 ### Future Work
 
