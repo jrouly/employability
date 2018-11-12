@@ -74,7 +74,7 @@ lazy val analysis = project
 
 lazy val web = project
   .enablePlugins(PlayScala, DockerPlugin)
-  .dependsOn(postgres)
+  .dependsOn(elasticsearch)
   .settings(commonSettings)
   .settings(dockerBaseImage := "openjdk:8-jre")
   .settings(dockerRepository := Some("jrouly"))

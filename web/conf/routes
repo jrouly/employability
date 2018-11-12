@@ -1,0 +1,11 @@
+# API definition.
+GET     /api/echo                               net.rouly.employability.web.echo.EchoController.echo
+
+GET     /api/topics                             net.rouly.employability.web.api.TopicController.allTopics
+GET     /api/topics/:id                         net.rouly.employability.web.api.TopicController.topicById(id: String)
+
+# Application definition.
+GET     /                                       net.rouly.employability.web.application.ApplicationController.index
+GET     /topics                                 net.rouly.employability.web.application.ApplicationController.allTopics
+GET     /topics/:id                             net.rouly.employability.web.application.ApplicationController.topicById(id: String)
+GET     /assets/*file                           controllers.Assets.at(file)

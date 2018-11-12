@@ -1,0 +1,36 @@
+#nav {
+  display: block;
+  box-sizing: border-box;
+  float: left;
+  clear: none;
+  list-style-type: none;
+  padding: 0px;
+
+  width: 100px;
+  margin-right: 20px;
+}
+
+#nav li {
+  display: block;
+}
+
+#nav li a {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px 0px 5px 10px;
+}
+
+#nav li.separator {
+  color: #626262;
+  font-weight: bold;
+  padding-top: 15px;
+  padding-bottom: 5px;
+  text-transform: uppercase;
+}
+
+#nav ul {
+  border-left: 1px solid #ccc;
+  padding: 0px;
+  margin-left: 10px;
+}

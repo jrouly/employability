@@ -1,0 +1,11 @@
+#banner {
+  font-size: 0.7em;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ccc;
+}
+
+#banner #subtitle {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 0.7em;
+}

@@ -1,0 +1,26 @@
+table.topic {
+  border-collapse: collapse;
+  display: inline-table;
+  margin: 15px;
+}
+
+table.topic thead, table.topic td {
+  text-align: left;
+  padding: 8px;
+  font-family: monospace;
+}
+
+table.topic tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+table.topic thead {
+  background-color: #3F78A9;
+  color: whitesmoke;
+}
+
+table.topic caption {
+  padding: 8px;
+  font-size: 1.1em;
+}
+

@@ -1,0 +1,21 @@
+@import net.rouly.employability.models.Topic
+
+@(topic: Topic)
+
+<table class="topic">
+    <caption>id = @topic.id</caption>
+    <thead>
+        <tr>
+            <td>word</td>
+            <td>frequency</td>
+        </tr>
+    </thead>
+    <tbody>
+    @for((word, frequency) <- topic.wordFrequency.toList.sortBy(_._2).reverse) {
+        <tr>
+            <td>@word</td>
+            <td>@("%.8f".format(frequency))</td>
+        </tr>
+    }
+    </tbody>
+</table>
