@@ -1,0 +1,18 @@
+@import net.rouly.employability.models.Document
+
+@(documents: List[Document[String]])
+
+@application.layout.main(title = "Documents") {
+
+    <h2>Documents</h2>
+
+    <p>
+        This is a sampling of 20 random documents to give you a feel for the kinds of data being imported and the
+        kinds of processing they go through.
+    </p>
+
+    @for(document <- documents) {
+        @application.components.document(document)
+    }
+
+}

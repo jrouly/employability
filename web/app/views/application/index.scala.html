@@ -61,4 +61,53 @@
         <li>TBD</li>
     </ul>
 
+    <h3>Pre Processing</h3>
+
+    <p>
+        Human language text, specifically text sourced from the Internet, is notoriously noisy and inconsistently
+        formatted. Pre-processing the data is therefore a critical stage before LDA can be performed in order to
+        increase the chances of quality topic inference. Pre-processing reduces noise, removes outliers, and
+        standardizes a corpus of documents which otherwise are wildly nonstandard.
+    </p>
+
+    <p>
+        The steps taken in pre-processing are as follows, in order.
+    </p>
+
+    <h4>Language Detection</h4>
+
+    <p>
+        Documents that are not written in English are immediately removed from the dataset. Language recognition is
+        performed on the raw data using a trained model from the <a href="https://opennlp.apache.org/">Apache OpenNLP library</a>.
+        Any document that is not categorized primarily as English with a confidence of at least 90% is immediately removed.
+    </p>
+
+    <h4>Punctuation Removal</h4>
+
+    <p>
+        Free form text on the Internet comes in a wide variety of formats. Most of the formatting structure is removed
+        during ingestion, but stray punctuation frequently remains. Periods, commas, numbers, and any other non-word
+        characters are replaced with whitespace.
+    </p>
+
+    <h4>Lowercasing</h4>
+
+    <p>Every document is consistently lowercased to avoid case sensitive topic inference.</p>
+
+    <h4>Tokenization</h4>
+
+    <p>
+        Text is tokenized according to a statistical model provided by <a href="https://opennlp.apache.org/">Apache OpenNLP</a>
+        trained on an English language corpus. Tokens of length three or less are dropped to reduce noise.
+    </p>
+
+    <h4>Stemming</h4>
+
+    <p>
+        A standard Porter stemmer, again provided by <a href="https://opennlp.apache.org/">Apache OpenNLP</a>, is
+        applied to the tokens. The stemmer reduces English language words to their "stem" or root words. For example,
+        "salaried", "salaries", and "salary" might all be reduced to "salari". In this way, words with shared semantics
+        that would otherwise be unique tokens with low frequency are made to be significantly higher frequency.
+    </p>
+
 }
