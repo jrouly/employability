@@ -1,46 +1,36 @@
 package net.rouly.employability.preprocess.transform
 
-import java.util.UUID
-
 import akka.NotUsed
 import akka.stream.scaladsl.Flow
 import com.sksamuel.elastic4s.http.search.SearchHit
-import net.rouly.employability.models.Document
+import com.sksamuel.elastic4s.playjson._
+import net.rouly.employability.models.{Document, JobPosting}
+
+import scala.util.{Success, Try}
 
 /**
-  * Transform structured ES [[SearchHit]] results into a [[net.rouly.employability.models.Document]] model.
+  * Transform structured ES [[SearchHit]] results into a [[Document]] model.
   */
 object DocumentTransformFlow {
 
-  def apply(): Flow[SearchHit, Document[String], NotUsed] = Flow[SearchHit]
-    .map {
-      case JobPostingSearchHit(jobPosting) => Some(jobPosting)
-      case _ => None
-    }
-    .collect { case Some(doc) => doc }
+  def apply(): Flow[SearchHit, Document[String], NotUsed] = Flow[SearchHit].map(toDoc).collect(some)
 
-  private object JobPostingSearchHit extends SearchHitExtractor("doc", "id", "description")
+  private def toDoc(hit: SearchHit): Option[Document[String]] = {
+    val asJobPosting = hit
+      .safeToOpt[JobPosting]
+      .collect(success)
+      .map(toDoc)
 
-  private abstract class SearchHitExtractor(
-    `type`: String,
-    idField: String,
-    contentField: String
-  ) {
-
-    def unapply(hit: SearchHit): Option[Document[String]] = {
-      if (hit.`type` != `type`) None
-      else {
-        val source = hit.sourceAsMap
-        for {
-          id <- source.get(idField)
-          content <- source.get(contentField)
-        } yield Document(
-          id = UUID.fromString(id.toString),
-          raw = content.toString,
-          content = content.toString
-        )
-      }
-    }
+    asJobPosting
   }
+
+  private def toDoc(jobPosting: JobPosting): Document[String] = Document(
+    id = jobPosting.id,
+    raw = jobPosting.description,
+    content = jobPosting.description
+  )
+
+  private def success[T]: PartialFunction[Try[T], T] = { case Success(t) => t }
+  private def some[T]: PartialFunction[Option[T], T] = { case Some(t) => t }
 
 }

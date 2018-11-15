@@ -1,7 +1,64 @@
 @application.layout.main(title = "Main") {
     <h2>About</h2>
-    <i>Employability</i> is a research project exploring how universities are preparing students for the workforce.
-    Its name comes from the notion of how <i>employable</i> a student is upon graduation.
 
-    <h3>Employability</h3>
+    <p>
+        <i>Employability</i> is a research project exploring how universities are preparing students for the workforce.
+        Its name comes from the notion of how <i>employable</i> a student is upon graduation.
+    </p>
+
+    <h3>Background</h3>
+
+    <h4>Employability</h4>
+
+    <p>
+        The <em>employability</em> of a university graduate refers generally to the ability of that graduate to obtain,
+        maintain, and perform in a career setting. Yorke specifically defines employability as a set of "skills,
+        understandings, and personal attributes" that influence this ability. Others in the field concur with this
+        definition, emphasizing that any holistic definition of employability must include academic or domain skills and
+        expertise, transferrable skills, employer expectations and needs, graduate personality characteristics, and even
+        external societal constraints.
+    </p>
+
+    <h4>Topic Modeling</h4>
+
+    <p>
+        The main contribution of this work is a mechanism for the automated measure of potential employability,
+        specifically the automated measure of how closely concepts taught at the postsecondary level match expected
+        domain skills in the workforce. In order to compute this measure, we must first be able to automatically
+        identify curricular concepts and job skills. Machine Learning (ML) and Natural Language Processing (NLP) present
+        a class of methods which satisfy this need. ML is an interdisciplinary field of artificial intelligence and
+        statistics which provides methods for pattern detection and approximation of unknown functions in myriad
+        domains. NLP seeks to parse and understand natural human language in an automated fashion. Topic modeling is a
+        class of algorithms in the intersection of these two fields which seeks to identify the topics within a corpus.
+        The specific definition of a topic is highly dependent on the method used, but generally refers to a concept or
+        idea present within a body of text.
+    </p>
+
+    <p>
+        Latent topic models approximate topics based on underlying (latent) textual patterns. The topics are not
+        defined explicitly anywhere in the text. Latent dirichlet allocation (LDA) is a topic modeling method capable
+        of identifying such a latent model. In LDA topics are frequency distributions of terms over the vocabulary
+        of a body of text. For example, from a collection of scientific articles about frogs, a hypothetical latent topic
+        might include such terms as rainforest, amphibious, and habitat with varying associated frequency. It is
+        possible to validate the performance of LDA in an automated fashion when trained on a labeled set of
+        data. Extensions of LDA, such as supervised LDA (sLDA), provide a mechanism to tie the latent topics
+        back to explicit labels within the data set.
+    </p>
+
+    <h3>Data Sources</h3>
+
+    <h4>Job Postings</h4>
+
+    <ul>
+        <li><a href="https://data.world/promptcloud/30000-job-postings-from-seek-australia">SEEK Australia</a></li>
+        <li><a href="https://data.world/promptcloud/50000-job-board-records-from-reed-uk">Reed UK</a></li>
+        <li><a href="https://data.world/promptcloud/us-jobs-on-dice-com">Dice.com US</a></li>
+    </ul>
+
+    <h4>Course Descriptions</h4>
+
+    <ul>
+        <li>TBD</li>
+    </ul>
+
 }

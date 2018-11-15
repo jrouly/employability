@@ -30,4 +30,6 @@ trait EmployabilityApp {
 
   val configuration: Configuration = Configuration.default
 
+  protected lazy val parallelism: Int = Runtime.getRuntime.availableProcessors()
+
 }

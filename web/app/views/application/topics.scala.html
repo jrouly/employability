@@ -12,6 +12,13 @@
         given words are estimated to show up in documents modeled under this topic.
     </p>
 
+    <p>
+        These topics are inferred in an entirely unsupervised fashion. This means that no manual labeling, no curation,
+        no human interaction at all has occurred. The words are <strong>stemmed</strong>, meaning word endings have
+        been removed and tokens have been reduced to their <em>stem</em> or root word. This is why they may appear
+        strange.
+    </p>
+
     @for(topic <- topics) {
         @application.components.topic(topic)
     }

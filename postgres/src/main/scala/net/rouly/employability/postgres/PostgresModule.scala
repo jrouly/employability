@@ -22,6 +22,11 @@ class PostgresModule(
   lazy val mapping: PostgresMapping = wire[PostgresMapping]
   lazy val streams: PostgresStreams = wire[PostgresStreams]
 
+  def insert[T: RecordInsertion](t: T): Future[Unit] = {
+    val insert = implicitly[RecordInsertion[T]]
+    session.db.run(insert(t)).map(_ => ())
+  }
+
   def init(): Future[Unit] = for {
     _ <- schema.documents.dropIfExists
     _ <- schema.documents.createIfNotExists

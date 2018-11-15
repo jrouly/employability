@@ -6,11 +6,9 @@
         <title>Employability - @title</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
     </head>
-    <maincontent>
-        <div id="container">
-            @application.layout.banner(pagetitle = title)
-            @application.layout.nav()
-            @application.layout.maincontent(body)
-        </div>
-    </maincontent>
+    <div id="container">
+        @application.layout.banner(pagetitle = title)
+        @application.layout.nav()
+        @application.layout.maincontent(body)
+    </div>
 </html>

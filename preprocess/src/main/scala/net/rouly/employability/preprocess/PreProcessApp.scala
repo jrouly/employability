@@ -7,7 +7,7 @@ import net.rouly.employability.EmployabilityApp
 import net.rouly.employability.elasticsearch.ElasticsearchModule
 import net.rouly.employability.models.Document
 import net.rouly.employability.postgres._
-import net.rouly.employability.preprocess.opennlp.{AnalysisOpenNlpModels, OpenNlpModule}
+import net.rouly.employability.preprocess.opennlp.OpenNlpModule
 import net.rouly.employability.preprocess.transform.{DocumentTransformFlow, PreProcessFlow}
 import net.rouly.employability.streams.BookKeepingWireTap
 import play.api.libs.ws.StandaloneWSClient
@@ -28,28 +28,27 @@ object PreProcessApp
   lazy val opennlp: OpenNlpModule = wire[OpenNlpModule]
 
   // Blocking IO: Retrieve online binaries of opennlp models.
-  val openNlpModels: AnalysisOpenNlpModels = new AnalysisOpenNlpModels(
-    placeNameModel = Await.result(opennlp.reader.getModel("en-ner-location.bin"), 2.minutes),
-    tokenizerModel = Await.result(opennlp.reader.getModel("en-token.bin"), 2.minutes)
-  )
+  val openNlpModels = opennlp.download()
 
   // Set up DB schema.
   Await.result(postgres.init(), 5.seconds)
 
   lazy val graph = {
     import postgres.mapping._
+    val sink = Sink.foreachAsync(parallelism)(postgres.insert[Document[String]])
 
     elasticsearch.streams
       .source(elasticsearch.config.jobPostingIndex)
+      .async
       .wireTap(BookKeepingWireTap("elasticsearch"))
       .via(DocumentTransformFlow())
       .via(PreProcessFlow(openNlpModels))
-      .alsoTo(postgres.streams.sink[Document[String]])
-      .runWith(Sink.ignore)
+      .wireTap(BookKeepingWireTap("preprocessed"))
+      .runWith(sink)
   }
 
   logger.info("Start preprocessing.")
-  Await.result(graph, 5.minutes)
+  Await.result(graph, 10.minutes)
   logger.info("Done.")
 
   Await.result(actorSystem.terminate(), 5.minutes)

@@ -18,9 +18,9 @@ class WSClientOpenNlpModelReader(
 ) extends OpenNlpModelReader {
   private val client = wire[OpenNlpModelClient]
 
-  override def getModel(name: String): Future[OpenNlpModel] =
+  override def getModel(name: String, baseUrl: String): Future[OpenNlpModel] =
     client
-      .requestModel(name)
+      .requestModel(baseUrl, name)
       .map(_.bodyAsSource.runWith(StreamConverters.asInputStream()))
       .map(stream => new OpenNlpModel(name, stream))
 

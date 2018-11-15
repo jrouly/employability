@@ -6,6 +6,6 @@ import scala.concurrent.Future
 
 trait OpenNlpModelReader {
 
-  def getModel(name: String): Future[OpenNlpModel]
+  def getModel(name: String, baseUrl: String): Future[OpenNlpModel]
 
 }

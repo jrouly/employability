@@ -22,7 +22,8 @@ lazy val core = project
     Logging.logback,
     Logging.scalaLogging,
     Macwire.macros,
-    Macwire.util
+    Macwire.util,
+    Play26.json
   ))
 
 lazy val elasticsearch = project

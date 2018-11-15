@@ -26,7 +26,7 @@ object AnalysisApp
     .getOrCreate()
 
   logger.info("Start LDA.")
-  Await.result(lda.execute(), 5.minutes)
+  Await.result(lda.execute(), 10.minutes)
   logger.info("Done.")
 
   Await.result(actorSystem.terminate(), 5.minutes)

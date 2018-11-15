@@ -2,6 +2,8 @@ package net.rouly.employability.models
 
 import java.util.UUID
 
+import play.api.libs.json.{Format, Json}
+
 /**
   * @param id unique identifier
   * @param dataSet which data set the data came from
@@ -16,3 +18,7 @@ case class JobPosting(
   title: Option[String] = None,
   skills: Option[String] = None
 )
+
+object JobPosting {
+  implicit val jobPostingFormat: Format[JobPosting] = Json.format[JobPosting]
+}

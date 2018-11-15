@@ -24,7 +24,7 @@ class CachingOpenNlpModelReader(
   private val cachePath = configuration.get("opennlp.model.cache", "data/opennlp/models")
   private val cache = new Cache(cachePath)
 
-  override def getModel(name: String): Future[OpenNlpModel] = {
+  override def getModel(name: String, baseUrl: String): Future[OpenNlpModel] = {
     cache.get(name) match {
       // If the cached stream is present, return it.
       case Some(stream) =>
@@ -35,7 +35,7 @@ class CachingOpenNlpModelReader(
       case None =>
         logger.info(s"Cache miss: [$name]")
         underlying
-          .getModel(name)
+          .getModel(name, baseUrl)
           .andThen { case Success(stream) => cache.put(stream) }
     }
   }

@@ -25,6 +25,7 @@ class LdaProcessor(
       .option("dbtable", config.jdbcTable)
       .option("user", config.jdbcUser)
       .option("password", config.jdbcPassword)
+      .option("driver", "org.postgresql.Driver")
       .load()
   }
 
