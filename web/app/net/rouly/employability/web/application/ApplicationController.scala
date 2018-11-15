@@ -24,7 +24,7 @@ class ApplicationController(
   def topicById(id: String) = Action.async {
     for {
       topic <- topicService.topicSource.filter(_.id == id).runWith(Sink.head)
-    } yield Ok(application.topic(topic))
+    } yield Ok(application.components.topic(topic))
   }
 
 }
