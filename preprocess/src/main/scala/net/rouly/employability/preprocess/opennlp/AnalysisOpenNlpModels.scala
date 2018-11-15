@@ -1,7 +1,9 @@
 package net.rouly.employability.preprocess.opennlp
 
+import opennlp.tools.langdetect.LanguageDetectorModel
+import opennlp.tools.tokenize.TokenizerModel
+
 class AnalysisOpenNlpModels(
-  val languageDetector: OpenNlpModel,
-  val placeNameModel: OpenNlpModel,
-  val tokenizerModel: OpenNlpModel
+  val languageDetector: LanguageDetectorModel,
+  val tokenizerModel: TokenizerModel
 )

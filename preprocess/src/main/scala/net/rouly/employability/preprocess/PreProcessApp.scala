@@ -28,7 +28,7 @@ object PreProcessApp
   lazy val opennlp: OpenNlpModule = wire[OpenNlpModule]
 
   // Blocking IO: Retrieve online binaries of opennlp models.
-  val openNlpModels = opennlp.download()
+  val openNlpModels = Await.result(opennlp.download, 2.minutes)
 
   // Set up DB schema.
   Await.result(postgres.init(), 5.seconds)
@@ -44,7 +44,7 @@ object PreProcessApp
       .via(DocumentTransformFlow())
       .via(PreProcessFlow(openNlpModels))
       .wireTap(BookKeepingWireTap("preprocessed"))
-      .runWith(sink)
+      .runWith(sink.async)
   }
 
   logger.info("Start preprocessing.")

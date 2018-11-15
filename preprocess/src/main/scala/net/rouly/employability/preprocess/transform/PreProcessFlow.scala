@@ -6,7 +6,7 @@ import net.rouly.employability.models.Document
 import net.rouly.employability.preprocess.opennlp.AnalysisOpenNlpModels
 import net.rouly.employability.preprocess.transform.preprocess.FilterEnglish._
 import net.rouly.employability.preprocess.transform.preprocess.StripPunctuation
-import opennlp.tools.langdetect.{LanguageDetector, LanguageDetectorME, LanguageDetectorModel}
+import opennlp.tools.langdetect.{LanguageDetector, LanguageDetectorME}
 import opennlp.tools.stemmer.{PorterStemmer, Stemmer}
 import opennlp.tools.tokenize._
 import opennlp.tools.util.normalizer._
@@ -33,12 +33,9 @@ object PreProcessFlow {
   }
 
   def apply(models: AnalysisOpenNlpModels): Flow[Document[String], Document[String], NotUsed] = {
-    val tokenizer = new TokenizerME(new TokenizerModel(models.tokenizerModel.stream))
-    val languageDetector = new LanguageDetectorME(new LanguageDetectorModel(models.languageDetector.stream))
-    val normalizer = new AggregateCharSequenceNormalizer(
-      new NumberCharSequenceNormalizer,
-      new ShrinkCharSequenceNormalizer
-    )
+    val tokenizer = new TokenizerME(models.tokenizerModel)
+    val languageDetector = new LanguageDetectorME(models.languageDetector)
+    val normalizer = new ShrinkCharSequenceNormalizer
     val stemmer = new PorterStemmer
     apply(tokenizer, languageDetector, normalizer, stemmer)
   }
