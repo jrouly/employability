@@ -17,6 +17,7 @@ services:
     environment:
       - discovery.type=single-node
       - cluster.name=employability
+      - path.repo=/usr/share/elasticsearch/backups
     volumes:
       - "data-elasticsearch:/usr/share/elasticsearch/data"
 
