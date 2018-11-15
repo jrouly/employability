@@ -44,7 +44,7 @@ object PreProcessApp
       .via(DocumentTransformFlow())
       .via(PreProcessFlow(openNlpModels))
       .wireTap(BookKeepingWireTap("preprocessed"))
-      .runWith(sink.async)
+      .runWith(sink)
   }
 
   logger.info("Start preprocessing.")
