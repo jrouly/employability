@@ -22,9 +22,9 @@
         <li><a href="#pre-processing">Pre Processing</a></li>
         <ol>
             <li><a href="#language-detection">Language Detection</a></li>
-            <li><a href="#punctuation-removal">Punctuation Removal</a></li>
             <li><a href="#lowercasing">Lowercasing</a></li>
             <li><a href="#tokenization">Tokenization</a></li>
+            <li><a href="#stop-word">Stop Word Removal</a></li>
             <li><a href="#stemming">Stemming</a></li>
         </ol>
     </ol>
@@ -105,14 +105,6 @@
         Any document that is not categorized primarily as English with a confidence of at least 90% is immediately removed.
     </p>
 
-    <h3 id="punctuation-removal">Punctuation Removal</h3>
-
-    <p>
-        Free form text on the Internet comes in a wide variety of formats. Most of the formatting structure is removed
-        during ingestion, but stray punctuation frequently remains. Periods, commas, numbers, and any other non-word
-        characters are replaced with whitespace.
-    </p>
-
     <h3 id="lowercasing">Lowercasing</h3>
 
     <p>Every document is consistently lowercased to avoid case sensitive topic inference.</p>
@@ -122,6 +114,16 @@
     <p>
         Text is tokenized according to a statistical model provided by <a href="https://opennlp.apache.org/">Apache OpenNLP</a>
         trained on an English language corpus. Tokens of length three or less are dropped to reduce noise.
+    </p>
+
+    <h3 id="stop-word">Tokenization</h3>
+
+    <p>
+        <em>Stop words</em> are words with little to not unique semantic value. They are words that glue together the
+        meatier, more meaningful words in a language. For example, "do", "it", and "and" are all English stop words.
+        Indeed, most conjunctions, pronouns, and prepositions are considered stop words. Using a list of English
+        stop words from the <a href="https://www.nltk.org/">Natural Language Toolkit</a>, all tokens identified as
+        stop words are removed to uniformly increase the semantic content of tokens.
     </p>
 
     <h3 id="stemming">Stemming</h3>
