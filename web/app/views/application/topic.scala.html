@@ -1,0 +1,18 @@
+@import net.rouly.employability.models.Topic
+
+@import net.rouly.employability.models.ModeledDocument
+@(topic: Topic, documents: List[ModeledDocument])
+
+@application.layout.main(title = s"Topic ${topic.id}") {
+
+    <h1>Topic @topic.id</h1>
+
+    @application.components.topic(topic)
+
+    <h3>Matching documents</h3>
+    <p>A selection of the most relevant (highest weight) documents follows.</p>
+
+    @for(document <- documents) {
+        @application.components.document(document)
+    }
+}

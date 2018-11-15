@@ -23,14 +23,29 @@ class ApplicationController(
 
   def topicById(id: String) = Action.async {
     for {
-      topic <- service.topicSource.filter(_.id == id).runWith(Sink.head)
-    } yield Ok(application.components.topic(topic))
+      topic <- service.topicSource.filter(_.id == id).runWith(Sink.headOption)
+      docs <- service.documentsByTopic(id).take(10).runWith(Sink.collection)
+    } yield {
+      topic.render(application.topic(_, docs.toList))
+    }
   }
 
   def docsByTopicId(id: String) = Action.async {
     for {
-      topic <- service.documentsByTopic(id).take(10).runWith(Sink.collection)
-    } yield Ok(topic.toString)
+      docs <- service.documentsByTopic(id).take(10).runWith(Sink.collection)
+    } yield Ok(docs.toString)
+  }
+
+  def allDocuments = Action.async {
+    for {
+      docs <- service.documentSource.take(5).runWith(Sink.collection)
+    } yield Ok(application.documents(docs.toList))
+  }
+
+  def docById(id: String) = Action.async {
+    for {
+      doc <- service.documentSource.filter(_.id == id).runWith(Sink.headOption)
+    } yield doc.render(application.document.apply)
   }
 
 }

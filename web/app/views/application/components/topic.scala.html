@@ -1,9 +1,10 @@
 @import net.rouly.employability.models.Topic
+@import net.rouly.employability.web.application.routes
 
 @(topic: Topic)
 
-<table class="topic">
-    <caption>id = @topic.id</caption>
+<table>
+    <caption><a href="@routes.ApplicationController.topicById(topic.id)">topic @topic.id</a></caption>
     <thead>
         <tr>
             <td>word</td>

@@ -1,5 +1,36 @@
-@import net.rouly.employability.models.Document
+@import net.rouly.employability.models.ModeledDocument
+@import net.rouly.employability.web.application.routes
 
-@(document: Document[String])
+@(document: ModeledDocument)
 
-@document.content
+<div>
+
+    <h2>Id</h2>
+
+    <h3><a href="@routes.ApplicationController.docById(document.id)">@document.id</a></h3>
+
+    <h2>Original Text</h2>
+
+    <blockquote>@document.originalText.take(1000) ... </blockquote>
+
+    <h2>Inferred Topics</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <td>topic</td>
+                <td>topic words</td>
+                <td>weight</td>
+            </tr>
+        </thead>
+        <tbody>
+        @for(wt <- document.weightedTopics.sortBy(_.weight).reverse) {
+            <tr>
+                <td><a href="@routes.ApplicationController.topicById(wt.topic.id)">@wt.topic.id</a></td>
+                <td><a href="@routes.ApplicationController.topicById(wt.topic.id)">@wt.topic.wordFrequency.toList.sortBy(_._2).reverse.map(_._1).mkString(", ")</a></td>
+                <td>@("%.8f".format(wt.weight))</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

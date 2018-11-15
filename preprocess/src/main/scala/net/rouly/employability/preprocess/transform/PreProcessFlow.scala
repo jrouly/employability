@@ -6,18 +6,19 @@ import net.rouly.employability.models.Document
 import net.rouly.employability.preprocess.opennlp.AnalysisOpenNlpModels
 import net.rouly.employability.preprocess.transform.preprocess.FilterEnglish._
 import net.rouly.employability.preprocess.transform.preprocess.StripPunctuation
-import opennlp.tools.langdetect.{LanguageDetector, LanguageDetectorME}
-import opennlp.tools.stemmer.{PorterStemmer, Stemmer}
+import opennlp.tools.langdetect.LanguageDetectorME
+import opennlp.tools.stemmer.PorterStemmer
 import opennlp.tools.tokenize._
 import opennlp.tools.util.normalizer._
+
+
 object PreProcessFlow {
 
-  def apply(
-    tokenizer: Tokenizer,
-    languageDetector: LanguageDetector,
-    normalizer: CharSequenceNormalizer,
-    stemmer: Stemmer
-  ): Flow[Document[String], Document[String], NotUsed] = {
+  def apply(models: AnalysisOpenNlpModels): Flow[Document[String], Document[String], NotUsed] = {
+    val tokenizer = new TokenizerME(models.tokenizerModel)
+    val languageDetector = new LanguageDetectorME(models.languageDetector)
+    val normalizer = new ShrinkCharSequenceNormalizer
+    val stemmer = new PorterStemmer
 
     Flow[Document[String]]
       .filter(languageDetector.isEnglish) // only allow English sentences
@@ -29,15 +30,6 @@ object PreProcessFlow {
       .map(lift(_.map(stemmer.stem))) // reduce tokens to stems
       .map(lift(_.toSeq.map(_.toString))) // reshape as Seq[String]
       .map(lift(_.mkString("|"))) // concatenate tokens with a known delimiter
-
-  }
-
-  def apply(models: AnalysisOpenNlpModels): Flow[Document[String], Document[String], NotUsed] = {
-    val tokenizer = new TokenizerME(models.tokenizerModel)
-    val languageDetector = new LanguageDetectorME(models.languageDetector)
-    val normalizer = new ShrinkCharSequenceNormalizer
-    val stemmer = new PorterStemmer
-    apply(tokenizer, languageDetector, normalizer, stemmer)
   }
 
   /**

@@ -1,12 +1,13 @@
 package net.rouly.employability.analysis.lda
 
 import akka.actor.ActorSystem
-import net.rouly.employability.models.{ModeledDocument, Topic}
+import net.rouly.employability.models.{ModeledDocument, Topic, WeightedTopic}
 import org.apache.spark.ml.clustering.{LDA, LDAModel}
 import org.apache.spark.ml.feature._
 import org.apache.spark.ml.linalg
 import org.apache.spark.sql._
 
+import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
 class LdaProcessor(
@@ -89,18 +90,18 @@ class LdaProcessor(
   /**
     * Associate modeled documents with their topic distributions.
     */
-  private def getModeledDocuments(df: DataFrame) = {
+  private def getModeledDocuments(df: DataFrame, topics: Vector[Topic]) = {
     df.map {
       case Row(id: String, raw: String, _, _, filtered, _, _, distribution: linalg.Vector) =>
         ModeledDocument(
           id = id,
           originalText = raw,
           tokens = filtered.asInstanceOf[Seq[String]],
-          topicWeight = distribution
+          weightedTopics = distribution
             .toArray
             .zipWithIndex
-            .map { case (weight, topic) => topic.toString -> weight }
-            .toMap
+            .map { case (weight, topic) => WeightedTopic(topics(topic), weight) }
+            .toList
         )
       case _ =>
         throw new Exception("Unable to parse modeled topics.")
@@ -126,8 +127,8 @@ class LdaProcessor(
       val modeled = model.transform(df)
 
       // Extract results.
-      val topics = getTopics(model, vocabulary)
-      val modeledDocuments = getModeledDocuments(modeled)
+      val topics = getTopics(model, vocabulary).toLocalIterator().asScala.toVector
+      val modeledDocuments = getModeledDocuments(modeled, topics)
 
       // Emit results.
       topics.foreach(topic => LdaQueues.emit(topic))

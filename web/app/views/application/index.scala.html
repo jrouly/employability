@@ -1,14 +1,37 @@
 @application.layout.main(title = "Main") {
-    <h2>About</h2>
+    <h1>About</h1>
 
     <p>
         <i>Employability</i> is a research project exploring how universities are preparing students for the workforce.
         Its name comes from the notion of how <i>employable</i> a student is upon graduation.
     </p>
 
-    <h3>Background</h3>
+    <h2>Contents</h2>
 
-    <h4>Employability</h4>
+    <ol>
+        <li><a href="#background">Background</a></li>
+        <ol>
+            <li><a href="#employability">Employability</a></li>
+            <li><a href="#topic-modeling">Topic Modeling</a></li>
+        </ol>
+        <li><a href="#data-sources">Data Sources</a></li>
+        <ol>
+            <li><a href="#job-postings">Job Postings</a></li>
+            <li><a href="#course-descriptions">Course Descriptions</a></li>
+        </ol>
+        <li><a href="#pre-processing">Pre Processing</a></li>
+        <ol>
+            <li><a href="#language-detection">Language Detection</a></li>
+            <li><a href="#punctuation-removal">Punctuation Removal</a></li>
+            <li><a href="#lowercasing">Lowercasing</a></li>
+            <li><a href="#tokenization">Tokenization</a></li>
+            <li><a href="#stemming">Stemming</a></li>
+        </ol>
+    </ol>
+
+    <h2 id="background">Background</h2>
+
+    <h3 id="employability">Employability</h3>
 
     <p>
         The <em>employability</em> of a university graduate refers generally to the ability of that graduate to obtain,
@@ -19,7 +42,7 @@
         external societal constraints.
     </p>
 
-    <h4>Topic Modeling</h4>
+    <h3 id="topic-modeling">Topic Modeling</h3>
 
     <p>
         The main contribution of this work is a mechanism for the automated measure of potential employability,
@@ -45,9 +68,9 @@
         back to explicit labels within the data set.
     </p>
 
-    <h3>Data Sources</h3>
+    <h2 id="data-sources">Data Sources</h2>
 
-    <h4>Job Postings</h4>
+    <h3 id="job-postings">Job Postings</h3>
 
     <ul>
         <li><a href="https://data.world/promptcloud/30000-job-postings-from-seek-australia">SEEK Australia</a></li>
@@ -55,13 +78,13 @@
         <li><a href="https://data.world/promptcloud/us-jobs-on-dice-com">Dice.com US</a></li>
     </ul>
 
-    <h4>Course Descriptions</h4>
+    <h3 id="course-descriptions">Course Descriptions</h3>
 
     <ul>
         <li>TBD</li>
     </ul>
 
-    <h3>Pre Processing</h3>
+    <h2 id="pre-processing">Pre Processing</h2>
 
     <p>
         Human language text, specifically text sourced from the Internet, is notoriously noisy and inconsistently
@@ -74,7 +97,7 @@
         The steps taken in pre-processing are as follows, in order.
     </p>
 
-    <h4>Language Detection</h4>
+    <h3 id="language-detection">Language Detection</h3>
 
     <p>
         Documents that are not written in English are immediately removed from the dataset. Language recognition is
@@ -82,7 +105,7 @@
         Any document that is not categorized primarily as English with a confidence of at least 90% is immediately removed.
     </p>
 
-    <h4>Punctuation Removal</h4>
+    <h3 id="punctuation-removal">Punctuation Removal</h3>
 
     <p>
         Free form text on the Internet comes in a wide variety of formats. Most of the formatting structure is removed
@@ -90,18 +113,18 @@
         characters are replaced with whitespace.
     </p>
 
-    <h4>Lowercasing</h4>
+    <h3 id="lowercasing">Lowercasing</h3>
 
     <p>Every document is consistently lowercased to avoid case sensitive topic inference.</p>
 
-    <h4>Tokenization</h4>
+    <h3 id="tokenization">Tokenization</h3>
 
     <p>
         Text is tokenized according to a statistical model provided by <a href="https://opennlp.apache.org/">Apache OpenNLP</a>
         trained on an English language corpus. Tokens of length three or less are dropped to reduce noise.
     </p>
 
-    <h4>Stemming</h4>
+    <h3 id="stemming">Stemming</h3>
 
     <p>
         A standard Porter stemmer, again provided by <a href="https://opennlp.apache.org/">Apache OpenNLP</a>, is

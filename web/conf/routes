@@ -9,4 +9,6 @@ GET     /                                       net.rouly.employability.web.appl
 GET     /topics                                 net.rouly.employability.web.application.ApplicationController.allTopics
 GET     /topics/:id                             net.rouly.employability.web.application.ApplicationController.topicById(id: String)
 GET     /topics/:id/docs                        net.rouly.employability.web.application.ApplicationController.docsByTopicId(id: String)
+GET     /docs                                   net.rouly.employability.web.application.ApplicationController.allDocuments
+GET     /docs/:id                               net.rouly.employability.web.application.ApplicationController.docById(id: String)
 GET     /assets/*file                           controllers.Assets.at(file)

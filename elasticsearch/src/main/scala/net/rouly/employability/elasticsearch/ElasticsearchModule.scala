@@ -16,6 +16,18 @@ class ElasticsearchModule(configuration: Configuration)(implicit actorSystem: Ac
   lazy val mapping: ElasticsearchMapping = wire[ElasticsearchMapping]
   lazy val streams: ElasticsearchStreams = wire[ElasticsearchStreams]
 
+  def init() = {
+    import com.sksamuel.elastic4s.http.ElasticDsl._
+
+    client.execute {
+      createIndex(config.modeledDocumentIndex).mappings(ElasticDsl.mapping("doc").fields(
+        textField("id"),
+        textField("originalText"),
+        nestedField("weightedTopics")
+      ))
+    }
+  }
+
   def close(): Unit = {
     client.close()
   }

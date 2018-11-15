@@ -5,7 +5,7 @@ import akka.stream.scaladsl.Source
 import com.sksamuel.elastic4s.http.ElasticDsl._
 import com.sksamuel.elastic4s.playjson._
 import net.rouly.employability.elasticsearch.ElasticsearchModule
-import net.rouly.employability.models.Topic
+import net.rouly.employability.models.{ModeledDocument, Topic}
 
 import scala.concurrent.duration._
 
@@ -20,16 +20,26 @@ class ElasticsearchService(elasticsearch: ElasticsearchModule) {
       .map(_.to[Topic])
   }
 
-  def documentsByTopic(topicId: String): Source[ModeledDocumentDisplay, NotUsed] = {
-    val field = s"topicWeight.$topicId"
+  def documentsByTopic(topicId: String): Source[ModeledDocument, NotUsed] = {
     val searchRequest = search(elasticsearch.config.modeledDocumentIndex)
-      .query(rangeQuery(field).gt(0.01))
-      .sortByFieldDesc(field)
+      .query(
+        nestedQuery("weightedTopics", must(
+          termQuery("weightedTopics.topic.id", topicId),
+          rangeQuery("weightedTopics.weight").gt(0.1)
+        ))
+      )
+      .sortByFieldDesc("weightedTopics.weight")
       .scroll(5.seconds)
 
     elasticsearch.streams
       .source(searchRequest)
-      .map(_.to[ModeledDocumentDisplay])
+      .map(_.to[ModeledDocument])
+  }
+
+  def documentSource: Source[ModeledDocument, NotUsed] = {
+    elasticsearch.streams
+      .source(elasticsearch.config.modeledDocumentIndex)
+      .map(_.to[ModeledDocument])
   }
 
 }

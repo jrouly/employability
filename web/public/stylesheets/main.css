@@ -7,7 +7,7 @@
 @import "layout/maincontent.css";
 @import "layout/nav.css";
 
-@import "components/topics.css";
+@import "components/table.css";
 
 body { font-size: .9em; }
 p { text-align: justify; }
