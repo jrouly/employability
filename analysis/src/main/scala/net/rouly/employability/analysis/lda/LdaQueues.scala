@@ -1,6 +1,6 @@
 package net.rouly.employability.analysis.lda
 
-import akka.stream.scaladsl.{Source, SourceQueueWithComplete}
+import akka.stream.scaladsl.{Keep, Source, SourceQueueWithComplete}
 import akka.stream.{Materializer, OverflowStrategy}
 import net.rouly.common.config.Configuration
 import net.rouly.employability.elasticsearch.ElasticsearchModule
@@ -17,12 +17,14 @@ class LdaQueues(
 
   lazy val topics: SourceQueueWithComplete[Topic] = {
     Source.queue[Topic](queueBandwidth, OverflowStrategy.backpressure)
+      .watchTermination()(Keep.left)
       .to(elasticsearch.streams.sink[Topic])
       .run()
   }
 
   lazy val documents: SourceQueueWithComplete[ModeledDocument] = {
     Source.queue[ModeledDocument](queueBandwidth, OverflowStrategy.backpressure)
+      .watchTermination()(Keep.left)
       .to(elasticsearch.streams.sink[ModeledDocument])
       .run()
   }
