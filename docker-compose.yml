@@ -13,7 +13,7 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
     container_name: employability-elasticsearch
-    ports: ["9200:9200", "9300:9300"]
+    expose: ["9200", "9300"]
     environment:
       - discovery.type=single-node
       - cluster.name=employability
@@ -24,7 +24,7 @@ services:
   postgres:
     image: postgres:10
     container_name: employability-postgres
-    ports: ["5432:5432"]
+    expose: ["5432"]
     environment:
       POSTGRES_USER: employability
       POSTGRES_PASSWORD: employability
