@@ -2,15 +2,23 @@ import Dependencies._
 
 name := "employability"
 
+lazy val noPublish = Seq(
+  publishArtifact := false,
+  publishLocal := {},
+  publish := {}
+)
+
 lazy val commonSettings = Seq(
-  resolvers += Resolver.bintrayRepo("jrouly", "sbt-release"),
   licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
   organization := "net.rouly",
   scalaVersion := "2.11.12",
+  version := "0.2",
   name := s"employability-${name.value}"
 ) ++ Bintray.settings
 
 lazy val root = (project in file("."))
+  .settings(commonSettings)
+  .settings(noPublish)
   .aggregate(core, elasticsearch, postgres, ingest, preprocess, analysis, web)
 
 lazy val core = project
@@ -88,3 +96,5 @@ lazy val web = project
   ))
 
 fork := true
+
+resolvers += Resolver.bintrayRepo("jrouly", "sbt-release")
