@@ -19,7 +19,16 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file("."))
   .settings(commonSettings)
   .settings(noPublish)
-  .aggregate(core, elasticsearch, postgres, ingest, preprocess, analysis, web)
+  .aggregate(
+    core,
+    elasticsearch,
+    postgres,
+    scraping,
+    ingest,
+    preprocess,
+    analysis,
+    web
+  )
 
 lazy val core = project
   .disablePlugins(BackgroundRunPlugin)
@@ -53,6 +62,15 @@ lazy val postgres = project
     Postgres.postgres,
     Postgres.slick,
     Postgres.slickPostgres
+  ))
+
+lazy val scraping = project
+  .dependsOn(core)
+  .settings(commonSettings)
+  .settings(libraryDependencies ++= Seq(
+    Akka.actors,
+    Akka.streams,
+    JSoup.jsoup
   ))
 
 lazy val ingest = project

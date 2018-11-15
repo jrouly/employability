@@ -8,6 +8,7 @@ object Dependencies {
   object Akka {
     private val version = "2.5.17"
 
+    lazy val actors = "com.typesafe.akka" %% "akka-actor" % version
     lazy val streams = "com.typesafe.akka" %% "akka-stream" % version
   }
 
@@ -29,6 +30,12 @@ object Dependencies {
     lazy val elastic4sHttp = "com.sksamuel.elastic4s" %% "elastic4s-http" % version
     lazy val elastic4sStreams = "com.sksamuel.elastic4s" %% "elastic4s-http-streams" % version
     lazy val elastic4sPlayJson = "com.sksamuel.elastic4s" %% "elastic4s-play-json" % version
+  }
+
+  object JSoup {
+    private val version = "1.11.3"
+
+    lazy val jsoup = "org.jsoup" % "jsoup" % version
   }
 
   object Logging {
