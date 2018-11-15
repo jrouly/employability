@@ -17,7 +17,8 @@ services:
     environment:
       - discovery.type=single-node
       - cluster.name=employability
-      - path.repo=/usr/share/elasticsearch/backups
+      - path.repo=/usr/share/elasticsearch/snapshots/
+      - repositories.url.allowed_urls=http://employability.rouly.net/snapshots/*
     volumes:
       - "data-elasticsearch:/usr/share/elasticsearch/data"
 
