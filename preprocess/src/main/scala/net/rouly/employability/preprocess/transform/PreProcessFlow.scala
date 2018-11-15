@@ -11,7 +11,6 @@ import opennlp.tools.stemmer.PorterStemmer
 import opennlp.tools.tokenize._
 import opennlp.tools.util.normalizer._
 
-
 object PreProcessFlow {
 
   def apply(models: AnalysisOpenNlpModels): Flow[Document[String], Document[String], NotUsed] = {

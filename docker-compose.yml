@@ -2,6 +2,13 @@ version: '3'
 
 services:
 
+  web:
+    image: jrouly/employability-web:latest
+    container_name: employability-web
+    ports: ["9000:9000"]
+    environment:
+      - EMPLOYABILITY_APP_SECRET
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
     container_name: employability-elasticsearch
