@@ -108,6 +108,7 @@ lazy val web = project
   .settings(dockerRepository := Some("jrouly"))
   .settings(dockerUpdateLatest := true)
   .settings(libraryDependencies ++= Seq(
+    Play26.ehcache,
     Play26.json,
     Play26.test,
     Play26.server,

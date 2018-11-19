@@ -53,6 +53,7 @@ object Dependencies {
   object Play26 {
     private val version = "2.6.9"
 
+    lazy val ehcache = "com.typesafe.play" %% "play-ehcache" % version
     lazy val json = "com.typesafe.play" %% "play-json" % version
     lazy val test = "com.typesafe.play" %% "play-test" % version % "test"
     lazy val server = "com.typesafe.play" %% "play-server" % version
