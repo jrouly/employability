@@ -86,11 +86,19 @@ Raw data is accepted from the following data providers:
 "net.rouly" % "employability-ingest" % "x.x.x"
 ```
 
+### `preprocess`
+
+Entry point application to pre-process and clean ingested data.
+Cleaned and prepared data is exported to Postgres.
+
+```scala
+"net.rouly" % "employability-ingest" % "x.x.x"
+```
+
 ### `analysis`
 
-Entry point application to read raw data from Elasticsearch and execute the primary topic modeling steps.
-Data is pre-processed in this step as well.
-Topics are output to Postgres.
+Entry point application to read processed data from Postgres and execute the primary topic modeling steps.
+Topics are output to Elasticsearch.
 
 ```scala
 "net.rouly" % "employability-analysis" % "x.x.x"
