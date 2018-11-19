@@ -20,7 +20,7 @@ object AnalysisApp
   lazy val postgres: PostgresModule = wire[PostgresModule]
   lazy val lda: LdaModule = wire[LdaModule]
 
-  Await.result(elasticsearch.init(), 5.seconds)
+  elasticsearch.init()
 
   lazy val spark = SparkSession
     .builder()

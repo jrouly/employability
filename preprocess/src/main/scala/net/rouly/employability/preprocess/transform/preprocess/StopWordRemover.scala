@@ -2,13 +2,10 @@ package net.rouly.employability.preprocess.transform.preprocess
 
 import scala.io.Source
 
-class StopWordRemover {
-
-  def isStopWord(token: String): Boolean = StopWordRemover.StopWords.contains(token)
-
-}
-
 object StopWordRemover {
+
+  def isStopWord(token: String): Boolean = StopWords.contains(token)
+
   private final val StopWords: Set[String] = loadStopWords()
 
   private def loadStopWords(): Set[String] = {

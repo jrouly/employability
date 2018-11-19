@@ -11,7 +11,7 @@ class LdaQueues(
   elasticsearch: ElasticsearchModule
 )(implicit materializer: Materializer) {
 
-  private val queueBandwidth = configuration.get("queue.bandwidth", "100").toInt
+  private val queueBandwidth = configuration.get("queue.bandwidth", "10000").toInt
 
   import elasticsearch.mapping._
 

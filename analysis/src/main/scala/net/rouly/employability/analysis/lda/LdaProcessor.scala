@@ -127,8 +127,9 @@ class LdaProcessor(
       val modeled = model.transform(df)
 
       // Extract results.
-      val topics = getTopics(model, vocabulary).toLocalIterator().asScala.toVector
-      val modeledDocuments = getModeledDocuments(modeled, topics)
+      val topics = getTopics(model, vocabulary)
+      val topicVector = topics.toLocalIterator().asScala.toVector
+      val modeledDocuments = getModeledDocuments(modeled, topicVector)
 
       // Emit results.
       topics.foreach(topic => LdaQueues.emit(topic))

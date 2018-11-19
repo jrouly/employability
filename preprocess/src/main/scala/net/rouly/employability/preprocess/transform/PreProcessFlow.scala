@@ -5,7 +5,7 @@ import akka.stream.scaladsl.Flow
 import net.rouly.employability.models.Document
 import net.rouly.employability.preprocess.opennlp.AnalysisOpenNlpModels
 import net.rouly.employability.preprocess.transform.preprocess.FilterEnglish._
-import net.rouly.employability.preprocess.transform.preprocess.StopWordRemover
+import net.rouly.employability.preprocess.transform.preprocess.{GarbageRemover, StopWordRemover}
 import opennlp.tools.langdetect.LanguageDetectorME
 import opennlp.tools.stemmer.PorterStemmer
 import opennlp.tools.tokenize._
@@ -18,13 +18,13 @@ object PreProcessFlow {
     val languageDetector = new LanguageDetectorME(models.languageDetector)
     val normalizer = new ShrinkCharSequenceNormalizer
     val stemmer = new PorterStemmer
-    val stopWords = new StopWordRemover
 
     Flow[Document[String]]
       .filter(languageDetector.isEnglish) // only allow English sentences
       .map(lift(_.toLowerCase.trim)) // consistently lowercase all words
       .map(lift(tokenizer.tokenize)) // split sentences into tokens
-      .map(lift(_.filterNot(stopWords.isStopWord))) // remove stop words
+      .map(lift(_.filterNot(StopWordRemover.isStopWord))) // remove stop words
+      .map(lift(_.filterNot(GarbageRemover.isGarbage))) // remove tokens with non-word characters
       .map(lift(_.map(normalizer.normalize))) // normalize sequences
       .map(lift(_.filter(_.length > 3))) // drop short tokens
       .map(lift(_.map(stemmer.stem))) // reduce tokens to stems

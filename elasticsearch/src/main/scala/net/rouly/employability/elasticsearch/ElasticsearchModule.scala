@@ -2,6 +2,7 @@ package net.rouly.employability.elasticsearch
 
 import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.http._
+import com.sksamuel.elastic4s.http.index.CreateIndexResponse
 import com.softwaremill.macwire.{Module, wire}
 import net.rouly.common.config.Configuration
 
@@ -16,16 +17,30 @@ class ElasticsearchModule(configuration: Configuration)(implicit actorSystem: Ac
   lazy val mapping: ElasticsearchMapping = wire[ElasticsearchMapping]
   lazy val streams: ElasticsearchStreams = wire[ElasticsearchStreams]
 
-  def init() = {
+  def init(): Response[CreateIndexResponse] = {
     import com.sksamuel.elastic4s.http.ElasticDsl._
 
     client.execute {
       createIndex(config.modeledDocumentIndex).mappings(ElasticDsl.mapping("doc").fields(
         textField("id"),
         textField("originalText"),
-        nestedField("weightedTopics")
+        textField("tokens"),
+        nestedField("weightedTopics").fields(
+          objectField("topic").fields(
+            textField("id"),
+            objectField("wordFrequency")
+          ),
+          longField("weight")
+        )
       ))
-    }
+    }.await
+
+    client.execute {
+      createIndex(config.topicIndex).mappings(ElasticDsl.mapping("doc").fields(
+        textField("id"),
+        objectField("wordFrequency")
+      ))
+    }.await
   }
 
   def close(): Unit = {
