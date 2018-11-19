@@ -30,7 +30,7 @@ class ElasticsearchModule(configuration: Configuration)(implicit actorSystem: Ac
             textField("id"),
             objectField("wordFrequency")
           ),
-          longField("weight")
+          doubleField("weight")
         )
       ))
     }.await
