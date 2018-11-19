@@ -6,9 +6,9 @@ GET     /api/topics/:id                         net.rouly.employability.web.api.
 
 # Application definition.
 GET     /                                       net.rouly.employability.web.application.ApplicationController.index
-GET     /topics                                 net.rouly.employability.web.application.ApplicationController.allTopics
-GET     /topics/:id                             net.rouly.employability.web.application.ApplicationController.topicById(id: String)
-GET     /topics/:id/docs                        net.rouly.employability.web.application.ApplicationController.docsByTopicId(id: String)
-GET     /docs                                   net.rouly.employability.web.application.ApplicationController.allDocuments
-GET     /docs/:id                               net.rouly.employability.web.application.ApplicationController.docById(id: String)
-GET     /assets/*file                           controllers.Assets.at(file)
+GET     /web/topics                             net.rouly.employability.web.application.ApplicationController.allTopics
+GET     /web/topics/:id                         net.rouly.employability.web.application.ApplicationController.topicById(id: String)
+GET     /web/topics/:id/docs                    net.rouly.employability.web.application.ApplicationController.docsByTopicId(id: String)
+GET     /web/docs                               net.rouly.employability.web.application.ApplicationController.allDocuments
+GET     /web/docs/:id                           net.rouly.employability.web.application.ApplicationController.docById(id: String)
+GET     /web/assets/*file                       controllers.Assets.at(file)
