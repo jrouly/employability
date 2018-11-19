@@ -12,7 +12,7 @@ lazy val commonSettings = Seq(
   licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
   organization := "net.rouly",
   scalaVersion := "2.11.12",
-  version := "0.2",
+  version := "0.3",
   name := s"employability-${name.value}"
 ) ++ Bintray.settings
 
