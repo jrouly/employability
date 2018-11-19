@@ -10,6 +10,7 @@ lazy val noPublish = Seq(
 
 lazy val commonSettings = Seq(
   licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
+  resolvers += Resolver.bintrayRepo("jrouly", "sbt-release"),
   organization := "net.rouly",
   scalaVersion := "2.11.12",
   version := "0.3",
