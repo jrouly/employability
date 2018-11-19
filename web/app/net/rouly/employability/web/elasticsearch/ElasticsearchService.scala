@@ -3,10 +3,13 @@ package net.rouly.employability.web.elasticsearch
 import akka.NotUsed
 import akka.stream.scaladsl.Source
 import com.sksamuel.elastic4s.http.ElasticDsl._
+import com.sksamuel.elastic4s.http.Response
+import com.sksamuel.elastic4s.http.count.CountResponse
 import com.sksamuel.elastic4s.playjson._
 import net.rouly.employability.elasticsearch.ElasticsearchModule
 import net.rouly.employability.models.{ModeledDocument, Topic}
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class ElasticsearchService(elasticsearch: ElasticsearchModule) {
@@ -40,6 +43,13 @@ class ElasticsearchService(elasticsearch: ElasticsearchModule) {
     elasticsearch.streams
       .source(elasticsearch.config.modeledDocumentIndex)
       .map(_.to[ModeledDocument])
+  }
+
+  def documentCount: Future[Response[CountResponse]] = {
+    import com.sksamuel.elastic4s.http.ElasticDsl._
+    elasticsearch.client.execute {
+      count(elasticsearch.config.modeledDocumentIndex)
+    }
   }
 
 }

@@ -12,8 +12,8 @@ class ElasticsearchModule(configuration: Configuration)(implicit actorSystem: Ac
   lazy val config: ElasticsearchConfig = wire[ElasticsearchConfig]
 
   private lazy val properties: ElasticProperties = ElasticProperties(config.baseUrl)
-  private lazy val client: ElasticClient = ElasticClient(properties)
 
+  lazy val client: ElasticClient = ElasticClient(properties)
   lazy val mapping: ElasticsearchMapping = wire[ElasticsearchMapping]
   lazy val streams: ElasticsearchStreams = wire[ElasticsearchStreams]
 

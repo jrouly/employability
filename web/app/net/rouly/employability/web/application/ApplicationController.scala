@@ -39,7 +39,8 @@ class ApplicationController(
   def allDocuments = Action.async {
     for {
       docs <- service.documentSource.take(5).runWith(Sink.collection)
-    } yield Ok(application.documents(docs.toList))
+      count <- service.documentCount
+    } yield Ok(application.documents(docs.toList, count.result.count))
   }
 
   def docById(id: String) = Action.async {

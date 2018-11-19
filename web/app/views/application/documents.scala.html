@@ -1,15 +1,15 @@
 @import net.rouly.employability.models.ModeledDocument
 
-@(documents: List[ModeledDocument])
+@(documents: List[ModeledDocument], count: Long)
 
 @application.layout.main(title = "Documents") {
 
     <h1>Documents</h1>
 
     <p>
-        This is a sampling of five random documents. Each document has been included in the LDA process and had
-        topics inferred. Documents are represented as a mixture of topics, with different weighting applied to each
-        topic.
+        This is a sampling of five random documents, from a total of @count indexed documents. Each document has been
+        included in the LDA process and had topics inferred. Documents are represented as a mixture of topics, with
+        different weighting applied to each topic.
     </p>
 
     @for(document <- documents) {
