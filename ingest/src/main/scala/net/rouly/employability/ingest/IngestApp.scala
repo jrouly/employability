@@ -29,7 +29,7 @@ object IngestApp
   lazy val ingestGraph: Future[Done] = {
     import elasticsearch.mapping._
 
-    val source = /*dataWorld.source merge*/ scraping.source
+    val source = dataWorld.source merge scraping.source
 
     source
       .alsoTo(elasticsearch.streams.sink[RawDocument])
