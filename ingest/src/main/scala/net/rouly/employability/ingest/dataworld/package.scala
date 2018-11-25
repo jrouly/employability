@@ -22,6 +22,7 @@ package object dataworld {
           id = UUID.nameUUIDFromBytes(record.values.mkString.getBytes),
           dataSet = dataSet.displayName,
           description = record(dataSet.dictionary("description")),
+          kind = "job-posting",
           title = record(dataSet.dictionary("title")).emptyToNone
         ))
     }
