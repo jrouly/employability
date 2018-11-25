@@ -7,13 +7,12 @@ import com.typesafe.scalalogging.StrictLogging
 import net.rouly.employability.EmployabilityApp
 import net.rouly.employability.elasticsearch.ElasticsearchModule
 import net.rouly.employability.ingest.dataworld.DataWorldModule
-import net.rouly.employability.models.JobPosting
+import net.rouly.employability.models.RawDocument
 import net.rouly.employability.streams.BookKeepingWireTap
 import play.api.libs.ws.StandaloneWSClient
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 object IngestApp
   extends App
@@ -29,18 +28,19 @@ object IngestApp
     import elasticsearch.mapping._
 
     dataWorld.source
-      .alsoTo(elasticsearch.streams.sink[JobPosting])
+      .alsoTo(elasticsearch.streams.sink[RawDocument])
       .wireTap(BookKeepingWireTap("elasticsearch"))
       .runWith(Sink.ignore)
   }
 
-  logger.info("Start.")
-  Await.result(ingestGraph, 5.minutes)
-  logger.info("Done.")
+  // Register shutdown hooks.
+  actorSystem.registerOnTermination {
+    elasticsearch.close()
+    wsClient.close()
+    materializer.shutdown()
+  }
 
-  Await.result(actorSystem.terminate(), 5.minutes)
+  // Execute the application.
+  run(ingestGraph)
 
-  materializer.shutdown()
-  elasticsearch.close()
-  wsClient.close()
 }

@@ -3,7 +3,7 @@ package net.rouly.employability.ingest
 import java.util.UUID
 
 import net.rouly.employability.ingest.dataworld.model.DataWorldDataSet
-import net.rouly.employability.models.JobPosting
+import net.rouly.employability.models.RawDocument
 
 import scala.util.Try
 
@@ -14,16 +14,15 @@ package object dataworld {
     type Extractor[T] = Map[String, String] => Try[T]
 
     /**
-      * Build a [[JobPosting]] from a CSV map.
+      * Build a [[RawDocument]] from a CSV map.
       */
-    def jobPosting(dataSet: DataWorldDataSet): Extractor[JobPosting] = {
+    def jobPosting(dataSet: DataWorldDataSet): Extractor[RawDocument] = {
       record =>
-        Try(JobPosting(
+        Try(RawDocument(
           id = UUID.nameUUIDFromBytes(record.values.mkString.getBytes),
           dataSet = dataSet.displayName,
           description = record(dataSet.dictionary("description")),
-          title = record(dataSet.dictionary("title")).emptyToNone,
-          skills = dataSet.dictionary.get("skills").flatMap(record(_).emptyToNone)
+          title = record(dataSet.dictionary("title")).emptyToNone
         ))
     }
 

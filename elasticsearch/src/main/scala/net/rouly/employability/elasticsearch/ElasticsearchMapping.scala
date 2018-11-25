@@ -4,13 +4,13 @@ import com.sksamuel.elastic4s.bulk.BulkCompatibleRequest
 import com.sksamuel.elastic4s.http.ElasticDsl._
 import com.sksamuel.elastic4s.playjson._
 import com.sksamuel.elastic4s.streams.RequestBuilder
-import net.rouly.employability.models.{JobPosting, ModeledDocument, Topic}
+import net.rouly.employability.models.{ModeledDocument, RawDocument, Topic}
 
 class ElasticsearchMapping(config: ElasticsearchConfig) {
 
-  implicit val jobPostingRequestBuilder: RequestBuilder[JobPosting] = new RequestBuilder[JobPosting] {
-    override def request(t: JobPosting): BulkCompatibleRequest =
-      indexInto(config.jobPostingIndex / "doc").id(t.id.toString).source(t)
+  implicit val rawDocumentRequestBuilder: RequestBuilder[RawDocument] = new RequestBuilder[RawDocument] {
+    override def request(t: RawDocument): BulkCompatibleRequest =
+      indexInto(config.rawDocumentIndex / "doc").id(t.id.toString).source(t)
   }
 
   implicit val topicRequestBuilder: RequestBuilder[Topic] = new RequestBuilder[Topic] {

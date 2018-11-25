@@ -4,7 +4,6 @@
   "fileName": "reed_uk.csv",
   "dictionary": {
     "description": "job_description",
-    "title": "job_title",
-    "skills": "job_requirements"
+    "title": "job_title"
   }
 }

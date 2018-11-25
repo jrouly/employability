@@ -8,7 +8,7 @@ class ElasticsearchConfig(configuration: Configuration) {
   val baseUrl: String = configuration.get("elasticsearch.url", "http://localhost:9200")
 
   // Index names.
-  val jobPostingIndex: String = configuration.get("elasticsearch.index", "job-postings")
+  val rawDocumentIndex: String = configuration.get("elasticsearch.index", "raw-documents")
   val topicIndex: String = configuration.get("elasticsearch.index", "topics")
   val modeledDocumentIndex: String = configuration.get("elasticsearch.modeled.document.index", "modeled-documents")
 

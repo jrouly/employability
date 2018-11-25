@@ -38,7 +38,7 @@ object PreProcessApp
     val sink = Sink.foreachAsync(parallelism)(postgres.insert[Document[String]])
 
     elasticsearch.streams
-      .source(elasticsearch.config.jobPostingIndex)
+      .source(elasticsearch.config.rawDocumentIndex)
       .async
       .wireTap(BookKeepingWireTap("elasticsearch"))
       .via(DocumentTransformFlow())
@@ -47,15 +47,15 @@ object PreProcessApp
       .runWith(sink)
   }
 
-  logger.info("Start preprocessing.")
-  Await.result(graph, 10.minutes)
-  logger.info("Done.")
+  // Register shutdown hooks.
+  actorSystem.registerOnTermination {
+    wsClient.close()
+    elasticsearch.close()
+    postgres.close()
+    materializer.shutdown()
+  }
 
-  Await.result(actorSystem.terminate(), 5.minutes)
-
-  materializer.shutdown()
-  elasticsearch.close()
-  wsClient.close()
-  postgres.close()
+  // Execute the application.
+  run(graph, 10.minutes)
 
 }

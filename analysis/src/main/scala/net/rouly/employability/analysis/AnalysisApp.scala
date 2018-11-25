@@ -8,7 +8,6 @@ import net.rouly.employability.elasticsearch.ElasticsearchModule
 import net.rouly.employability.postgres.PostgresModule
 import org.apache.spark.sql.SparkSession
 
-import scala.concurrent.Await
 import scala.concurrent.duration._
 
 object AnalysisApp
@@ -27,14 +26,14 @@ object AnalysisApp
     .master("local[12]")
     .getOrCreate()
 
-  logger.info("Start LDA.")
-  Await.result(lda.execute(), 10.minutes)
-  logger.info("Done.")
+  // Register shutdown hooks.
+  actorSystem.registerOnTermination {
+    elasticsearch.close()
+    spark.close()
+    materializer.shutdown()
+  }
 
-  Await.result(actorSystem.terminate(), 5.minutes)
-
-  materializer.shutdown()
-  elasticsearch.close()
-  spark.close()
+  // Execute the application.
+  run(lda.execute(), 10.minutes)
 
 }

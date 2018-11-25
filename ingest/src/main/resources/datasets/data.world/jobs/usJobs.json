@@ -4,7 +4,6 @@
   "fileName": "dice_com-job_us_sample.csv",
   "dictionary": {
     "description": "jobdescription",
-    "title": "jobtitle",
-    "skills": "skills"
+    "title": "jobtitle"
   }
 }

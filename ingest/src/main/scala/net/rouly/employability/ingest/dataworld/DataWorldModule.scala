@@ -5,7 +5,7 @@ import com.softwaremill.macwire.wire
 import com.typesafe.scalalogging.StrictLogging
 import net.rouly.common.config.Configuration
 import net.rouly.employability.ingest.dataworld.csv.Extractor
-import net.rouly.employability.models.JobPosting
+import net.rouly.employability.models.RawDocument
 import net.rouly.employability.streams._
 import play.api.libs.ws.StandaloneWSClient
 
@@ -20,11 +20,11 @@ class DataWorldModule(
   private lazy val reader: DataWorldDataSetReader = wire[DataWorldDataSetReader]
 
   private lazy val dataSets = reader.all.map { dataset =>
-    implicit val extractor: Extractor[JobPosting] = csv.jobPosting(dataset)
+    implicit val extractor: Extractor[RawDocument] = csv.jobPosting(dataset)
     logger.info(dataset.displayName)
-    client.getCsv[JobPosting](dataset)
+    client.getCsv[RawDocument](dataset)
   }
 
-  lazy val source: Source[JobPosting, _] = Source.multi(dataSets)
+  lazy val source: Source[RawDocument, _] = Source.multi(dataSets)
 
 }

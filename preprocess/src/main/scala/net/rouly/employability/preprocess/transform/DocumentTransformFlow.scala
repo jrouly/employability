@@ -4,7 +4,7 @@ import akka.NotUsed
 import akka.stream.scaladsl.Flow
 import com.sksamuel.elastic4s.http.search.SearchHit
 import com.sksamuel.elastic4s.playjson._
-import net.rouly.employability.models.{Document, JobPosting}
+import net.rouly.employability.models.{Document, RawDocument}
 
 import scala.util.{Success, Try}
 
@@ -17,14 +17,14 @@ object DocumentTransformFlow {
 
   private def toDoc(hit: SearchHit): Option[Document[String]] = {
     val asJobPosting = hit
-      .safeToOpt[JobPosting]
+      .safeToOpt[RawDocument]
       .collect(success)
       .map(toDoc)
 
     asJobPosting
   }
 
-  private def toDoc(jobPosting: JobPosting): Document[String] = Document(
+  private def toDoc(jobPosting: RawDocument): Document[String] = Document(
     id = jobPosting.id,
     raw = jobPosting.description,
     content = jobPosting.description
