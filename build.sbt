@@ -24,7 +24,6 @@ lazy val root = (project in file("."))
     core,
     elasticsearch,
     postgres,
-    scraping,
     ingest,
     preprocess,
     analysis,
@@ -65,21 +64,15 @@ lazy val postgres = project
     Postgres.slickPostgres
   ))
 
-lazy val scraping = project
-  .dependsOn(core, elasticsearch)
-  .settings(commonSettings)
-  .settings(libraryDependencies ++= Seq(
-    Akka.actors,
-    Akka.streams,
-    JSoup.jsoup,
-    Misc.scalaUri
-  ))
-
 lazy val ingest = project
   .dependsOn(elasticsearch)
   .settings(commonSettings)
   .settings(libraryDependencies ++= Seq(
+    Akka.actors,
+    Akka.streams,
     Alpakka.csv,
+    JSoup.jsoup,
+    Misc.scalaUri,
     Play26.json,
     Play26.ws
   ))
