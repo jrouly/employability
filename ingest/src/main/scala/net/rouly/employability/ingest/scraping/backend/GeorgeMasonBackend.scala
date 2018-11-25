@@ -39,22 +39,26 @@ class GeorgeMasonBackend(
         .select("#coursescontainer")
         .select(".courseblock")
         .asScala.toList
-        .map(toDocument)
+        .flatMap(toDocument)
     }
   }
 
-  protected def toDocument(element: Element): CourseDescription = {
+  protected def toDocument(element: Element): Option[CourseDescription] = {
     val code = element.select(".cb_code").text
     val title = element.select(".cb_title").text
     val desc = element.select(".courseblockdesc").text
     val uuid = code + title + desc + dataSet
 
-    CourseDescription(
-      id = UUID.nameUUIDFromBytes(uuid.getBytes),
-      dataSet = dataSet,
-      description = desc,
-      title = Some(title)
-    )
+    if (title.isEmpty || desc.isEmpty) None
+    else Some {
+      CourseDescription(
+        id = UUID.nameUUIDFromBytes(uuid.getBytes),
+        dataSet = dataSet,
+        description = desc,
+        title = Some(title)
+      )
+    }
+
   }
 
 }

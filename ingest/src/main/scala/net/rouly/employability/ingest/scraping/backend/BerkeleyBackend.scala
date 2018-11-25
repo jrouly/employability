@@ -38,11 +38,11 @@ class BerkeleyBackend(
       document
         .select(".courseblock")
         .asScala.toList
-        .map(toDocument)
+        .flatMap(toDocument)
     }
   }
 
-  protected def toDocument(element: Element): CourseDescription = {
+  protected def toDocument(element: Element): Option[CourseDescription] = {
     val titleEl = element.select(".courseblocktitle")
     val bodyEl = element.select(".coursebody")
 
@@ -51,12 +51,16 @@ class BerkeleyBackend(
     val desc = bodyEl.select(".courseblockdesc").text
     val uuid = code + title + desc + dataSet
 
-    CourseDescription(
-      id = UUID.nameUUIDFromBytes(uuid.getBytes),
-      dataSet = dataSet,
-      description = desc,
-      title = Some(title)
-    )
+    if (title.isEmpty || desc.isEmpty) None
+    else Some {
+      CourseDescription(
+        id = UUID.nameUUIDFromBytes(uuid.getBytes),
+        dataSet = dataSet,
+        description = desc,
+        title = Some(title)
+      )
+    }
+
   }
 
 }

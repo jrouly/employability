@@ -31,6 +31,6 @@ abstract class GenericBackend(jsoup: JSoupClient)(implicit ec: BlockingExecution
 
   protected def getCourses(departmentUrl: Url): Future[List[CourseDescription]]
 
-  protected def toDocument(element: Element): CourseDescription
+  protected def toDocument(element: Element): Option[CourseDescription]
 
 }

@@ -38,21 +38,24 @@ class UChicagoBackend(
       document
         .select(".courseblock")
         .asScala.toList
-        .map(toDocument)
+        .flatMap(toDocument)
     }
   }
 
-  protected def toDocument(element: Element): CourseDescription = {
+  protected def toDocument(element: Element): Option[CourseDescription] = {
     val title = element.select(".courseblocktitle").text
     val desc = element.select(".courseblockdesc").text
     val uuid = title + desc + dataSet
 
-    CourseDescription(
-      id = UUID.nameUUIDFromBytes(uuid.getBytes),
-      dataSet = dataSet,
-      description = desc,
-      title = Some(title)
-    )
+    if (title.isEmpty || desc.isEmpty) None
+    else Some {
+      CourseDescription(
+        id = UUID.nameUUIDFromBytes(uuid.getBytes),
+        dataSet = dataSet,
+        description = desc,
+        title = Some(title)
+      )
+    }
   }
 
 }
