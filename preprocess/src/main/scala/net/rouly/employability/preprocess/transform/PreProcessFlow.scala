@@ -29,6 +29,7 @@ object PreProcessFlow {
       .map(lift(_.filter(_.length > 3))) // drop short tokens
       .map(lift(_.map(stemmer.stem))) // reduce tokens to stems
       .map(lift(_.toSeq.map(_.toString))) // reshape as Seq[String]
+      .filter(_.content.distinct.length < 15) // drop short documents
       .map(lift(_.mkString("|"))) // concatenate tokens with a known delimiter
   }
 
