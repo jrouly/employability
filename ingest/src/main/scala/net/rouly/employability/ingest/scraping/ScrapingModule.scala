@@ -17,6 +17,8 @@ class ScrapingModule(implicit actorSystem: ActorSystem) {
 
   private lazy val berkeley: BerkeleyBackend = wire[BerkeleyBackend]
   private lazy val gmu: GeorgeMasonBackend = wire[GeorgeMasonBackend]
+  private lazy val illinois: IllinoisBackend = wire[IllinoisBackend]
+  private lazy val iowaState: IowaStateBackend = wire[IowaStateBackend]
   private lazy val stolaf: StOlafBackend = wire[StOlafBackend]
   private lazy val uchicago: UChicagoBackend = wire[UChicagoBackend]
   private lazy val wofford: WoffordBackend = wire[WoffordBackend]
@@ -24,6 +26,8 @@ class ScrapingModule(implicit actorSystem: ActorSystem) {
   private lazy val sources = List(
     berkeley.scrape,
     gmu.scrape,
+    illinois.scrape,
+    iowaState.scrape,
     stolaf.scrape,
     uchicago.scrape,
     wofford.scrape
