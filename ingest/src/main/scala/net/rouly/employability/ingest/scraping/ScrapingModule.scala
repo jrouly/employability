@@ -16,14 +16,16 @@ class ScrapingModule(implicit actorSystem: ActorSystem) {
   private lazy val jsoupClient: JSoupClient = wire[JSoupClient]
 
   private lazy val berkeley: BerkeleyBackend = wire[BerkeleyBackend]
-  private lazy val gmu: GeorgeMasonUniversityBackend = wire[GeorgeMasonUniversityBackend]
+  private lazy val gmu: GeorgeMasonBackend = wire[GeorgeMasonBackend]
   private lazy val stolaf: StOlafBackend = wire[StOlafBackend]
-  private lazy val wofford: WoffordCollegeBackend = wire[WoffordCollegeBackend]
+  private lazy val uchicago: UChicagoBackend = wire[UChicagoBackend]
+  private lazy val wofford: WoffordBackend = wire[WoffordBackend]
 
   private lazy val sources = List(
     berkeley.scrape,
     gmu.scrape,
     stolaf.scrape,
+    uchicago.scrape,
     wofford.scrape
   )
 
