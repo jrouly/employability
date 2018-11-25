@@ -27,8 +27,8 @@ class GeorgeMasonUniversityBackend(
   def scrape: Source[RawDocument, NotUsed] = {
     val courses = for {
       departmentUrls <- getDepartmentUrls
-      courseElement <- Future.traverse(departmentUrls)(getCourses)
-    } yield Source(courseElement.flatten.map(toDocument))
+      courses <- Future.traverse(departmentUrls)(getCourses)
+    } yield Source(courses.flatten)
 
     Source
       .fromFutureSource(courses)
@@ -48,16 +48,17 @@ class GeorgeMasonUniversityBackend(
     }
   }
 
-  private def getCourses(departmentUrl: Url): Future[List[Element]] = {
+  private def getCourses(departmentUrl: Url): Future[List[CourseDescription]] = {
     jsoup.get(departmentUrl).map { document =>
       document
         .select("#coursescontainer")
         .select(".courseblock")
         .asScala.toList
+        .map(toDocument)
     }
   }
 
-  private def toDocument(element: Element): RawDocument = {
+  private def toDocument(element: Element): CourseDescription = {
     val code = element.select(".cb_code").text
     val title = element.select(".cb_title").text
     val desc = element.select(".courseblockdesc").text

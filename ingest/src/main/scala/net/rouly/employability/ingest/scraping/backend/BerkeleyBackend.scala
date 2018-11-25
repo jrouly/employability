@@ -3,7 +3,7 @@ package net.rouly.employability.ingest.scraping.backend
 import java.util.UUID
 
 import akka.NotUsed
-import akka.stream.scaladsl._
+import akka.stream.scaladsl.{Flow, Keep, Source}
 import io.lemonlabs.uri._
 import io.lemonlabs.uri.dsl._
 import net.rouly.employability.blocking.BlockingExecutionContext
@@ -15,13 +15,14 @@ import org.jsoup.nodes.Element
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
-class StOlafBackend(
+class BerkeleyBackend(
   jsoup: JSoupClient
-)(implicit ec: BlockingExecutionContext) extends ScrapingBackend {
+)(implicit ec: BlockingExecutionContext)
+  extends ScrapingBackend {
 
-  private val baseUrl = "http://catalog.stolaf.edu"
+  private val baseUrl = "http://guide.berkeley.edu"
 
-  private val dataSet = "stolaf"
+  private val dataSet = "ucberkeley"
 
   def scrape: Source[RawDocument, NotUsed] = {
     val courses = for {
@@ -36,9 +37,9 @@ class StOlafBackend(
   }
 
   private def getDepartmentUrls: Future[List[Url]] = {
-    jsoup.get(baseUrl / "academic-programs").map { document =>
+    jsoup.get(baseUrl / "courses").map { document =>
       document
-        .select("ul[id~=academic-programs]")
+        .select("#atozindex")
         .select("li")
         .select("a")
         .asScala.toList
@@ -50,7 +51,6 @@ class StOlafBackend(
   private def getCourses(departmentUrl: Url): Future[List[CourseDescription]] = {
     jsoup.get(departmentUrl).map { document =>
       document
-        .select("#coursestextcontainer")
         .select(".courseblock")
         .asScala.toList
         .map(toDocument)
@@ -58,9 +58,13 @@ class StOlafBackend(
   }
 
   private def toDocument(element: Element): CourseDescription = {
-    val title = element.select(".courseblocktitle").text
-    val desc = element.select(".courseblockdesc").text
-    val uuid = title + desc + dataSet
+    val titleEl = element.select(".courseblocktitle")
+    val bodyEl = element.select(".coursebody")
+
+    val code = titleEl.select(".code").text
+    val title = titleEl.select(".title").text
+    val desc = bodyEl.select(".courseblockdesc").text
+    val uuid = code + title + desc + dataSet
 
     CourseDescription(
       id = UUID.nameUUIDFromBytes(uuid.getBytes),

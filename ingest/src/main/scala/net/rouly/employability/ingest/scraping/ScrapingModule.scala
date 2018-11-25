@@ -15,14 +15,16 @@ class ScrapingModule(implicit actorSystem: ActorSystem) {
   private implicit val blockingExecutionContext: BlockingExecutionContext = BlockingExecutionContext.byName("scraping-dispatcher")
   private lazy val jsoupClient: JSoupClient = wire[JSoupClient]
 
+  private lazy val berkeley: BerkeleyBackend = wire[BerkeleyBackend]
   private lazy val gmu: GeorgeMasonUniversityBackend = wire[GeorgeMasonUniversityBackend]
-  private lazy val wofford: WoffordCollegeBackend = wire[WoffordCollegeBackend]
   private lazy val stolaf: StOlafBackend = wire[StOlafBackend]
+  private lazy val wofford: WoffordCollegeBackend = wire[WoffordCollegeBackend]
 
   private lazy val sources = List(
+    berkeley.scrape,
     gmu.scrape,
-    wofford.scrape,
-    stolaf.scrape
+    stolaf.scrape,
+    wofford.scrape
   )
 
   lazy val source: Source[RawDocument, _] = Source.multi(sources)
