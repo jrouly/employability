@@ -50,6 +50,10 @@ object Dependencies {
     lazy val util = "com.softwaremill.macwire" %% "util" % version
   }
 
+  object Misc {
+    lazy val scalaUri = "io.lemonlabs" %% "scala-uri" % "1.4.0"
+  }
+
   object Play26 {
     private val version = "2.6.9"
 

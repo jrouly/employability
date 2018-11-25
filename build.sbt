@@ -66,12 +66,13 @@ lazy val postgres = project
   ))
 
 lazy val scraping = project
-  .dependsOn(core)
+  .dependsOn(core, elasticsearch)
   .settings(commonSettings)
   .settings(libraryDependencies ++= Seq(
     Akka.actors,
     Akka.streams,
-    JSoup.jsoup
+    JSoup.jsoup,
+    Misc.scalaUri
   ))
 
 lazy val ingest = project
