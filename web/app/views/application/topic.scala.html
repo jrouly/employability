@@ -1,6 +1,4 @@
-@import net.rouly.employability.models.Topic
-
-@import net.rouly.employability.models.ModeledDocument
+@import net.rouly.employability.models.{ModeledDocument, Topic}
 @(topic: Topic, documents: List[ModeledDocument])
 
 @application.layout.main(title = s"Topic ${topic.id}") {

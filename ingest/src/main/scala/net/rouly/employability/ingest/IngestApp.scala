@@ -29,7 +29,8 @@ object IngestApp
   lazy val ingestGraph: Future[Done] = {
     import elasticsearch.mapping._
 
-    val source = dataWorld.source merge scraping.source
+    // val source = dataWorld.source merge scraping.source
+    val source = scraping.source
 
     source
       .alsoTo(elasticsearch.streams.sink[RawDocument])
@@ -41,7 +42,6 @@ object IngestApp
   actorSystem.registerOnTermination {
     elasticsearch.close()
     wsClient.close()
-    materializer.shutdown()
   }
 
   // Execute the application.

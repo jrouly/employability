@@ -4,7 +4,7 @@ import akka.NotUsed
 import akka.stream.scaladsl.Flow
 import com.sksamuel.elastic4s.http.search.SearchHit
 import com.sksamuel.elastic4s.playjson._
-import net.rouly.employability.models.{Document, RawDocument}
+import net.rouly.employability.models._
 
 import scala.util.{Success, Try}
 
@@ -13,21 +13,33 @@ import scala.util.{Success, Try}
   */
 object DocumentTransformFlow {
 
-  def apply(): Flow[SearchHit, Document[String], NotUsed] = Flow[SearchHit].map(toDoc).collect(some)
+  def apply(): Flow[SearchHit, Document[String], NotUsed] =
+    Flow[SearchHit]
+      .map(toDoc)
+      .collect(some)
 
   private def toDoc(hit: SearchHit): Option[Document[String]] = {
-    val asJobPosting = hit
+    hit
       .safeToOpt[RawDocument]
       .collect(success)
-      .map(toDoc)
-
-    asJobPosting
+      .map {
+        case jobPosting: JobPosting => toDoc(jobPosting)
+        case courseDescription: CourseDescription => toDoc(courseDescription)
+      }
   }
 
-  private def toDoc(jobPosting: RawDocument): Document[String] = Document(
+  private def toDoc(jobPosting: JobPosting): Document[String] = Document(
     id = jobPosting.id,
     raw = jobPosting.description,
-    content = jobPosting.description
+    content = jobPosting.description,
+    kind = DocumentKind.JobDescription
+  )
+
+  private def toDoc(courseDescription: CourseDescription): Document[String] = Document(
+    id = courseDescription.id,
+    raw = courseDescription.description,
+    content = courseDescription.description,
+    kind = DocumentKind.CourseDescription
   )
 
   private def success[T]: PartialFunction[Try[T], T] = { case Success(t) => t }

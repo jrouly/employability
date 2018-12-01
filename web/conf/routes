@@ -5,10 +5,11 @@ GET     /api/topics                             net.rouly.employability.web.api.
 GET     /api/topics/:id                         net.rouly.employability.web.api.ApiController.topicById(id: String)
 
 # Application definition.
-GET     /                                       net.rouly.employability.web.application.ApplicationController.index
-GET     /web/topics                             net.rouly.employability.web.application.ApplicationController.allTopics
-GET     /web/topics/:id                         net.rouly.employability.web.application.ApplicationController.topicById(id: String)
-GET     /web/topics/:id/docs                    net.rouly.employability.web.application.ApplicationController.docsByTopicId(id: String)
-GET     /web/docs                               net.rouly.employability.web.application.ApplicationController.allDocuments
-GET     /web/docs/:id                           net.rouly.employability.web.application.ApplicationController.docById(id: String)
+GET     /                                       net.rouly.employability.web.application.StaticPagesController.index
+GET     /about                                  net.rouly.employability.web.application.StaticPagesController.about
+GET     /web/topics                             net.rouly.employability.web.application.ElasticsearchController.allTopics
+GET     /web/topics/:id                         net.rouly.employability.web.application.ElasticsearchController.topicById(id: String)
+GET     /web/topics/:id/docs                    net.rouly.employability.web.application.ElasticsearchController.docsByTopicId(id: String)
+GET     /web/docs                               net.rouly.employability.web.application.ElasticsearchController.allDocuments
+GET     /web/docs/:id                           net.rouly.employability.web.application.ElasticsearchController.docById(id: String)
 GET     /web/assets/*file                       controllers.Assets.at(file)

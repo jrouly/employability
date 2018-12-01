@@ -30,7 +30,6 @@ object AnalysisApp
   actorSystem.registerOnTermination {
     elasticsearch.close()
     spark.close()
-    materializer.shutdown()
   }
 
   // Execute the application.

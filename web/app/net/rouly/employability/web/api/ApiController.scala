@@ -1,7 +1,7 @@
 package net.rouly.employability.web.api
 
 import net.rouly.employability.models.Topic
-import net.rouly.employability.web.elasticsearch.ElasticsearchService
+import net.rouly.employability.web.elasticsearch.ElasticsearchWebService
 import play.api.cache.Cached
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{AbstractController, ControllerComponents}
@@ -9,7 +9,7 @@ import play.api.mvc.{AbstractController, ControllerComponents}
 class ApiController(
   cc: ControllerComponents,
   cached: Cached,
-  service: ElasticsearchService
+  service: ElasticsearchWebService
 ) extends AbstractController(cc) {
 
   def allTopics = cached("api.allTopics") {

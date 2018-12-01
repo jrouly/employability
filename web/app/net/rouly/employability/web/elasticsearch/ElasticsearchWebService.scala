@@ -12,7 +12,7 @@ import net.rouly.employability.models.{ModeledDocument, Topic}
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-class ElasticsearchService(elasticsearch: ElasticsearchModule) {
+class ElasticsearchWebService(elasticsearch: ElasticsearchModule) {
 
   /**
     * Read all topics from Elasticsearch and return a future with them.

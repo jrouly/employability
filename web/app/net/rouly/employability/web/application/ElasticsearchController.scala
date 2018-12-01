@@ -2,22 +2,18 @@ package net.rouly.employability.web.application
 
 import akka.stream.Materializer
 import akka.stream.scaladsl.Sink
-import net.rouly.employability.web.elasticsearch.ElasticsearchService
+import net.rouly.employability.web.elasticsearch.ElasticsearchWebService
 import play.api.cache.Cached
 import play.api.mvc.{AbstractController, ControllerComponents}
 import views.html.application
 
 import scala.concurrent.ExecutionContext
 
-class ApplicationController(
+class ElasticsearchController(
   cc: ControllerComponents,
   cached: Cached,
-  service: ElasticsearchService
+  service: ElasticsearchWebService
 )(implicit mat: Materializer, ec: ExecutionContext) extends AbstractController(cc) {
-
-  def index = cached("app.index") {
-    Action(Ok(application.index()))
-  }
 
   def allTopics = cached("app.allTopics") {
     Action.async {

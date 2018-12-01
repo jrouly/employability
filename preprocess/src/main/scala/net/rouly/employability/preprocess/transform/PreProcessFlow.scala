@@ -27,9 +27,9 @@ object PreProcessFlow {
       .map(lift(_.filterNot(GarbageRemover.isGarbage))) // remove tokens with non-word characters
       .map(lift(_.map(normalizer.normalize))) // normalize sequences
       .map(lift(_.filter(_.length > 3))) // drop short tokens
+      .filter(_.content.distinct.length > 15) // drop short documents
       .map(lift(_.map(stemmer.stem))) // reduce tokens to stems
       .map(lift(_.toSeq.map(_.toString))) // reshape as Seq[String]
-      .filter(_.content.distinct.length > 15) // drop short documents
       .map(lift(_.mkString("|"))) // concatenate tokens with a known delimiter
   }
 
@@ -37,6 +37,6 @@ object PreProcessFlow {
     * Lift a function up into [[Document]] and apply it to [[Document.content]].
     */
   private def lift[T, R](fn: T => R): Document[T] => Document[R] =
-    dt => Document(id = dt.id, raw = dt.raw, content = fn(dt.content))
+    dt => Document(id = dt.id, raw = dt.raw, content = fn(dt.content), kind = dt.kind)
 
 }

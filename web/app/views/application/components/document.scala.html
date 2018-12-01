@@ -7,7 +7,7 @@
 
     <h2>Id</h2>
 
-    <h3><a href="@routes.ApplicationController.docById(document.id)">@document.id</a></h3>
+    <h3><a href="@routes.ElasticsearchController.docById(document.id)">@document.id</a></h3>
 
     <h2>Original Text</h2>
 
@@ -26,8 +26,8 @@
         <tbody>
         @for(wt <- document.weightedTopics.sortBy(_.weight).reverse) {
             <tr>
-                <td><a href="@routes.ApplicationController.topicById(wt.topic.id)">@wt.topic.id</a></td>
-                <td><a href="@routes.ApplicationController.topicById(wt.topic.id)">@wt.topic.wordFrequency.toList.sortBy(_._2).reverse.map(_._1).mkString(", ")</a></td>
+                <td><a href="@routes.ElasticsearchController.topicById(wt.topic.id)">@wt.topic.id</a></td>
+                <td><a href="@routes.ElasticsearchController.topicById(wt.topic.id)">@wt.topic.wordFrequency.toList.sortBy(_._2).reverse.map(_._1).mkString(", ")</a></td>
                 <td>@("%.8f".format(wt.weight))</td>
             </tr>
         }

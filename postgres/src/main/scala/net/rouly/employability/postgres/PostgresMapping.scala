@@ -7,7 +7,7 @@ class PostgresMapping(schema: PostgresSchema)(implicit val session: SlickSession
   import session.profile.api._
 
   implicit val documentInsertion: RecordInsertion[Document[String]] = { document =>
-    schema.documents += (document.id.toString, document.raw, document.content)
+    schema.documents += (document.id.toString, document.raw, document.content, document.kind.kind)
   }
 
 }

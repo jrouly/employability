@@ -6,9 +6,9 @@ import controllers.AssetsComponents
 import net.rouly.common.server.play.module.AppServerComponents
 import net.rouly.employability.elasticsearch.ElasticsearchModule
 import net.rouly.employability.web.api.ApiController
-import net.rouly.employability.web.application.ApplicationController
+import net.rouly.employability.web.application.{ElasticsearchController, StaticPagesController}
 import net.rouly.employability.web.echo.EchoController
-import net.rouly.employability.web.elasticsearch.ElasticsearchService
+import net.rouly.employability.web.elasticsearch.ElasticsearchWebService
 import play.api.BuiltInComponents
 import play.api.cache.Cached
 import play.api.cache.ehcache.EhCacheComponents
@@ -26,13 +26,13 @@ trait AppComponents
 
   private lazy val cached: Cached = new Cached(defaultCacheApi)
 
-  lazy val echoController: EchoController = wire[EchoController]
   lazy val elasticsearch: ElasticsearchModule = wire[ElasticsearchModule]
+  lazy val elasticsearchService: ElasticsearchWebService = wire[ElasticsearchWebService]
 
-  lazy val topicService: ElasticsearchService = wire[ElasticsearchService]
+  lazy val echoController: EchoController = wire[EchoController]
+  lazy val elasticsearchController: ElasticsearchController = wire[ElasticsearchController]
+  lazy val staticPagesController: StaticPagesController = wire[StaticPagesController]
   lazy val topicController: ApiController = wire[ApiController]
-
-  lazy val applicationController: ApplicationController = wire[ApplicationController]
 
   override lazy val router: Router = {
     lazy val prefix = "/" // routing prefix

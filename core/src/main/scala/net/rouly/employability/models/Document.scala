@@ -12,5 +12,6 @@ import java.util.UUID
 case class Document[T](
   id: UUID,
   raw: String,
-  content: T
+  content: T,
+  kind: DocumentKind
 )

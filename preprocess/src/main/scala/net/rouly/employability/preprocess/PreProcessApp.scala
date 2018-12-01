@@ -52,7 +52,6 @@ object PreProcessApp
     wsClient.close()
     elasticsearch.close()
     postgres.close()
-    materializer.shutdown()
   }
 
   // Execute the application.
