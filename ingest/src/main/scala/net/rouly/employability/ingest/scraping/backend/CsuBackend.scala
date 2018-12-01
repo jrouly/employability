@@ -12,17 +12,17 @@ import org.jsoup.nodes.Element
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
-class WoffordBackend(
+class CsuBackend(
   jsoup: JSoupClient
 )(implicit ec: BlockingExecutionContext)
   extends GenericBackend(jsoup) {
 
-  private val baseUrl = "http://catalog.wofford.edu"
+  private val baseUrl = "http://catalog.colostate.edu"
 
-  protected val dataSet = "Wofford College"
+  override protected val dataSet = "Colorado State University"
 
   protected def getDepartmentUrls: Future[List[Url]] = {
-    jsoup.get(baseUrl / "courses-instruction").map { document =>
+    jsoup.get(baseUrl / "general-catalog/courses-az").map { document =>
       document
         .select("#atozindex")
         .select("li")
@@ -36,7 +36,7 @@ class WoffordBackend(
   protected def getCourses(departmentUrl: Url): Future[List[CourseDescription]] = {
     jsoup.get(departmentUrl).map { document =>
       document
-        .select("#coursestextcontainer")
+        .select(".courses")
         .select(".courseblock")
         .asScala.toList
         .flatMap(toDocument)
@@ -45,7 +45,7 @@ class WoffordBackend(
 
   protected def toDocument(element: Element): Option[CourseDescription] = {
     val title = element.select(".courseblocktitle").text
-    val desc = element.select(".courseblockdesc").text
+    val desc = element.select(".courseblockdesc").text.split("Prerequisite: ").head
     val uuid = title + desc + dataSet
 
     if (title.isEmpty || desc.isEmpty) None

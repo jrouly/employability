@@ -17,12 +17,22 @@ class ScrapingModule(implicit actorSystem: ActorSystem) {
 
   private lazy val sources = List(
     wire[BerkeleyBackend].scrape,
+    wire[BuffaloBackend].scrape,
+    wire[CalPolyBackend].scrape,
+    wire[CsuBackend].scrape,
     wire[GeorgeMasonBackend].scrape,
+    wire[GeorgiaStateBackend].scrape,
     wire[HarvardBackend].scrape,
     wire[IllinoisBackend].scrape,
     wire[IowaStateBackend].scrape,
+    wire[PennStateBackend].scrape,
     wire[StOlafBackend].scrape,
+    wire[TexasAMBackend].scrape,
+    wire[UAlabamaBackend].scrape,
     wire[UChicagoBackend].scrape,
+    wire[UFloridaBackend].scrape,
+    wire[UWashingtonBackend].scrape,
+    wire[UncChapelHillBackend].scrape,
     wire[WoffordBackend].scrape
   )
 

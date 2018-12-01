@@ -12,21 +12,21 @@ import org.jsoup.nodes.Element
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
-class WoffordBackend(
+class UWashingtonBackend(
   jsoup: JSoupClient
 )(implicit ec: BlockingExecutionContext)
   extends GenericBackend(jsoup) {
 
-  private val baseUrl = "http://catalog.wofford.edu"
+  private val baseUrl = "https://www.washington.edu/students/crscat"
 
-  protected val dataSet = "Wofford College"
+  override protected val dataSet = "University of Washington"
 
   protected def getDepartmentUrls: Future[List[Url]] = {
-    jsoup.get(baseUrl / "courses-instruction").map { document =>
+    jsoup.get(baseUrl).map { document =>
       document
-        .select("#atozindex")
+        .select("ul")
         .select("li")
-        .select("a")
+        .select("a[href~=^[a-z]+.html]")
         .asScala.toList
         .map(_.attr("href"))
         .map(path => baseUrl / path)
@@ -36,16 +36,22 @@ class WoffordBackend(
   protected def getCourses(departmentUrl: Url): Future[List[CourseDescription]] = {
     jsoup.get(departmentUrl).map { document =>
       document
-        .select("#coursestextcontainer")
-        .select(".courseblock")
+        .select("ul")
+        .nextAll()
+        .select("p")
+        .select("a[name]")
         .asScala.toList
         .flatMap(toDocument)
     }
   }
 
   protected def toDocument(element: Element): Option[CourseDescription] = {
-    val title = element.select(".courseblocktitle").text
-    val desc = element.select(".courseblockdesc").text
+    val titleEl = element.select("b")
+    val title = titleEl.text
+
+    titleEl.remove()
+    val desc = element.text
+
     val uuid = title + desc + dataSet
 
     if (title.isEmpty || desc.isEmpty) None

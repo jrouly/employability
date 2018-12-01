@@ -19,7 +19,7 @@ class StOlafBackend(
 
   private val baseUrl = "http://catalog.stolaf.edu"
 
-  protected val dataSet = "stolaf"
+  protected val dataSet = "St Olaf College"
 
   protected def getDepartmentUrls: Future[List[Url]] = {
     jsoup.get(baseUrl / "academic-programs").map { document =>

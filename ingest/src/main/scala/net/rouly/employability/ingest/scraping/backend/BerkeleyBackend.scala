@@ -19,7 +19,7 @@ class BerkeleyBackend(
 
   private val baseUrl = "http://guide.berkeley.edu"
 
-  protected val dataSet = "ucberkeley"
+  protected val dataSet = "UC Berkeley"
 
   protected def getDepartmentUrls: Future[List[Url]] = {
     jsoup.get(baseUrl / "courses").map { document =>

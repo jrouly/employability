@@ -19,7 +19,7 @@ class UChicagoBackend(
 
   private val baseUrl = "http://collegecatalog.uchicago.edu"
 
-  protected val dataSet = "uchicago"
+  protected val dataSet = "University of Chicago"
 
   protected def getDepartmentUrls: Future[List[Url]] = {
     jsoup.get(baseUrl / "thecollege/programsofstudy").map { document =>

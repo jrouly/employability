@@ -19,7 +19,7 @@ class IowaStateBackend(
 
   private val baseUrl = "http://catalog.iastate.edu"
 
-  override protected val dataSet = "iastate"
+  override protected val dataSet = "Iowa State University"
 
   protected def getDepartmentUrls: Future[List[Url]] = {
     jsoup.get(baseUrl / "azcourses").map { document =>

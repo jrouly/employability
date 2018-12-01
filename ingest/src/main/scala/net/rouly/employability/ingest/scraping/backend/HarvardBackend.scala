@@ -21,7 +21,7 @@ class HarvardBackend(
   private val baseUrl = "https://courses.harvard.edu/search"
   private val pages = 0 to 15525 by 25
 
-  protected val dataSet = "harvard"
+  protected val dataSet = "Harvard"
 
   def scrape: Source[RawDocument, NotUsed] = {
     val courses = Future.traverse(pages.toList)(getCoursesForPage)
