@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+BASEDIR=$(cd $(dirname $0); pwd)
+. $BASEDIR/../bin/lib.sh
+
+SNAPSHOT=$1
+if [ -z $SNAPSHOT ]
+then
+  echo "Usage: ./import-data <uuid>"
+  exit 1
+fi
+
+echo "Creating remote repo."
+create_remote_repo
+
+echo "Restoring snapshot $SNAPSHOT."
+restore_snapshot remote $SNAPSHOT
+
+echo "Done."

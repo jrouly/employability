@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-BASEDIR=$(cd $(dirname $0); pwd)
-. $BASEDIR/../bin/lib.sh
-
-echo "Creating repo."
-create_remote_repo $1
-echo ""
