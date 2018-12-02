@@ -15,13 +15,9 @@
   </appender>
 
   <root level="warn">
-    <appender-ref ref="file" />
+    <appender-ref ref="console" />
   </root>
 
-  <logger name="net.rouly" level="debug">
-    <appender-ref ref="console" />
-  </logger>
-
-  <logger name="com.sksamuel" level="debug" />
+  <logger name="net.rouly" level="debug" />
 
 </configuration>
