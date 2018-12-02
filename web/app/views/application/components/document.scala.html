@@ -27,7 +27,7 @@
         @for(wt <- document.weightedTopics.sortBy(_.weight).reverse) {
             <tr>
                 <td><a href="@routes.ElasticsearchController.topicById(wt.topic.id)">@wt.topic.id</a></td>
-                <td><a href="@routes.ElasticsearchController.topicById(wt.topic.id)">@wt.topic.wordFrequency.toList.sortBy(_._2).reverse.map(_._1).mkString(", ")</a></td>
+                <td><a href="@routes.ElasticsearchController.topicById(wt.topic.id)">@wt.topic.wordFrequency.toList.sortBy(_.frequency).reverse.map(_.word).mkString(", ")</a></td>
                 <td>@("%.8f".format(wt.weight))</td>
             </tr>
         }

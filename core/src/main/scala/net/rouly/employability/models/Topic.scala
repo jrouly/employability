@@ -8,9 +8,18 @@ import play.api.libs.json.{Format, Json}
   */
 case class Topic(
   id: String,
-  wordFrequency: Map[String, Double]
+  wordFrequency: Set[WordFrequency]
 )
 
 object Topic {
-  implicit val topicFormat: Format[Topic] = Json.format[Topic]
+  implicit val format: Format[Topic] = Json.format[Topic]
+}
+
+case class WordFrequency(
+  word: String,
+  frequency: Double
+)
+
+object WordFrequency {
+  implicit val format: Format[WordFrequency] = Json.format[WordFrequency]
 }

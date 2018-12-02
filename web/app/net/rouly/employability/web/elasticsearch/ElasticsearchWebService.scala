@@ -24,13 +24,12 @@ class ElasticsearchWebService(elasticsearch: ElasticsearchModule) {
   }
 
   def documentsByTopic(topicId: String): Source[ModeledDocument, NotUsed] = {
+    val weightQuery = rangeQuery("weightedTopics.weight").gt(0.5)
+    val topicIdQuery = termQuery("weightedTopics.topic.id", topicId)
+    val query = nestedQuery("weightedTopics", must(topicIdQuery, weightQuery))
+
     val searchRequest = search(elasticsearch.config.modeledDocumentIndex)
-      .query(
-        nestedQuery("weightedTopics", must(
-          termQuery("weightedTopics.topic.id", topicId),
-          rangeQuery("weightedTopics.weight").gt(0.1)
-        ))
-      )
+      .query(query)
       .sortByFieldDesc("weightedTopics.weight")
       .scroll(5.seconds)
 

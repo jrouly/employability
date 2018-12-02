@@ -1,11 +1,13 @@
 package net.rouly.employability.analysis.lda
 
 import akka.actor.ActorSystem
-import net.rouly.employability.models.{ModeledDocument, Topic, WeightedTopic}
+import com.typesafe.scalalogging.Logger
+import net.rouly.employability.models.{ModeledDocument, Topic, WeightedTopic, WordFrequency}
 import org.apache.spark.ml.clustering.{LDA, LDAModel}
 import org.apache.spark.ml.feature._
 import org.apache.spark.ml.linalg
 import org.apache.spark.sql._
+import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
@@ -73,17 +75,20 @@ class LdaProcessor(
     */
   private def getTopics(model: LDAModel, vocabulary: Array[String]) = {
     val topics = model.describeTopics(config.wordsPerTopic)
-    topics.map {
+    topics.flatMap {
       case Row(id: Int, termIndices, termWeights) =>
         val termIndicesSeq = termIndices.asInstanceOf[Seq[Int]]
         val termWeightsSeq = termWeights.asInstanceOf[Seq[Double]]
         val wordFrequency = termIndicesSeq
           .map(vocabulary.apply)
           .zip(termWeightsSeq)
-          .toMap
-        Topic(id.toString, wordFrequency)
-      case _ =>
-        throw new Exception("Unable to parse topics.")
+          .map((WordFrequency.apply _).tupled)
+          .toSet
+        Some(Topic(id.toString, wordFrequency))
+      case error =>
+        val logger = Logger(LoggerFactory.getLogger("LdaProcessor"))
+        logger.error(s"Unable to parse topic. [$error]")
+        None
     }
   }
 
@@ -91,9 +96,9 @@ class LdaProcessor(
     * Associate modeled documents with their topic distributions.
     */
   private def getModeledDocuments(df: DataFrame, topics: Vector[Topic]) = {
-    df.map {
-      case Row(id: String, raw: String, _, _, filtered, _, _, distribution: linalg.Vector) =>
-        ModeledDocument(
+    df.flatMap {
+      case Row(id: String, raw: String, _, _, _, filtered, _, _, distribution: linalg.Vector) =>
+        Some(ModeledDocument(
           id = id,
           originalText = raw,
           tokens = filtered.asInstanceOf[Seq[String]],
@@ -102,9 +107,11 @@ class LdaProcessor(
             .zipWithIndex
             .map { case (weight, topic) => WeightedTopic(topics(topic), weight) }
             .toList
-        )
-      case _ =>
-        throw new Exception("Unable to parse modeled topics.")
+        ))
+      case error =>
+        val logger = Logger(LoggerFactory.getLogger("LdaProcessor"))
+        logger.error(s"Unable to parse modeled document. [$error]")
+        None
     }
   }
 

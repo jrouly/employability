@@ -2,6 +2,8 @@ package net.rouly.employability.analysis.lda
 
 import akka.actor.ActorSystem
 import akka.stream.Materializer
+import com.sksamuel.elastic4s.http._
+import com.sksamuel.elastic4s.mappings.FieldDefinition
 import com.softwaremill.macwire.{Module, wire}
 import net.rouly.common.config.Configuration
 import net.rouly.employability.elasticsearch.ElasticsearchModule
@@ -35,6 +37,42 @@ class LdaModule(
     for {
       _ <- queues.topics.watchCompletion()
       _ <- queues.documents.watchCompletion()
+    } yield ()
+
+  }
+
+  def initElasticsearch(): Future[Unit] = {
+    import com.sksamuel.elastic4s.http.ElasticDsl._
+
+    // This is nested under the ModeledDocument as well as Topic.
+    val topicSchema: Seq[FieldDefinition] = List(
+      textField("id"),
+      nestedField("wordFrequency").fields(
+        textField("word"),
+        doubleField("frequency")
+      )
+    )
+
+    val modeledDocumentFuture = elasticsearch.client.execute {
+      createIndex(elasticsearch.config.modeledDocumentIndex).mappings(ElasticDsl.mapping("doc").fields(
+        textField("id"),
+        textField("originalText"),
+        textField("tokens"),
+        nestedField("weightedTopics").fields(
+          objectField("topic").fields(topicSchema),
+          doubleField("weight")
+        )
+      ))
+    }
+
+    val topicFuture = elasticsearch.client.execute {
+      createIndex(elasticsearch.config.topicIndex)
+        .mappings(ElasticDsl.mapping("doc").fields(topicSchema))
+    }
+
+    for {
+      _ <- modeledDocumentFuture
+      _ <- topicFuture
     } yield ()
 
   }

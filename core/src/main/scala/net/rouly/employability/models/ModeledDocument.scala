@@ -10,6 +10,7 @@ import play.api.libs.json.{Format, Json}
   */
 case class ModeledDocument(
   id: String,
+  // todo: add kind
   originalText: String,
   tokens: Seq[String],
   weightedTopics: List[WeightedTopic]

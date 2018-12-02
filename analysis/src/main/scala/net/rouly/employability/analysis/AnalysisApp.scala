@@ -19,8 +19,6 @@ object AnalysisApp
   lazy val postgres: PostgresModule = wire[PostgresModule]
   lazy val lda: LdaModule = wire[LdaModule]
 
-  elasticsearch.init()
-
   lazy val spark = SparkSession
     .builder()
     .master("local[12]")
@@ -32,7 +30,13 @@ object AnalysisApp
     spark.close()
   }
 
+  // Build application future.
+  val future = for {
+    _ <- lda.initElasticsearch()
+    _ <- lda.execute()
+  } yield ()
+
   // Execute the application.
-  run(lda.execute(), 10.minutes)
+  run(future, 40.minutes)
 
 }
