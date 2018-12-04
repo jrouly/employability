@@ -21,31 +21,50 @@ Install the following dependencies:
 
 Using `docker-compose`, start the background services:
 
-    docker-compose up -d
+    docker-compose up -d elasticsearch
 
-Using `sbt`, execute the data pipelines.
+## Execution
 
-    sbt ingest/run      # ingest raw data
-    sbt preprocess/run  # prepare the data for LDA
-    sbt analysis/run    # perform topic modeling
+### Running the vis server
 
-Start up the visualization server to interact with the inferred topics.
+You can import a static dataset to run the vis server locally yourself without ingesting and processing the raw data.
+Start up elasticsearch and the vis server, then import the latest dataset.
 
-    sbt web/run
+    docker-compose up -d elasticsearch web
+    ./elasticsearch/bin/import-data 500-topics
 
-## Data Sources
+You should be able to acccess the vis server at [localhost:9000](localhost:9000) once the import completes.
 
-Data sources can be defined in `ingest/src/main/resources/datasets/`.
-Currently, only `csv` data sourced from [`data.world`](https://data.world) are supported, but extending the ingestion pipeline to additional data sources is straightforward.
+### Data Ingestion
 
-Register for an account at [`data.world`](https://data.world) to get an [API token](https://data.world/settings/advanced).
-Export the API token as an environment variable prior to ingestion.
+If you would like to run the whole ingestion and analysis process, there are a few more steps.
 
-    export DATA_WORLD_API_TOKEN=...
+Register for an account at [Data World](https://data.world) and export your API token.
 
-### Future Work
+    export DATA_WORLD_API_TOKEN=
 
-This project has spawned an [additional effort](https://github.com/jrouly/data.world-scala) to built a native Scala client for [`data.world`](https://data.world) using [Reactive Stream](http://www.reactive-streams.org/) technology.
+Start up all background data services.
+
+    docker-compose up -d elasticsearch kibana postgres
+
+Execute the data pipelines.
+
+    sbt ingest/run
+    sbt preprocess/run
+
+Execute LDA.
+
+    sbt analysis/run
+
+##### Configuring LDA
+
+You can modify the behavior of LDA through environment variables.
+Some pre-defined configurations are made available for you.
+
+    # Source one of these before running analysis/run.
+    source ./analysis/config/small
+    source ./analysis/config/medium
+    source ./analysis/config/large
 
 ## Project Modules
 
