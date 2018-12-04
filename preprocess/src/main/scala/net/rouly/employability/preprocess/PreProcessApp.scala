@@ -35,7 +35,7 @@ object PreProcessApp
 
   lazy val graph = {
     import postgres.mapping._
-    val sink = Sink.foreachAsync(parallelism)(postgres.insert[Document[String]])
+    val sink = Sink.foreachAsync(parallelism)(postgres.batchInsert[Document[String]])
 
     elasticsearch.streams
       .source(elasticsearch.config.rawDocumentIndex)
@@ -44,6 +44,7 @@ object PreProcessApp
       .via(DocumentTransformFlow())
       .via(PreProcessFlow(openNlpModels))
       .wireTap(BookKeepingWireTap("preprocessed"))
+      .grouped(500)
       .runWith(sink)
   }
 

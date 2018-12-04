@@ -12,6 +12,8 @@ package object postgres {
 
   type RecordInsertion[T] = T => DBIO[Int]
 
+  type BatchRecordInsertion[T] = Seq[T] => DBIO[Int]
+
   implicit class RichTable[T <: RelationalProfile#Table[_], U](
     val q: Query[T, U, Seq] with TableQuery[T]
   )(implicit session: SlickSession, ec: ExecutionContext) {

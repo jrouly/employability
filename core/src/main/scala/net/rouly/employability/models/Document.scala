@@ -13,5 +13,6 @@ case class Document[T](
   id: UUID,
   raw: String,
   content: T,
-  kind: DocumentKind
+  kind: DocumentKind,
+  dataSet: String
 )

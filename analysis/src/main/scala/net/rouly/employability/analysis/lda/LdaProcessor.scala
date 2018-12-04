@@ -2,7 +2,7 @@ package net.rouly.employability.analysis.lda
 
 import akka.actor.ActorSystem
 import com.typesafe.scalalogging.Logger
-import net.rouly.employability.models.{ModeledDocument, Topic, WeightedTopic, WordFrequency}
+import net.rouly.employability.models._
 import org.apache.spark.ml.clustering.{LDA, LDAModel}
 import org.apache.spark.ml.feature._
 import org.apache.spark.ml.linalg
@@ -97,9 +97,11 @@ class LdaProcessor(
     */
   private def getModeledDocuments(df: DataFrame, topics: Vector[Topic]) = {
     df.flatMap {
-      case Row(id: String, raw: String, _, _, _, filtered, _, _, distribution: linalg.Vector) =>
+      case Row(id: String, raw: String, _, kind: String, dataSet: String, _, filtered, _, _, distribution: linalg.Vector) =>
         Some(ModeledDocument(
           id = id,
+          kind = kind,
+          dataSet = dataSet,
           originalText = raw,
           tokens = filtered.asInstanceOf[Seq[String]],
           weightedTopics = distribution

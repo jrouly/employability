@@ -4,13 +4,16 @@ import play.api.libs.json.{Format, Json}
 
 /**
   * @param id corresponds to original document ID
-  * @param originalText orignial text of the document
+  * @param kind kind of document
+  * @param dataSet original dataset
+  * @param originalText original text of the document
   * @param tokens raw tokens
   * @param weightedTopics weighted mixture of topics
   */
 case class ModeledDocument(
   id: String,
-  // todo: add kind
+  kind: String,
+  dataSet: String,
   originalText: String,
   tokens: Seq[String],
   weightedTopics: List[WeightedTopic]

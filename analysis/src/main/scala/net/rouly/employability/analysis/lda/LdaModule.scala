@@ -46,7 +46,7 @@ class LdaModule(
 
     // This is nested under the ModeledDocument as well as Topic.
     val topicSchema: Seq[FieldDefinition] = List(
-      textField("id"),
+      textField("id").index(true),
       nestedField("wordFrequency").fields(
         textField("word"),
         doubleField("frequency")
@@ -56,6 +56,7 @@ class LdaModule(
     val modeledDocumentFuture = elasticsearch.client.execute {
       createIndex(elasticsearch.config.modeledDocumentIndex).mappings(ElasticDsl.mapping("doc").fields(
         textField("id"),
+        textField("kind").index(true),
         textField("originalText"),
         textField("tokens"),
         nestedField("weightedTopics").fields(

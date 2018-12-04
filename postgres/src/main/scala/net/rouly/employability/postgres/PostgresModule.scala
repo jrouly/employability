@@ -27,6 +27,11 @@ class PostgresModule(
     session.db.run(insert(t)).map(_ => ())
   }
 
+  def batchInsert[T: BatchRecordInsertion](t: Seq[T]): Future[Unit] = {
+    val insert = implicitly[BatchRecordInsertion[T]]
+    session.db.run(insert(t)).map(_ => ())
+  }
+
   def init(): Future[Unit] = for {
     _ <- schema.documents.dropIfExists
     _ <- schema.documents.createIfNotExists

@@ -37,6 +37,5 @@ object PreProcessFlow {
     * Lift a function up into [[Document]] and apply it to [[Document.content]].
     */
   private def lift[T, R](fn: T => R): Document[T] => Document[R] =
-    dt => Document(id = dt.id, raw = dt.raw, content = fn(dt.content), kind = dt.kind)
-
+    dt => dt.copy(content = fn(dt.content))
 }

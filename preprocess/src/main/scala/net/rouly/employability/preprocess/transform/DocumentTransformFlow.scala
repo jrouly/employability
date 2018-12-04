@@ -32,14 +32,16 @@ object DocumentTransformFlow {
     id = jobPosting.id,
     raw = jobPosting.description,
     content = jobPosting.description,
-    kind = DocumentKind.JobDescription
+    kind = DocumentKind.JobDescription,
+    dataSet = jobPosting.dataSet
   )
 
   private def toDoc(courseDescription: CourseDescription): Document[String] = Document(
     id = courseDescription.id,
     raw = courseDescription.description,
     content = courseDescription.description,
-    kind = DocumentKind.CourseDescription
+    kind = DocumentKind.CourseDescription,
+    dataSet = courseDescription.dataSet
   )
 
   private def success[T]: PartialFunction[Try[T], T] = { case Success(t) => t }
