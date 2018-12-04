@@ -21,7 +21,7 @@ class LdaProcessor(
   /**
     * Read in data from the JDBC where it's cached after streaming in from Elasticsearch.
     */
-  protected def readData: DataFrame = {
+  protected def readDataFromJdbc: DataFrame = {
     spark.read
       .format("jdbc")
       .option("url", config.jdbcUrl)
@@ -122,7 +122,7 @@ class LdaProcessor(
     try {
 
       // Perform vectorization.
-      val (df, vocabulary) = vectorize(readData)
+      val (df, vocabulary) = vectorize(readDataFromJdbc)
 
       // Set up LDA.
       val lda = new LDA()

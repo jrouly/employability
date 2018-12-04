@@ -37,6 +37,6 @@ object AnalysisApp
   } yield ()
 
   // Execute the application.
-  run(future, 3.hours)
+  run(future, 5.hours)
 
 }
