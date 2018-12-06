@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+BASEDIR=$(cd $(dirname $0); pwd)
+. $BASEDIR/../bin/lib.sh
+
+if [ ! "$(docker ps --quiet --filter name=employability-elasticsearch)" ]
+then
+  docker-compose up -d elasticsearch
+  sleep 3
+fi
+
+echo "Installing repository-s3 plugin."
+docker exec -it employability-elasticsearch bin/elasticsearch-plugin install --batch --silent repository-s3 > /dev/null
+docker-compose restart elasticsearch
