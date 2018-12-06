@@ -3,6 +3,7 @@
 
 *.log
 data/
+snapshots.tar.gz
 dist/*
 target/
 lib_managed/

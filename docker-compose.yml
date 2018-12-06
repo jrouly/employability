@@ -19,13 +19,15 @@ services:
       - cluster.name=employability
       - path.repo=/usr/share/elasticsearch/snapshots/
       - repositories.url.allowed_urls=http://employability.rouly.net/snapshots/*
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
     volumes:
       - "data-elasticsearch:/usr/share/elasticsearch/data"
+      - "./data/elasticsearch-snapshots:/usr/share/elasticsearch/snapshots"
 
   postgres:
     image: postgres:10
     container_name: employability-postgres
-    expose: ["5432"]
+    ports: ["127.0.0.1:5432:5432"]
     environment:
       POSTGRES_USER: employability
       POSTGRES_PASSWORD: employability

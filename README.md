@@ -56,6 +56,18 @@ Execute LDA.
 
     sbt analysis/run
 
+#### Exporting data
+
+In the same way that you can import an online snapshot of the Elasticsearch data, you can also export your own snapshot.
+
+    ./elasticsearch/bin/export-data <new-snapshot-id>
+
+This will do several things:
+
+  * create a `local` snapshot repository in your Elasticsearch cluster
+  * create a new snapshot in the `local` repository
+  * compress your snapshot repository to a portable `./snapshots.tar.gz` file
+
 ##### Configuring LDA
 
 You can modify the behavior of LDA through environment variables.

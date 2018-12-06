@@ -16,8 +16,8 @@ create_local_repo
 echo "Creating snapshot $SNAPSHOT."
 create_snapshot local $SNAPSHOT
 
-echo "Exporting snapshot $SNAPSHOT."
-rm -rf local
-docker cp employability-elasticsearch:/usr/share/elasticsearch/snapshots/local local
+echo "Compressing snapshot directory."
+tar czf snapshots.tar.gz ./data/elasticsearch-snapshots/local
 
+echo "Exported as: ./snapshots.tar.gz"
 echo "Done."
