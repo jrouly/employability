@@ -56,7 +56,8 @@ class LdaModule(
     val modeledDocumentFuture = elasticsearch.client.execute {
       createIndex(elasticsearch.config.modeledDocumentIndex).mappings(ElasticDsl.mapping("doc").fields(
         textField("id"),
-        textField("kind").index(true),
+        keywordField("kind").index(true),
+        keywordField("dataSet").index(true),
         textField("originalText"),
         textField("tokens"),
         nestedField("weightedTopics").fields(
