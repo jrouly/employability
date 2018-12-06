@@ -2,6 +2,7 @@ package net.rouly.employability.web.application
 
 import akka.stream.Materializer
 import akka.stream.scaladsl.Sink
+import net.rouly.employability.web.application.model.BucketStats
 import net.rouly.employability.web.elasticsearch.ElasticsearchWebService
 import play.api.cache.Cached
 import play.api.mvc.{AbstractController, ControllerComponents}
@@ -14,6 +15,27 @@ class ElasticsearchController(
   cached: Cached,
   service: ElasticsearchWebService
 )(implicit mat: Materializer, ec: ExecutionContext) extends AbstractController(cc) {
+
+  def index = cached("app.index") {
+    Action.async {
+      for {
+        rawKindStats <- service.bucket("kind.keyword", rawDocuments = true)
+        kindStats <- service.bucket("kind")
+        courseDescriptionStats <- service.bucket("dataSet", ("kind", "course-description"))
+        jobDescriptionStats <- service.bucket("dataSet", ("kind", "job-description"))
+        documentCount <- service.documentCount
+        topicCount <- service.topicCount
+      } yield {
+        val bucketStats = List(
+          BucketStats("data set (raw)", ("kind", "count"), rawKindStats.toList),
+          BucketStats("data set (modeled)", ("kind", "count"), kindStats.toList),
+          BucketStats("course descriptions (modeled)", ("source", "count"), courseDescriptionStats.toList),
+          BucketStats("job descriptions (modeled)", ("source", "count"), jobDescriptionStats.toList)
+        )
+        Ok(application.index(bucketStats, documentCount.result.count, topicCount.result.count))
+      }
+    }
+  }
 
   def allTopics = cached("app.allTopics") {
     Action.async {
@@ -31,14 +53,6 @@ class ElasticsearchController(
       } yield {
         topic.render(application.topic(_, docs.toList))
       }
-    }
-  }
-
-  def docsByTopicId(id: String) = cached(s"app.docsByTopicId.$id") {
-    Action.async {
-      for {
-        docs <- service.documentsByTopic(id).take(10).runWith(Sink.collection)
-      } yield Ok(docs.toString)
     }
   }
 

@@ -4,7 +4,7 @@ table {
   margin: 15px;
 }
 
-table thead, table td {
+table thead, table td, table th {
   text-align: left;
   padding: 8px;
   font-family: monospace;
@@ -15,12 +15,13 @@ table tr:nth-child(even) {
 }
 
 table thead {
-  background-color: #3F78A9;
+  background-color: royalblue;
   color: whitesmoke;
 }
 
 table caption {
   padding: 8px;
   font-size: 1.1em;
+  background-color: lightblue;
 }
 

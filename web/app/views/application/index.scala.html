@@ -1,3 +1,7 @@
+@import net.rouly.employability.web.application.model._
+
+@(stats: List[BucketStats], numTopics: Long, numDocs: Long)
+
 @application.layout.main(title = "Main") {
 
     <p>
@@ -5,17 +9,73 @@
         Its name comes from the notion of how <i>employable</i> a student is upon graduation.
     </p>
 
-    <h2>Instructions</h2>
+    <h2>Data</h2>
+
+    <!--
+    <table>
+        <caption>dataset statistics</caption>
+        <tbody>
+            <tr>
+                <td>Job Descriptions (raw)</td>
+                <td>96,822</td>
+            </tr>
+            <tr>
+                <td>Job Descriptions (preprocessed)</td>
+                <td>92,852</td>
+            </tr>
+            <tr>
+                <td>Course Descriptions (raw)</td>
+                <td>105,593</td>
+            </tr>
+            <tr>
+                <td>Course Descriptions (preprocessed)</td>
+                <td>17,536</td>
+            </tr>
+        </tbody>
+    </table>
+    -->
+
+    <h4>A note about course descriptions</h4>
 
     <p>
-        <strong>More to come.</strong>
+        The number of raw course and job descriptions roughly correspond. However, the data quality of the course
+        descriptions was clearly inferior compared to the job descriptions. Raw, unmodified course descriptions
+        were downloaded from primary sources (university catalog websites). Unfortunately, the average course
+        description is a very brief description of the mechanics of a course. The course description that details
+        expectations, concepts, and outcomes of a course is a rare one. A more appropriate data source, though
+        significantly less available, would be course syllabi.
     </p>
 
+    @for(stat <- stats) {
+        <div>
+            <table>
+                <caption>@stat.title</caption>
+                <thead>
+                    <tr>
+                        <th>@stat.labels._1</th>
+                        <th>@stat.labels._2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(entry <- stat.buckets) {
+                        <tr>
+                            <td>@entry.dataSet</td>
+                            <td>@("%,d".format(entry.coverage))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+
+    <h2>Report</h2>
+
     <p>
-        For now, you can use the site by exploring through the <em>Topics</em> and <em>Documents</em> tabs.
-        Each tab will render either a list of topics or a list of documents.
-        Topics will link to the documents that express them, and documents will list out the topics they all express.
-        Pages are hyperlinked together such that you can explore the relationships between topics and documents in this way.
+        An initial report of the eighteen universities surveyed is included.
+        <em>coverage</em> refers to the percent of the inferred topic universe covered by documents in the given
+        dataset. A heuristic to apply here is the higher the coverage the more broadly the dataset is represented
+        in the topic universe.
     </p>
 
 }
