@@ -1,6 +1,6 @@
-LDA_K=1000
-LDA_MAX_ITERATIONS=50
-LDA_WORDS_PER_TOPIC=10
-LDA_MIN_DOCUMENT_FREQUENCY=5
+export LDA_K=1000
+export LDA_MAX_ITERATIONS=50
+export LDA_WORDS_PER_TOPIC=10
+export LDA_MIN_DOCUMENT_FREQUENCY=5
 
-SBT_OPTS="-Xmx10240m -Xms10240m -Duser.timezone=EST -XX:MaxMetaspaceSize=1024m -XX:ReservedCodeCacheSize=1024m"
+export SBT_OPTS="-Xmx10240m -Xms10240m -Duser.timezone=EST -XX:MaxMetaspaceSize=1024m -XX:ReservedCodeCacheSize=1024m"
