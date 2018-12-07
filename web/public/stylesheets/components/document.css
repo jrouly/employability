@@ -1,0 +1,8 @@
+.document {
+  display: inline-block;
+  border: 1px solid darkgray;
+  border-radius: 9px;
+  padding: 5px 25px;
+  margin: 15px;
+  max-width: 500px;
+}

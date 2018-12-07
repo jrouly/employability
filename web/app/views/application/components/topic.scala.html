@@ -1,22 +1,29 @@
 @import net.rouly.employability.models.{Topic, WordFrequency}
 @import net.rouly.employability.web.application.routes
 
-@(topic: Topic)
+@(topic: Topic, link: Boolean = true)
 
-<table>
-    <caption><a href="@routes.ElasticsearchController.topicById(topic.id)">topic @topic.id</a></caption>
-    <thead>
-        <tr>
-            <th>word</th>
-            <th>frequency</th>
-        </tr>
-    </thead>
-    <tbody>
-    @for(WordFrequency(word, frequency) <- topic.wordFrequency.toList.sortBy(_.frequency).reverse) {
-        <tr>
-            <td>@word</td>
-            <td>@("%.8f".format(frequency))</td>
-        </tr>
-    }
-    </tbody>
-</table>
+<div class="topic">
+    <table>
+        <caption>
+            @if(!link) {
+                topic @topic.id
+            } else {
+                <a href="@routes.ElasticsearchController.topicById(topic.id)">topic @topic.id</a></caption>
+        }
+        <thead>
+            <tr>
+                <th>word</th>
+                <th>frequency</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for(WordFrequency(word, frequency) <- topic.wordFrequency.toList.sortBy(_.frequency).reverse) {
+            <tr>
+                <td>@word</td>
+                <td>@("%.8f".format(frequency))</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

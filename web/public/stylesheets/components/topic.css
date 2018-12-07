@@ -1,0 +1,7 @@
+.topic {
+  display: inline-block;
+  border: 1px solid darkgray;
+  border-radius: 9px;
+  margin: 10px;
+  max-width: 500px;
+}

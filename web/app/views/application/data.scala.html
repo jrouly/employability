@@ -1,0 +1,99 @@
+@import net.rouly.employability.web.application.model._
+
+@(rawDataSetStats: BucketStats,
+modeledDataSetStats: BucketStats,
+courseDescriptionStats: BucketStats,
+jobDescriptionStats: BucketStats,
+numTopics: Long,
+numDocs: Long)
+
+@application.layout.main(title = "Datasets") {
+
+    <h1>Data</h1>
+
+    <h2 id="data-sources">Data Sources</h2>
+
+    <h3 id="job-postings">Job Postings</h3>
+
+    <ul>
+        <li><a href="https://data.world/promptcloud/30000-job-postings-from-seek-australia">SEEK Australia</a></li>
+        <li><a href="https://data.world/promptcloud/50000-job-board-records-from-reed-uk">Reed UK</a></li>
+        <li><a href="https://data.world/promptcloud/us-jobs-on-dice-com">Dice.com US</a></li>
+    </ul>
+
+    <h3 id="course-descriptions">Course Descriptions</h3>
+
+    <p>
+        Course descriptions were surveyed from eighteen different undergraduate course catalogs.
+        The catalogs were selected from universities ranging from small to enormous, with course topics covering
+        a similarly varied range.
+    </p>
+
+    <ul>
+        <li><a href="http://catalog.calpoly.edu">Cal Polytechnic</a></li>
+        <li><a href="http://catalog.colostate.edu">Colorado State University</a></li>
+        <li><a href="https://catalog.gmu.edu">George Mason University</a></li>
+        <li><a href="https://catalog.gsu.edu/undergraduate20182019">Georgia State</a></li>
+        <li><a href="https://courses.harvard.edu/search">Harvard</a></li>
+        <li><a href="http://catalog.iastate.edu">Iowa State</a></li>
+        <li><a href="https://bulletins.psu.edu">Penn State</a></li>
+        <li><a href="https://catalog.buffalo.edu">SUNY Buffalo</a></li>
+        <li><a href="http://catalog.stolaf.edu">St Olaf College</a></li>
+        <li><a href="http://catalog.tamu.edu">Texas A&amp;M</a></li>
+        <li><a href="http://guide.berkeley.edu">UC Berkeley</a></li>
+        <li><a href="http://catalog.unc.edu">UNC Chapel Hill</a></li>
+        <li><a href="https://catalog.ua.edu">University of Alabama</a></li>
+        <li><a href="http://collegecatalog.uchicago.edu">University of Chicago</a></li>
+        <li><a href="https://catalog.ufl.edu">University of Florida</a></li>
+        <li><a href="http://catalog.illinois.edu">University of Illinois</a></li>
+        <li><a href="https://www.washington.edu/students/crscat">University of Washington</a></li>
+        <li><a href="http://catalog.wofford.edu">Wofford College</a></li>
+    </ul>
+
+
+    <!--
+    <table>
+        <caption>dataset statistics</caption>
+        <tbody>
+            <tr>
+                <td>Job Descriptions (raw)</td>
+                <td>96,822</td>
+            </tr>
+            <tr>
+                <td>Job Descriptions (preprocessed)</td>
+                <td>92,852</td>
+            </tr>
+            <tr>
+                <td>Course Descriptions (raw)</td>
+                <td>105,593</td>
+            </tr>
+            <tr>
+                <td>Course Descriptions (preprocessed)</td>
+                <td>17,536</td>
+            </tr>
+        </tbody>
+    </table>
+    -->
+
+    <h4>A note about course descriptions</h4>
+
+    <p>
+        The number of raw course and job descriptions roughly correspond. However, the data quality of the course
+        descriptions was clearly inferior compared to the job descriptions. Raw, unmodified course descriptions
+        were downloaded from primary sources (university catalog websites). Unfortunately, the average course
+        description is a very brief description of the mechanics of a course. The course description that details
+        expectations, concepts, and outcomes of a course is a rare one. A more appropriate data source, though
+        significantly less available, would be course syllabi.
+    </p>
+
+    <div>
+        @components.bucketstats(rawDataSetStats)
+        @components.bucketstats(modeledDataSetStats)
+    </div>
+
+    <div>
+        @components.bucketstats(courseDescriptionStats)
+        @components.bucketstats(jobDescriptionStats)
+    </div>
+
+}

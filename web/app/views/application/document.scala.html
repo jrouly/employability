@@ -3,6 +3,5 @@
 @(document: ModeledDocument)
 
 @application.layout.main(title = s"Document ${document.id}") {
-    <h1>Document</h1>
     @application.components.document(document)
 }

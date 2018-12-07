@@ -3,12 +3,10 @@
 
 @application.layout.main(title = s"Topic ${topic.id}") {
 
-    <h1>Topic @topic.id</h1>
-
-    @application.components.topic(topic)
+    @application.components.topic(topic, link = false)
 
     <h3>Matching documents</h3>
-    <p>A selection of the most relevant (highest weight) documents follows.</p>
+    <p>A selection of @documents.size random high weight (most relevant to topic @topic.id) documents follows.</p>
 
     @for(document <- documents) {
         @application.components.document(document)

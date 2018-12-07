@@ -12,6 +12,10 @@ class StaticPagesController(
   cached: Cached
 )(implicit mat: Materializer, ec: ExecutionContext) extends AbstractController(cc) {
 
+  def index = cached("app.index") {
+    Action(Ok(application.index()))
+  }
+
   def about = cached("app.about") {
     Action(Ok(application.about()))
   }

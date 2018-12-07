@@ -5,8 +5,9 @@ GET     /api/topics                             net.rouly.employability.web.api.
 GET     /api/topics/:id                         net.rouly.employability.web.api.ApiController.topicById(id: String)
 
 # Application definition.
-GET     /                                       net.rouly.employability.web.application.ElasticsearchController.index
+GET     /                                       net.rouly.employability.web.application.StaticPagesController.index
 GET     /web/about                              net.rouly.employability.web.application.StaticPagesController.about
+GET     /web/data                               net.rouly.employability.web.application.ElasticsearchController.data
 GET     /web/topics                             net.rouly.employability.web.application.ElasticsearchController.allTopics
 GET     /web/topics/:id                         net.rouly.employability.web.application.ElasticsearchController.topicById(id: String)
 GET     /web/docs                               net.rouly.employability.web.application.ElasticsearchController.allDocuments

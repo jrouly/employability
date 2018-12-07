@@ -3,19 +3,18 @@
 
 @(document: ModeledDocument)
 
-<div>
+<div class="document">
 
-    <h2>Id</h2>
+    <h4><a href="@routes.ElasticsearchController.docById(document.id)">@document.id</a></h4>
 
-    <h3><a href="@routes.ElasticsearchController.docById(document.id)">@document.id</a></h3>
+    <h4>@document.kind / @document.dataSet</h4>
 
-    <h2>Original Text</h2>
+    <h4>Original Text (snippet)</h4>
 
     <blockquote>@document.originalText.take(1000) ... </blockquote>
 
-    <h2>Inferred Topics</h2>
-
     <table>
+        <caption>Inferred Topics</caption>
         <thead>
             <tr>
                 <th>topic</th>

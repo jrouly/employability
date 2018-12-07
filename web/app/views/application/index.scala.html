@@ -1,6 +1,13 @@
-@import net.rouly.employability.web.application.model._
+@import net.rouly.employability.models._
 
-@(stats: List[BucketStats], numTopics: Long, numDocs: Long)
+@mockTopic = @{
+    Topic("X", Set(
+        WordFrequency("cat", 0.9913),
+        WordFrequency("dog", 0.9012),
+        WordFrequency("pig", 0.4020),
+        WordFrequency("robot", 0.0001)
+    ))
+}
 
 @application.layout.main(title = "Main") {
 
@@ -9,73 +16,50 @@
         Its name comes from the notion of how <i>employable</i> a student is upon graduation.
     </p>
 
-    <h2>Data</h2>
-
-    <!--
-    <table>
-        <caption>dataset statistics</caption>
-        <tbody>
-            <tr>
-                <td>Job Descriptions (raw)</td>
-                <td>96,822</td>
-            </tr>
-            <tr>
-                <td>Job Descriptions (preprocessed)</td>
-                <td>92,852</td>
-            </tr>
-            <tr>
-                <td>Course Descriptions (raw)</td>
-                <td>105,593</td>
-            </tr>
-            <tr>
-                <td>Course Descriptions (preprocessed)</td>
-                <td>17,536</td>
-            </tr>
-        </tbody>
-    </table>
-    -->
-
-    <h4>A note about course descriptions</h4>
+    <h3>How to use</h3>
 
     <p>
-        The number of raw course and job descriptions roughly correspond. However, the data quality of the course
-        descriptions was clearly inferior compared to the job descriptions. Raw, unmodified course descriptions
-        were downloaded from primary sources (university catalog websites). Unfortunately, the average course
-        description is a very brief description of the mechanics of a course. The course description that details
-        expectations, concepts, and outcomes of a course is a rare one. A more appropriate data source, though
-        significantly less available, would be course syllabi.
+        This site is designed to report the results of the project. Use the navigation bar on the left to jump around
+        sections of the website, exploring the inferred topics and related documents. The <em>Topics</em> portal allows
+        you to browse all of the inferred topics. Similarly, the <em>Documents</em> portal allows you to browse
+        a random selection of the modeled documents. Elements in each portal are hyperlinked to one another.
     </p>
-
-    @for(stat <- stats) {
-        <div>
-            <table>
-                <caption>@stat.title</caption>
-                <thead>
-                    <tr>
-                        <th>@stat.labels._1</th>
-                        <th>@stat.labels._2</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for(entry <- stat.buckets) {
-                        <tr>
-                            <td>@entry.dataSet</td>
-                            <td>@("%,d".format(entry.coverage))</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-
-
-    <h2>Report</h2>
 
     <p>
-        An initial report of the eighteen universities surveyed is included.
-        <em>coverage</em> refers to the percent of the inferred topic universe covered by documents in the given
-        dataset. A heuristic to apply here is the higher the coverage the more broadly the dataset is represented
-        in the topic universe.
+        So, if you click on a topic, you will be brought to that topic's page, along with a selection of documents
+        that express that topic at a high relevance.
     </p>
 
+    <p>
+        Similarly, if you click on a document, you will be brought to that document's page, along with all the topics
+        it expresses and their relevance values.
+    </p>
+
+    <h3>What is a topic?</h3>
+
+    <p>
+        In the context of this project, a <em>topic</em> is a statistical distribution over a vocabulary. Take the
+        following topic, for example.
+    </p>
+
+    @components.topic(mockTopic, link = false)
+
+    <p>
+        In this contrived topic, the most frequent terms are "cat" and "dog", with "pig" occurring at a lower frequency
+        and irrelevant words like "robot" occurring almost never. Since this topic would have been automatically
+        inferred in an unsupervised fashion, there's no label for it. But, using human intuition, one might expect this
+        topic to be related to documents about family pets.
+    </p>
+
+    <h3>What is a document?</h3>
+
+    <p>
+        A document is a collection of words written (presumably) by a human. Those words contain themes that the author
+        intended to convey in their writing. These themes can be modeled as term frequency distributions (topics).
+    </p>
+
+    <p>
+        In the context of this project, a <em>document</em> is either a Job Description or a Course Description. The
+        contents of the document are modeled according to inferred topics.
+    </p>
 }

@@ -1,0 +1,25 @@
+@import net.rouly.employability.web.application.model._
+
+@(stats: BucketStats)
+
+<table>
+    <caption>@stats.title</caption>
+    <thead>
+        <tr>
+            <th>@stats.labels._1</th>
+            <th>@stats.labels._2</th>
+        </tr>
+    </thead>
+    <tbody>
+    @for(entry <- stats.buckets) {
+        <tr>
+            <td>@entry.dataSet</td>
+            <td>@("%,d".format(entry.coverage))</td>
+        </tr>
+    }
+        <tr>
+            <td><strong>total</strong></td>
+            <td><strong>@("%,d".format(stats.buckets.map(_.coverage).sum))</strong></td>
+        </tr>
+    </tbody>
+</table>

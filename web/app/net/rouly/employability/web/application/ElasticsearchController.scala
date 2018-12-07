@@ -16,7 +16,7 @@ class ElasticsearchController(
   service: ElasticsearchWebService
 )(implicit mat: Materializer, ec: ExecutionContext) extends AbstractController(cc) {
 
-  def index = cached("app.index") {
+  def data = cached("app.data") {
     Action.async {
       for {
         rawKindStats <- service.bucket("kind.keyword", rawDocuments = true)
@@ -25,15 +25,14 @@ class ElasticsearchController(
         jobDescriptionStats <- service.bucket("dataSet", ("kind", "job-description"))
         documentCount <- service.documentCount
         topicCount <- service.topicCount
-      } yield {
-        val bucketStats = List(
-          BucketStats("data set (raw)", ("kind", "count"), rawKindStats.toList),
-          BucketStats("data set (modeled)", ("kind", "count"), kindStats.toList),
-          BucketStats("course descriptions (modeled)", ("source", "count"), courseDescriptionStats.toList),
-          BucketStats("job descriptions (modeled)", ("source", "count"), jobDescriptionStats.toList)
-        )
-        Ok(application.index(bucketStats, documentCount.result.count, topicCount.result.count))
-      }
+      } yield Ok(application.data(
+        rawDataSetStats = BucketStats("total data set (raw)", ("kind", "count"), rawKindStats.toList),
+        modeledDataSetStats = BucketStats("total data set (modeled)", ("kind", "count"), kindStats.toList),
+        courseDescriptionStats = BucketStats("course descriptions (modeled)", ("source", "count"), courseDescriptionStats.toList),
+        jobDescriptionStats = BucketStats("job descriptions (modeled)", ("source", "count"), jobDescriptionStats.toList),
+        documentCount.result.count,
+        topicCount.result.count
+      ))
     }
   }
 
