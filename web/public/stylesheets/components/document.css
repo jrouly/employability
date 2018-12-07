@@ -6,3 +6,7 @@
   margin: 15px;
   max-width: 500px;
 }
+
+.document table td {
+  text-align: left;
+}

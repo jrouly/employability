@@ -46,7 +46,7 @@ class LdaModule(
 
     // This is nested under the ModeledDocument as well as Topic.
     val topicSchema: Seq[FieldDefinition] = List(
-      textField("id").index(true),
+      keywordField("id").index(true),
       nestedField("wordFrequency").fields(
         textField("word"),
         doubleField("frequency")

@@ -8,6 +8,7 @@ GET     /api/topics/:id                         net.rouly.employability.web.api.
 GET     /                                       net.rouly.employability.web.application.StaticPagesController.index
 GET     /web/about                              net.rouly.employability.web.application.StaticPagesController.about
 GET     /web/data                               net.rouly.employability.web.application.ElasticsearchController.data
+GET     /web/overlap                            net.rouly.employability.web.application.ElasticsearchController.overlap
 GET     /web/topics                             net.rouly.employability.web.application.ElasticsearchController.allTopics
 GET     /web/topics/:id                         net.rouly.employability.web.application.ElasticsearchController.topicById(id: String)
 GET     /web/docs                               net.rouly.employability.web.application.ElasticsearchController.allDocuments

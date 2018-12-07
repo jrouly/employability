@@ -1,0 +1,44 @@
+@import net.rouly.employability.web.application.model.{OverlapStats, OverlapEntry}
+@import net.rouly.employability.models.Topic
+
+@(stats: OverlapStats, topics: List[Topic])
+
+@topic(id: String) = @{
+    topics.find(_.id == id).get.wordFrequency
+}
+
+@percent(entry: OverlapEntry, documentCount: Double) = @{
+    val percent = 100 * (documentCount / entry.topicCounts.map(_.documentCount).sum)
+    "%,8f".format(percent)
+}
+
+@application.layout.main(title = "Overlap") {
+
+    <h1>Overlap</h1>
+
+    <div>
+    @for(entry <- stats.entries) {
+
+        <table>
+            <caption>@entry.kind</caption>
+            <thead>
+                <tr>
+                    <th>topic id</th>
+                    <th>document count</th>
+                    <th>document ratio</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(topicCount <- entry.topicCounts) {
+                <tr>
+                    <td>@topicCount.topicId</td>
+                    <td>@("%,d".format(topicCount.documentCount))</td>
+                    <td>@percent(entry, topicCount.documentCount)</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </div>
+
+}

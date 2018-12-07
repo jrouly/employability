@@ -72,4 +72,13 @@ class ElasticsearchController(
     }
   }
 
+  def overlap = cached("app.overlap") {
+    Action.async {
+      for {
+        topics <- service.topicSource.runWith(Sink.collection)
+        overlap <- service.overlap
+      } yield Ok(application.overlap(overlap, topics.toList))
+    }
+  }
+
 }
