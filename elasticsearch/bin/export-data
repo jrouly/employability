@@ -16,8 +16,4 @@ create_local_repo
 echo "Creating snapshot $SNAPSHOT."
 create_snapshot local $SNAPSHOT
 
-echo "Compressing snapshot directory."
-tar czf snapshots.tar.gz ./data/elasticsearch-snapshots/local
-
-echo "Exported as: ./snapshots.tar.gz"
 echo "Done."
