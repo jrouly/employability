@@ -17,7 +17,7 @@ Corporate publications (blog posts, articles) may also contain descriptions of e
 However, perhaps the most straightforward source of data for this corpus is online job postings.
 Job postings generally follow a predictable format: logistics (role, seniority, location), brief company profile, and then a list of responsibilities and expected prerequisite skills.
 Logistic information is an ample source of noise, but company descriptions and more so responsibilities and prerequisites are exactly the kind of human language career data necessary for this analysis.
-
+Open data sources were identified on the Internet and aggregated into a corpus of over 92,000 job description documents.~\cite{data.world:promptcloud}
 
 
 \subsubsection{Curricular data}
@@ -36,28 +36,30 @@ Another ubiquitous curricular data modality is the course description.
 These documents are even more concise than syllabi, but are collected in ``catalogs'' for the express purpose of public consumption.
 This makes course descriptions an ideal target for data collection.
 Additionally, previous work has expressed success building web scrapers to extract course data from publicly available websites.~\cite{rouly2015}
+The present work involved the creation of web scrapers to ingest a course description dataset of almost 20,000 course descriptions from various American universities.
+A detailed breakdown of sources is available online at \href{http://employability.rouly.net}{employability.rouly.net}.
 
-\subsection{Data storage and preprocessing}
+\subsection{Data cleaning}
 
-Data will be aggregated in a central database.
-Elasticsearch~\cite{elasticsearch} will be the data store of choice.
-Elasticsearch provides a massively scalable platform for storing and querying textual datasets of varying schema.
-The Elasticsearch database additionally provides builtin features for text preprocessing, such as stemming and stop word removal.
-This makes it an excellent choice for storing the curricular and career data.
+Human language text in general contains a large amount of noise.
+Free form text retrieved from myriad Internet sources even more so.
+To improve on the signal to noise ratio, data was streamed through a cleaning process prior to storage in a central database.
+Statistical methods were utilized to determine language content of each document, and non-English documents were filtered out.
+The remaining documents were normalized via lowercasing and character sequence reduction, tokenized using a statistical model trained on English documents, and stemmed to word roots with the Porter stemmer.
+Known English ``stop words'' (glue words with little distinct semantic value) were filtered out of documents.
+Excessively short documents and tokens were dropped as well.
+By normalizing and stemming the documents, we provide the automated Topic Modeling methods a fighting chance to identify recurrent terms.
 
 \subsection{Topic modeling}
 
-This project does not include a ``from scratch'' implementation of Topic Modeling.
-There are many existing libraries offering LDA implementations.
-Spark~\cite{spark} is a common, industrial strength data processing library with one such LDA implementation.
-This project will use Spark as the primary framework for composing a data pipeline from Elasticsearch to execute LDA\@.
-The resulting topics will be stored in either Elasticsearch as metadata or a dedicated relational data store.
-An additional extraction pipeline will be necessary to extract a summary or report of the topics and their associated documents.
+Using the Spark library implementations, documents were vectorized from the raw ``bag of terms'' representation using a TF-IDF measure.
+These vectorized representations were fed into an LDA processor under a variety of constraint settings.
+Results are reported in the next section.
 
-\subsection{Topic analysis and visualization}
+\subsection{Analysis}
 
-Similarity metrics between topics will also be computed using Spark.
-Spark provides a great deal of builtin clustering mechanisms and other statistical analyses.
-Visualization of clustered topics will also be a critical outcome --- there are myriad possible technologies to produce a satisfactory visualization.
-An additional critical outcome is a manual interpretation of topics.
-Because LDA produces \textit{latent} topics, they must be interpreted by a human to identify the common semantics of the word distribution.
+After modeling the corpora of documents, a measure of overlap between the two was computed.
+The guiding notion in this analysis is that the proportional frequency with which topics are expressed in a corpus represents the prevalence, or importance, of that topic to the corpus.
+In other words, the more frequently a topic comes up, the more relevant it is as a whole to the corpus.
+Elasticsearch was used to perform an aggregation over all the modeled documents.
+{\color{red}TODO.}
