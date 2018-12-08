@@ -7,7 +7,6 @@ import net.rouly.employability.web.application.service.ElasticsearchWebService
 import net.rouly.employability.web.elasticsearch.{DocumentService, TopicService}
 import play.api.cache.Cached
 import play.api.mvc.{AbstractController, ControllerComponents}
-import vegas.spec.Spec.Axis.Properties
 import views.html.application
 
 import scala.concurrent.ExecutionContext
@@ -81,22 +80,14 @@ class ElasticsearchController(
       import vegas._
       import vegas.render.HTMLRenderer
 
-      def relevant(entry: OverlapEntry): Boolean = {
-        val threshold = 0.01
-        entry.jobDescriptionProportion > threshold || entry.courseDescriptionProportion > threshold
-      }
-
-      def cap(entry: OverlapEntry): OverlapEntry = {
-        val threshold = 0.02
-        entry.copy(
-          jobDescriptionProportion = Math.min(entry.jobDescriptionProportion, threshold),
-          courseDescriptionProportion = Math.min(entry.courseDescriptionProportion, threshold)
-        )
+      def relevant(strict: Boolean, threshold: Double)(entry: OverlapEntry): Boolean = {
+        if (strict) entry.jobDescriptionProportion > threshold && entry.courseDescriptionProportion > threshold
+        else entry.jobDescriptionProportion > threshold || entry.courseDescriptionProportion > threshold
       }
 
       val data = stats.entries
-        .filter(relevant)
-        .sortBy(_.courseDescriptionProportion)
+        .filter(relevant(strict = false, threshold = 0.01))
+        .sortBy(_.topicId)
         .flatMap { entry =>
           List(
             Map("Topic" -> entry.topicId, "Proportion" -> entry.courseDescriptionProportion, "Key" -> "course-description"),
@@ -104,7 +95,7 @@ class ElasticsearchController(
           )
         }
 
-      val plot = Vegas(width = 500d, height=250d)
+      val plot = Vegas(width = 500d, height = 250d)
         .withData(data)
         .mark(Bar)
         .configMark(opacity = 0.5)
