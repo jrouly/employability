@@ -1,0 +1,91 @@
+\section{Introduction}
+
+More and more frequently, young Americans entering the workforce are encountering educational requirements for entry level positions.~\cite{carnevale2010}
+This phenomenon may be viewed as a consequence of attempting to quantify or standardize student career preparedness.
+Career preparedness generally describes the readiness of a student to enter the workforce after the completion of a post-secondary educational program.~\cite{ccrsOrganizer2014}
+Employability more generally describes the ability of a graduate to become and remain employed and can be thought to subsume the notion of preparedness.~\cite{williams2016}
+Predictors of student employability play an important role among post-secondary educational institutions, not only as possible measures of educational quality~\cite{storen2010} but as a possible influence on student enrollment, funding, and policy change~\cite{harvey2000}.
+Employability is itself a complex, subtle, and multifaceted concept spanning many fields and factors.~\cite{williams2016,yorke2006,harvey2001}
+Academic domain knowledge and skills are one such contributory factor to student employability.~\cite{conley2012,ccrsOrganizer2014}
+Post-secondary institutions and employers alike publish vast quantities of information relating to the domain knowledge and skills expected of their students and employees, respectively, in the form of course curriculum descriptions and job descriptions.
+This research project introduces an application of Machine Learning (ML) and Natural Language Processing (NLP), specifically Topic Modeling, to large corpora of course and job descriptions in order to derive measures of predicted student employability based on academic domain knowledge.
+
+\subsection{Employability}
+
+Employability of a university graduate refers generally to the ability of that graduate to obtain, maintain, and perform in a career setting.~\cite{harvey2001,yorke2006}.
+Yorke specifically defines employability as a set of ``skills, understandings, and personal attributes'' that influence this ability.~\cite{yorke2006}
+Others in the field concur with this definition, emphasizing that any holistic definition of employability must include academic or domain skills and expertise, transferrable skills, employer expectations and needs, graduate personality characteristics, and even external societal constraints.~\cite{harvey2001,williams2016,thijssen2008,hillage1998}
+
+\subsection{Measuring employability}
+
+Measuring employability directly is difficult, as the concept itself is a complex composite of personality traits and skills that a student gains and hones over time, all of which lend themselves to the successful acquisition of and performance within a job.~\cite{harvey2000,yorke2006,williams2016}
+Harvey~\cite{harvey2001} discusses a variety of proposed definitions and related measures.
+The most straightforward is the simple ability of a graduate to ``secure any job'' upon graduation.
+A more future facing view is of the candidate's ability to continuously learn and adapt on the job, as individuals must maintain their employability as they transition from job to job well after graduation.
+% Both of these definitions lend themselves to outcome based reporting, which Harvey argues are prone to ambiguity, bias, and confounding factors.~\cite{harvey2001}
+Yorke~\cite{yorke2006} describes employability as a ``set of achievements'' including learned skills and personal characteristics which make graduates more likely to gain employment and to be successful thereafter.
+This definition takes into account subtleties such as the \textit{probabilistic} nature of the job market, learned versus inherent behaviors, and personal definitions of success after employment.
+
+\subsubsection{Pitfalls}
+
+Part of the complexity of defining or measuring candidate employability is the number of perspectives held by various stakeholders.
+Thijssen et al.\ propose at least three perspectives: that of the employer, the individual candidate, and indirectly society at large.~\cite{thijssen2008}
+The employer has a certain set of requirements that a candidate must meet, frequently published in the form of a job description enumerating a collection of skills or behaviors of generally successful employees.
+The candidate possesses the skills they have developed through their education as well as personality traits and interests that influence their willingness and ability to engage in certain domains.
+Societal factors play an external confounding role in employability.
+Overall economic health may increase or decrease the availability of jobs on whole.
+Additionally, cultural trends in prestige or perceived status associated with certain roles may influence trends in student enrollment.
+Ultimately, the common ground between the two direct stakeholders tends toward a semblance of the achievements or skills described by Yorke.
+
+\subsubsection{Scope}
+
+A concrete definition of these contributory skills, learned or otherwise, is tricky to lay out.
+Broadly speaking, Yorke differentiates between ``core'' and ``transferrable'' skills.
+Transferrable skills are those that are generic enough to be applied in varied contexts.
+These skills frequently do not belong to a single curriculum or domain.
+Bridges describes these generic skills as the abilities ``at the heart of the sensitive, responsive and adaptable exercise of professionalism in any sphere.''~\cite{bridges1993}
+Core skills, on the other hand, are related to mastery of the content and topics relevant to a given domain.
+From the perspective of an educational institution, these skills relate to the academic content and knowledge provided to students as part of a specific curriculum.
+From the employer's perspective, these are the key skills and knowledge which which an employee must have familiarity in order to excel at their specific position.
+Lists of core skills per domain tend to be defined ad hoc~\cite{wolf2002,yorke2006} and at the very least manually maintained.
+Employers seek to identify the skills they view as desirable, and educators the skills they view as important to their curriculum.
+For the purpose of this research, the measure of employability is narrowly scoped to the academic knowledge or core domain skills made available to a graduate at the postsecondary level.
+
+
+\subsection{Topic modeling}
+
+The main contribution of this work is a mechanism for the measure of expected employability, specifically the automated measure of how closely concepts taught at the postsecondary level match expected domain skills in the workforce across a broad view of both.
+In order to compute this measure, it is necessary to first identify these curricular concepts and job skills.
+ML and NLP present a class of methods which satisfy this need.
+ML is an interdisciplinary field of artificial intelligence and statistics which provides methods for pattern detection and approximation of unknown functions in myriad domains.
+NLP seeks to parse and understand natural human language in an automated fashion.
+Topic modeling is a class of algorithms in the intersection of these two fields which seeks to identify the \textit{topics} within a corpus.
+The specific definition of a topic is highly dependent on the method used, but generally refers to a concept or idea present within a body of text.
+
+
+\subsubsection{Latent topic models}
+
+Latent topic models approximate topics based on underlying (\textit{latent}) textual patterns.
+The topics are not defined explicitly anywhere in the text.
+Latent dirichlet allocation (LDA) is a topic modeling method capable of identifying such a latent model.~\cite{blei2003}
+In LDA topics are frequency distributions of terms over the vocabulary of a body of text.
+For example, from a collection of scientific articles about frogs, a hypothetical latent topic might include such terms as \textit{rainforest}, \textit{amphibious}, and \textit{habitat} with varying associated frequency.
+It is possible to validate the performance of LDA in an automated fashion when trained on a labeled set of data.~\cite{ramirez2012}
+Extensions of LDA, such as supervised LDA (sLDA), provide a mechanism to tie the latent topics back to explicit labels within the data set.~\cite{mcauliffe2008}
+
+
+% Instead of identifying latent topics, an alternate method of textual understanding relies on explicit labels to produce more easily interpretable topic representations.
+% Explicit semantic analysis (ESA) relies on labeled data to produce a representation of knowledge and concepts within a corpus~\cite{gabrilovich2009}, and utilizes an entirely different process than LDA\@.
+% ESA represents the semantics of a document as vectors in a knowledge space, where encyclopedias such as Wikipedia are mined for their labeled and manually curated knowledge~\cite{gabrilovich2007}.
+% The requirements of ESA are different from LDA, in its dependence on a labeled encyclopedic knowledge representation.
+% However, the topics it produces are generally easier to interpret, as they are sourced from well defined, explicitly manually labeled knowledge.
+
+\subsubsection{Applicability}
+
+This work hinges on several assumptions.
+First, the common assumption that Topic Modeling makes, that human language documents contain themes or ideas.
+More critically however, that the kinds of documents analyzed will contain the expected themes or ideas.
+Specifically this work assumes that job descriptions, broadly speaking, describe the skills and expectations of an ideal candidate.
+Additionally, that course descriptions, again broadly speaking, describe the expected outcomes of a university course, in terms of academic knowledge and skills.
+In the discussion we will address the validity of these assumptions based on an analysis of the data.
+In the following section the methods of data collection and processing are discussed.

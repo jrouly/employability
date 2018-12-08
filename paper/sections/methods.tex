@@ -1,0 +1,63 @@
+\section{Methods}
+
+This work can be split into four stages: data collection, data cleaning, topic modeling, and analysis.
+
+\subsection{Data collection}
+
+Large volumes of human language text must be acquired prior to beginning the analysis.
+This text falls into two categories: career data and curricular data.
+The Internet was used as the primary source for all data acquired.
+
+\subsubsection{Career data}
+
+Career data is any human language text describing the expected skills and qualifications of an ideal candidate.
+This kind of data is present in many formats.
+A contract signed between an employer and employee may contain this data in a description of day to day roles and responsibilities.
+Corporate publications (blog posts, articles) may also contain descriptions of employee behavior and roles.
+However, perhaps the most straightforward source of data for this corpus is online job postings.
+Job postings generally follow a predictable format: logistics (role, seniority, location), brief company profile, and then a list of responsibilities and expected prerequisite skills.
+Logistic information is an ample source of noise, but company descriptions and more so responsibilities and prerequisites are exactly the kind of human language career data necessary for this analysis.
+
+
+
+\subsubsection{Curricular data}
+
+Curricular data is human language text that describes expected outcomes of postsecondary courses.
+This data set must contain the necessary data to identify academic core skills addressed at the postsecondary level.
+This is much more subtle and difficult to standardize proposition than career data.
+A course curriculum contains exactly this data, but the formatting and availability of course curriculum documents vary widely and thus they do not lend themselves toward a broadly scoped automated data ingestion process.
+
+Perhaps the most common source of curricular data is the course syllabus.
+Syllabi contain similar information in a much more concise format.
+Additionally, they tend to communicate expectations of students, course logistics, and the end goals of the course curriculum.
+Several projects to collect corpora of syllabi exist, perhaps most notable being the Open Syllabus Project (OSP), but in general the raw data is not easily accessed.
+
+Another ubiquitous curricular data modality is the course description.
+These documents are even more concise than syllabi, but are collected in ``catalogs'' for the express purpose of public consumption.
+This makes course descriptions an ideal target for data collection.
+Additionally, previous work has expressed success building web scrapers to extract course data from publicly available websites.~\cite{rouly2015}
+
+\subsection{Data storage and preprocessing}
+
+Data will be aggregated in a central database.
+Elasticsearch~\cite{elasticsearch} will be the data store of choice.
+Elasticsearch provides a massively scalable platform for storing and querying textual datasets of varying schema.
+The Elasticsearch database additionally provides builtin features for text preprocessing, such as stemming and stop word removal.
+This makes it an excellent choice for storing the curricular and career data.
+
+\subsection{Topic modeling}
+
+This project does not include a ``from scratch'' implementation of Topic Modeling.
+There are many existing libraries offering LDA implementations.
+Spark~\cite{spark} is a common, industrial strength data processing library with one such LDA implementation.
+This project will use Spark as the primary framework for composing a data pipeline from Elasticsearch to execute LDA\@.
+The resulting topics will be stored in either Elasticsearch as metadata or a dedicated relational data store.
+An additional extraction pipeline will be necessary to extract a summary or report of the topics and their associated documents.
+
+\subsection{Topic analysis and visualization}
+
+Similarity metrics between topics will also be computed using Spark.
+Spark provides a great deal of builtin clustering mechanisms and other statistical analyses.
+Visualization of clustered topics will also be a critical outcome --- there are myriad possible technologies to produce a satisfactory visualization.
+An additional critical outcome is a manual interpretation of topics.
+Because LDA produces \textit{latent} topics, they must be interpreted by a human to identify the common semantics of the word distribution.

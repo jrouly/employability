@@ -1,21 +1,24 @@
-\documentclass{article}
-\usepackage[top=1in,bottom=1in,left=1in,right=1in]{geometry}
-
-\providecommand{\keywords}[1]{\textbf{\textit{Keywords---}} #1}
+\documentclass{edm}
 
 \begin{document}
 
 \title{\input{sections/title}}
 
+\numberofauthors{1}
+
 \author{%
+  \alignauthor%
   Michel Rouly\\
-  Georgia Institute of Technology\\
-  jrouly@gatech.edu
+  \affaddr{Georgia Institute of Technology}\\
+  \email{jrouly@gatech.edu}
 }
 
 \maketitle
 
 \input{sections/abstract}
+
+\category{K.4.m}{Computers and Society}{Miscellaneous}
+\category{I.2.7}{Natural Language Processing}{Text analysis}
 
 \keywords{\input{sections/keywords}}
 
@@ -31,8 +34,9 @@
 
 \input{sections/acknowledgments}
 
-\clearpage
-\bibliographystyle{acm}
+\bibliographystyle{abbrv}
 \bibliography{references}
+
+\balancecolumns{}
 
 \end{document}

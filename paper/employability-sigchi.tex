@@ -1,0 +1,107 @@
+\documentclass{sigchi}
+
+% Load basic packages
+\usepackage{balance}  % to better equalize the last page
+\usepackage{graphics} % for EPS, load graphicx instead
+\usepackage[T1]{fontenc}
+\usepackage{txfonts}
+\usepackage{mathptmx}
+\usepackage[pdftex]{hyperref}
+\usepackage{color}
+\usepackage{booktabs}
+\usepackage{textcomp}
+% Some optional stuff you might like/need.
+\usepackage{microtype} % Improved Tracking and Kerning
+% \usepackage[all]{hypcap}  % Fixes bug in hyperref caption linking
+\usepackage{ccicons}  % Cite your images correctly!
+% \usepackage[utf8]{inputenc} % for a UTF8 editor only
+
+% Paper metadata (use plain text, for PDF inclusion and later
+% re-using, if desired).  Use \emtpyauthor when submitting for review
+% so you remain anonymous.
+\def\plaintitle{\input{sections/title}}
+\def\plainauthor{Michel Rouly}
+\def\emptyauthor{}
+\def\plainkeywords{\input{sections/keywords}}
+\def\plaingeneralterms{Topic Modeling}
+
+% llt: Define a global style for URLs, rather that the default one
+\makeatletter
+\def\url@leostyle{%
+  \@ifundefined{selectfont}{
+    \def\UrlFont{\sf}
+  }{
+    \def\UrlFont{\small\bf\ttfamily}
+  }}
+\makeatother
+\urlstyle{leo}
+
+% To make various LaTeX processors do the right thing with page size.
+\def\pprw{8.5in}
+\def\pprh{11in}
+\special{papersize=\pprw,\pprh}
+\setlength{\paperwidth}{\pprw}
+\setlength{\paperheight}{\pprh}
+\setlength{\pdfpagewidth}{\pprw}
+\setlength{\pdfpageheight}{\pprh}
+
+% Make sure hyperref comes last of your loaded packages, to give it a
+% fighting chance of not being over-written, since its job is to
+% redefine many LaTeX commands.
+\definecolor{linkColor}{RGB}{6,125,233}
+\hypersetup{%
+  pdftitle={\plaintitle},
+  pdfauthor={\plainauthor},
+% Use \emptyauthor for submission version.
+%  pdfauthor={\emptyauthor},
+  pdfkeywords={\plainkeywords},
+  bookmarksnumbered,
+  pdfstartview={FitH},
+  colorlinks,
+  citecolor=black,
+  filecolor=black,
+  linkcolor=black,
+  urlcolor=linkColor,
+  breaklinks=true,
+}
+
+\begin{document}
+
+\title{\plaintitle}
+
+\numberofauthors{1}
+
+\author{%
+  \alignauthor%
+  Michel Rouly\\
+  \affaddr{Georgia Institute of Technology}\\
+  \email{jrouly3@gatech.edu}
+}
+
+\maketitle
+
+\input{sections/abstract}
+
+\category{K.4.m}{Computers and Society}{Miscellaneous}
+\category{I.2.7}{Natural Language Processing}{Text analysis}
+
+\keywords{\plainkeywords}
+
+\input{sections/introduction}
+
+\input{sections/related-work}
+
+\input{sections/methods}
+
+\input{sections/results}
+
+\input{sections/discussion}
+
+\input{sections/acknowledgments}
+
+\balance{}
+
+\bibliographystyle{sigchi}
+\bibliography{references}
+
+\end{document}
