@@ -18,6 +18,7 @@ services:
       - discovery.type=single-node
       - cluster.name=employability
       - path.repo=/usr/share/elasticsearch/snapshots/
+      - repositories.url.allowed_urls=http://net.rouly.employability.s3-website-us-east-1.amazonaws.com/*
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
     volumes:
       - "data-elasticsearch:/usr/share/elasticsearch/data"

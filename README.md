@@ -31,7 +31,6 @@ You can import a static dataset to run the vis server locally yourself without i
 Start up elasticsearch and the vis server, then import the latest dataset.
 
     docker-compose up -d elasticsearch web
-    ./elasticsearch/bin/install-s3-plugin
     ./elasticsearch/bin/import-data 500-topics
 
 You should be able to acccess the vis server at [localhost:9000](localhost:9000) once the import completes.

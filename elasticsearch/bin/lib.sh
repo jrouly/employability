@@ -26,7 +26,7 @@ function create_remote_repo() {
     -d '{
       "type": "url",
       "settings": {
-        "url": "http://employability.rouly.net/snapshots/"
+        "url": "http://net.rouly.employability.s3-website-us-east-1.amazonaws.com/"
       }
     }'
   echo ""
