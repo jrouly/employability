@@ -3,6 +3,7 @@
 
 *.log
 data/
+documents.csv
 snapshots.tar.gz
 dist/*
 target/
