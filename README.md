@@ -13,27 +13,18 @@ Topic modeling is used to infer concepts from large datasets of job postings and
 
 ## Installation
 
-Install the following dependencies:
+##### Dependencies
 
-* [`java`](https://www.java.com/en/)
-* [`sbt`](https://www.scala-sbt.org/)
 * [`docker`](https://www.docker.com/) and [`docker-compose`](https://docs.docker.com/compose/)
+* [`java`](https://www.java.com/en/) (optional)
+* [`sbt`](https://www.scala-sbt.org/) (optional)
 
-Using `docker-compose`, start the background services:
-
-    docker-compose up -d elasticsearch
-
-## Importing data
-
-You can import a static dataset locally without ingesting and processing the raw data.
-Start up elasticsearch, then import the latest dataset.
+##### Import data
 
     docker-compose up -d elasticsearch
     ./elasticsearch/bin/import-data small  # {small|medium|large}
 
-## Running the vis server
-
-Start the vis server container.
+##### Start the server
 
     docker-compose up -d web
 
@@ -43,22 +34,24 @@ You should be able to acccess the vis server at [`localhost:9000`](http://localh
 
 If you would like to run the whole ingestion and analysis process, there are a few more steps.
 
+##### data.world API token
+
 Register for an account at [Data World](https://data.world) and export your API token.
 
     export DATA_WORLD_API_TOKEN=
 
-Start up all background data services.
+##### Start up background services
 
     docker-compose up -d elasticsearch kibana postgres
 
-Execute the data pipelines.
+##### Run data pipelines
 
     sbt ingest/run
     sbt preprocess/run
 
 ## Executing LDA
 
-Execute LDA with default parameters.
+##### With default parameters
 
     sbt analysis/run
 
@@ -73,8 +66,6 @@ Some pre-defined configurations are made available for you.
     source ./analysis/config/large
 
 ### Exporting data
-
-In the same way that you can import an online snapshot of the Elasticsearch data, you can also export your own snapshot.
 
     ./elasticsearch/bin/export-data NEW_SNAPSHOT_ID
 
