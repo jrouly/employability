@@ -52,6 +52,7 @@ object Dependencies {
 
   object Misc {
     lazy val scalaUri = "io.lemonlabs" %% "scala-uri" % "1.4.0"
+    lazy val vegas = "org.vegas-viz" %% "vegas" % "0.3.11"
   }
 
   object Play26 {
