@@ -4,12 +4,13 @@
 
 @(stats: OverlapStats, topics: List[Topic], plot: String)
 
-@relevantEntries(threshold: Double) = @{
-    stats.entries.filter { entry =>
-      val cdr = entry.courseDescriptionProportion >= threshold
-      val jdr = entry.jobDescriptionProportion >= threshold
-      cdr || jdr
-    }
+@relevantEntries(threshold: Double, strict: Boolean) = @{
+  stats.entries.filter { entry =>
+    val cdr = entry.courseDescriptionProportion >= threshold
+    val jdr = entry.jobDescriptionProportion >= threshold
+    if (strict) cdr && jdr
+    else cdr || jdr
+  }
 }
 
 @application.layout.main(title = "Overlap") {
@@ -37,7 +38,7 @@
                 </tr>
             </thead>
             <tbody>
-            @for(entry <- relevantEntries(0.01).sortBy(_.topicId)) {
+            @for(entry <- relevantEntries(0.01, strict = false).sortBy(_.topicId)) {
                 <tr>
                     <td><a href="@routes.ElasticsearchController.topicById(entry.topicId.toString)">@entry.topicId</a></td>
                     <td>@components.int(entry.jobDescriptionCount)</td>
