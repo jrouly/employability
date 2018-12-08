@@ -2,13 +2,12 @@
 @import net.rouly.employability.web.application.model.OverlapStats
 @import net.rouly.employability.web.application.routes
 
-@(stats: OverlapStats, topics: List[Topic])
+@(stats: OverlapStats, topics: List[Topic], plot: String)
 
-@relevantEntries = @{
-    val relevanceThreshold = 0.05
+@relevantEntries(threshold: Double) = @{
     stats.entries.filter { entry =>
-      val cdr = entry.courseDescriptionProportion >= relevanceThreshold
-      val jdr = entry.jobDescriptionProportion >= relevanceThreshold
+      val cdr = entry.courseDescriptionProportion >= threshold
+      val jdr = entry.jobDescriptionProportion >= threshold
       cdr || jdr
     }
 }
@@ -18,30 +17,63 @@
     <h1>Overlap</h1>
 
     <p>
-        This table reports the frequency with which each topic is modeled in each corpus (job descriptions, course
-        descriptions). Topics are ordered by ID.
+        This table reports the percent proportion with which each topic is modeled in each corpus (job descriptions, course
+        descriptions). Topics are ordered by ID. Only the most relevant topics (greater than 1% in either corpus) are shown.
+        It is shown first in graphical form.
     </p>
+
+    <div>@Html(plot)</div>
 
     <div>
         <table>
-            <caption>Document Topic Frequency</caption>
+            <caption>Most Relevant Document Topic Frequency</caption>
             <thead>
                 <tr>
                     <th>topic id</th>
                     <th>job description count</th>
-                    <th>job description frequency</th>
+                    <th>job description proportion</th>
                     <th>course description count</th>
-                    <th>course description frequency</th>
+                    <th>course description proportion</th>
                 </tr>
             </thead>
             <tbody>
-            @for(entry <- relevantEntries.sortBy(_.topicId)) {
+            @for(entry <- relevantEntries(0.01).sortBy(_.topicId)) {
                 <tr>
                     <td><a href="@routes.ElasticsearchController.topicById(entry.topicId.toString)">@entry.topicId</a></td>
                     <td>@components.int(entry.jobDescriptionCount)</td>
-                    <td>@components.double(entry.jobDescriptionProportion)</td>
+                    <td>@components.percent(entry.jobDescriptionProportion)</td>
                     <td>@components.int(entry.courseDescriptionCount)</td>
-                    <td>@components.double(entry.courseDescriptionProportion)</td>
+                    <td>@components.percent(entry.courseDescriptionProportion)</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+    <p>
+        This table contains the same data but for a complete listing of all topics.
+    </p>
+
+    <div>
+        <table>
+            <caption>Complete Document Topic Frequency</caption>
+            <thead>
+                <tr>
+                    <th>topic id</th>
+                    <th>job description count</th>
+                    <th>job description proportion</th>
+                    <th>course description count</th>
+                    <th>course description proportion</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(entry <- stats.entries.sortBy(_.topicId)) {
+                <tr>
+                    <td><a href="@routes.ElasticsearchController.topicById(entry.topicId.toString)">@entry.topicId</a></td>
+                    <td>@components.int(entry.jobDescriptionCount)</td>
+                    <td>@components.percent(entry.jobDescriptionProportion)</td>
+                    <td>@components.int(entry.courseDescriptionCount)</td>
+                    <td>@components.percent(entry.courseDescriptionProportion)</td>
                 </tr>
             }
             </tbody>

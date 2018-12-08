@@ -12,4 +12,9 @@ package object application {
     }
   }
 
+  implicit class RichResult(result: Result) {
+    def cached: Result = result.withHeaders("Cache-Control" -> "public")
+    def notCached: Result = result.withHeaders("Cache-Control" -> "no-store")
+  }
+
 }
