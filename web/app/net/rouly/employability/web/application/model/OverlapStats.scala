@@ -25,8 +25,7 @@ object OverlapStats {
             .relevant_topic_ids
             .buckets
             .map(relevantTopicId => OverlapTopicCount(relevantTopicId.key, relevantTopicId.doc_count.toInt))
-        )
-      )
+        ))
     )
   }
 

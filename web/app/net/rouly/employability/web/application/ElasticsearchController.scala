@@ -3,7 +3,8 @@ package net.rouly.employability.web.application
 import akka.stream.Materializer
 import akka.stream.scaladsl.Sink
 import net.rouly.employability.web.application.model.BucketStats
-import net.rouly.employability.web.elasticsearch.ElasticsearchWebService
+import net.rouly.employability.web.application.service.ElasticsearchWebService
+import net.rouly.employability.web.elasticsearch.{DocumentService, TopicService}
 import play.api.cache.Cached
 import play.api.mvc.{AbstractController, ControllerComponents}
 import views.html.application
@@ -13,18 +14,20 @@ import scala.concurrent.ExecutionContext
 class ElasticsearchController(
   cc: ControllerComponents,
   cached: Cached,
-  service: ElasticsearchWebService
+  topicService: TopicService,
+  documentService: DocumentService,
+  webService: ElasticsearchWebService
 )(implicit mat: Materializer, ec: ExecutionContext) extends AbstractController(cc) {
 
   def data = cached("app.data") {
     Action.async {
       for {
-        rawKindStats <- service.bucket("kind.keyword", rawDocuments = true)
-        kindStats <- service.bucket("kind")
-        courseDescriptionStats <- service.bucket("dataSet", ("kind", "course-description"))
-        jobDescriptionStats <- service.bucket("dataSet", ("kind", "job-description"))
-        documentCount <- service.documentCount
-        topicCount <- service.topicCount
+        rawKindStats <- webService.bucket("kind.keyword", rawDocuments = true)
+        kindStats <- webService.bucket("kind")
+        courseDescriptionStats <- webService.bucket("dataSet", ("kind", "course-description"))
+        jobDescriptionStats <- webService.bucket("dataSet", ("kind", "job-description"))
+        documentCount <- documentService.documentCount
+        topicCount <- topicService.topicCount
       } yield Ok(application.data(
         rawDataSetStats = BucketStats("total data set (raw)", ("kind", "count"), rawKindStats.toList),
         modeledDataSetStats = BucketStats("total data set (modeled)", ("kind", "count"), kindStats.toList),
@@ -39,7 +42,7 @@ class ElasticsearchController(
   def allTopics = cached("app.allTopics") {
     Action.async {
       for {
-        topics <- service.topicSource.runWith(Sink.collection)
+        topics <- topicService.topicSource.runWith(Sink.collection)
       } yield Ok(application.topics(topics.toList.sortBy(_.id.toInt)))
     }
   }
@@ -47,8 +50,8 @@ class ElasticsearchController(
   def topicById(id: String) = cached(s"app.topicById.$id") {
     Action.async {
       for {
-        topic <- service.topicSource.filter(_.id == id).runWith(Sink.headOption)
-        docs <- service.documentsByTopic(id).take(10).runWith(Sink.collection)
+        topic <- topicService.topicSource.filter(_.id == id).runWith(Sink.headOption)
+        docs <- documentService.documentsByTopic(id).take(10).runWith(Sink.collection)
       } yield {
         topic.render(application.topic(_, docs.toList))
       }
@@ -58,8 +61,8 @@ class ElasticsearchController(
   def allDocuments = cached("app.allDocuments") {
     Action.async {
       for {
-        docs <- service.documentSource.take(5).runWith(Sink.collection)
-        count <- service.documentCount
+        docs <- documentService.documentSource.take(5).runWith(Sink.collection)
+        count <- documentService.documentCount
       } yield Ok(application.documents(docs.toList, count.result.count))
     }
   }
@@ -67,7 +70,7 @@ class ElasticsearchController(
   def docById(id: String) = cached(s"app.docById.$id") {
     Action.async {
       for {
-        doc <- service.documentSource.filter(_.id == id).runWith(Sink.headOption)
+        doc <- documentService.documentSource.filter(_.id == id).runWith(Sink.headOption)
       } yield doc.render(application.document.apply)
     }
   }
@@ -75,8 +78,8 @@ class ElasticsearchController(
   def overlap = cached("app.overlap") {
     Action.async {
       for {
-        topics <- service.topicSource.runWith(Sink.collection)
-        overlap <- service.overlap
+        topics <- topicService.topicSource.runWith(Sink.collection)
+        overlap <- webService.overlap
       } yield Ok(application.overlap(overlap, topics.toList))
     }
   }

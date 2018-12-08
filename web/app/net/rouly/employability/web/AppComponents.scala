@@ -6,9 +6,10 @@ import controllers.AssetsComponents
 import net.rouly.common.server.play.module.AppServerComponents
 import net.rouly.employability.elasticsearch.ElasticsearchModule
 import net.rouly.employability.web.api.ApiController
+import net.rouly.employability.web.application.service.ElasticsearchWebService
 import net.rouly.employability.web.application.{ElasticsearchController, StaticPagesController}
 import net.rouly.employability.web.echo.EchoController
-import net.rouly.employability.web.elasticsearch.ElasticsearchWebService
+import net.rouly.employability.web.elasticsearch.{DocumentService, TopicService}
 import play.api.BuiltInComponents
 import play.api.cache.Cached
 import play.api.cache.ehcache.EhCacheComponents
@@ -27,7 +28,10 @@ trait AppComponents
   private lazy val cached: Cached = new Cached(defaultCacheApi)
 
   lazy val elasticsearch: ElasticsearchModule = wire[ElasticsearchModule]
-  lazy val elasticsearchService: ElasticsearchWebService = wire[ElasticsearchWebService]
+
+  lazy val documentService: DocumentService = wire[DocumentService]
+  lazy val topicService: TopicService = wire[TopicService]
+  lazy val webService: ElasticsearchWebService = wire[ElasticsearchWebService]
 
   lazy val echoController: EchoController = wire[EchoController]
   lazy val elasticsearchController: ElasticsearchController = wire[ElasticsearchController]

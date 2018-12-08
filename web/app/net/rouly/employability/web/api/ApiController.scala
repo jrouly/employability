@@ -1,7 +1,7 @@
 package net.rouly.employability.web.api
 
 import net.rouly.employability.models.Topic
-import net.rouly.employability.web.elasticsearch.ElasticsearchWebService
+import net.rouly.employability.web.elasticsearch.{DocumentService, TopicService}
 import play.api.cache.Cached
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{AbstractController, ControllerComponents}
@@ -9,16 +9,17 @@ import play.api.mvc.{AbstractController, ControllerComponents}
 class ApiController(
   cc: ControllerComponents,
   cached: Cached,
-  service: ElasticsearchWebService
+  documentService: DocumentService,
+  topicService: TopicService
 ) extends AbstractController(cc) {
 
   def allTopics = cached("api.allTopics") {
-    Action(service.topicSource.chunkedResponse)
+    Action(topicService.topicSource.chunkedResponse)
   }
 
   def topicById(id: String) = cached(s"api.topicById.$id") {
     Action {
-      service
+      topicService
         .topicSource
         .filter(_.id == id)
         .take(1)
@@ -27,7 +28,7 @@ class ApiController(
   }
 
   def docsByTopicId(id: String) = cached(s"api.docsByTopicId.$id") {
-    Action(service.documentsByTopic(id).chunkedResponse)
+    Action(documentService.documentsByTopic(id).chunkedResponse)
   }
 
 }
