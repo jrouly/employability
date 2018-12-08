@@ -7,7 +7,7 @@ services:
     container_name: employability-web
     ports: ["127.0.0.1:9000:9000"]
     environment:
-      - EMPLOYABILITY_APP_SECRET
+      - EMPLOYABILITY_APP_SECRET=overrideme
       - ELASTICSEARCH_URL=http://employability-elasticsearch:9200
 
   elasticsearch:
