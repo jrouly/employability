@@ -9,7 +9,7 @@ import net.rouly.employability.preprocess.opennlp.OpenNlpModel
 import net.rouly.employability.preprocess.opennlp.reader.CachingOpenNlpModelReader.Cache
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Success, Try}
+import scala.util.Try
 
 /**
   * Cache the downloaded model files to disk once retrieved.
@@ -34,9 +34,11 @@ class CachingOpenNlpModelReader(
       // Otherwise, read from the underlying reader and cache the result on completion.
       case None =>
         logger.info(s"Cache miss: [$name]")
+        def error = throw new RuntimeException("Unable to retrieve cached opennlp asset. Please try again.")
         underlying
           .getModel(name, baseUrl)
-          .andThen { case Success(stream) => cache.put(stream) }
+          .map(cache.put)
+          .map(_ => cache.get(name).getOrElse(error))
     }
   }
 
