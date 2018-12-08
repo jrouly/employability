@@ -7,9 +7,9 @@
     <h1>Documents</h1>
 
     <p>
-        This is a sampling of five random documents, from a total of @("%,d".format(count)) indexed documents.
-        Each document has been included in the LDA process and had topics inferred. Documents are represented as a
-        mixture of topics, with different weighting applied to each topic.
+        This is a sampling of five random documents, from a total of <strong>@components.int(count)</strong> indexed
+        documents. Each document has been included in the LDA process and had topics inferred. Documents are represented
+        as a mixture of topics, with different weighting applied to each topic.
     </p>
 
     @for(document <- documents) {

@@ -23,11 +23,11 @@
             </tr>
         </thead>
         <tbody>
-        @for(wt <- document.weightedTopics.sortBy(_.weight).reverse) {
+        @for(wt <- document.weightedTopics.sortBy(_.weight).reverse.take(10)) {
             <tr>
                 <td><a href="@routes.ElasticsearchController.topicById(wt.topic.id)">@wt.topic.id</a></td>
                 <td><a href="@routes.ElasticsearchController.topicById(wt.topic.id)">@wt.topic.wordFrequency.toList.sortBy(_.frequency).reverse.map(_.word).mkString(", ")</a></td>
-                <td>@("%.8f".format(wt.weight))</td>
+                <td>@double(wt.weight)</td>
             </tr>
         }
         </tbody>

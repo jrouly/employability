@@ -1,46 +1,51 @@
-@import net.rouly.employability.web.application.model.{OverlapStats, OverlapEntry}
 @import net.rouly.employability.models.Topic
+@import net.rouly.employability.web.application.model.OverlapStats
+@import net.rouly.employability.web.application.routes
 
 @(stats: OverlapStats, topics: List[Topic])
 
-@topic(id: String) = @{
-    topics.find(_.id == id).get.wordFrequency
-}
-
-@percent(entry: OverlapEntry, documentCount: Double) = @{
-    val percent = 100 * (documentCount / entry.topicCounts.map(_.documentCount).sum)
-    "%,8f".format(percent)
+@relevantEntries = @{
+    val relevanceThreshold = 0.05
+    stats.entries.filter { entry =>
+      val cdr = entry.courseDescriptionProportion >= relevanceThreshold
+      val jdr = entry.jobDescriptionProportion >= relevanceThreshold
+      cdr || jdr
+    }
 }
 
 @application.layout.main(title = "Overlap") {
 
     <h1>Overlap</h1>
 
-    Work in progress.
+    <p>
+        This table reports the frequency with which each topic is modeled in each corpus (job descriptions, course
+        descriptions). Topics are ordered by ID.
+    </p>
 
     <div>
-    @for(entry <- stats.entries) {
-
         <table>
-            <caption>@entry.kind</caption>
+            <caption>Document Topic Frequency</caption>
             <thead>
                 <tr>
                     <th>topic id</th>
-                    <th>document count</th>
-                    <th>document ratio</th>
+                    <th>job description count</th>
+                    <th>job description frequency</th>
+                    <th>course description count</th>
+                    <th>course description frequency</th>
                 </tr>
             </thead>
             <tbody>
-            @for(topicCount <- entry.topicCounts) {
+            @for(entry <- relevantEntries.sortBy(_.topicId)) {
                 <tr>
-                    <td>@topicCount.topicId</td>
-                    <td>@("%,d".format(topicCount.documentCount))</td>
-                    <td>@percent(entry, topicCount.documentCount)</td>
+                    <td><a href="@routes.ElasticsearchController.topicById(entry.topicId.toString)">@entry.topicId</a></td>
+                    <td>@components.int(entry.jobDescriptionCount)</td>
+                    <td>@components.double(entry.jobDescriptionProportion)</td>
+                    <td>@components.int(entry.courseDescriptionCount)</td>
+                    <td>@components.double(entry.courseDescriptionProportion)</td>
                 </tr>
             }
             </tbody>
         </table>
-    }
     </div>
 
 }

@@ -1,4 +1,4 @@
-@import net.rouly.employability.web.application.model._
+@import net.rouly.employability.web.application.model.BucketStats
 
 @(stats: BucketStats)
 
@@ -14,12 +14,12 @@
     @for(entry <- stats.buckets) {
         <tr>
             <td>@entry.dataSet</td>
-            <td>@("%,d".format(entry.coverage))</td>
+            <td>@int(entry.coverage)</td>
         </tr>
     }
         <tr>
             <td><strong>total</strong></td>
-            <td><strong>@("%,d".format(stats.buckets.map(_.coverage).sum))</strong></td>
+            <td><strong>@int(stats.buckets.map(_.coverage).sum)</strong></td>
         </tr>
     </tbody>
 </table>

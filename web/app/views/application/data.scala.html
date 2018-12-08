@@ -50,31 +50,6 @@ numDocs: Long)
         <li><a href="http://catalog.wofford.edu">Wofford College</a></li>
     </ul>
 
-
-    <!--
-    <table>
-        <caption>dataset statistics</caption>
-        <tbody>
-            <tr>
-                <td>Job Descriptions (raw)</td>
-                <td>96,822</td>
-            </tr>
-            <tr>
-                <td>Job Descriptions (preprocessed)</td>
-                <td>92,852</td>
-            </tr>
-            <tr>
-                <td>Course Descriptions (raw)</td>
-                <td>105,593</td>
-            </tr>
-            <tr>
-                <td>Course Descriptions (preprocessed)</td>
-                <td>17,536</td>
-            </tr>
-        </tbody>
-    </table>
-    -->
-
     <h4>A note about course descriptions</h4>
 
     <p>
@@ -85,6 +60,24 @@ numDocs: Long)
         expectations, concepts, and outcomes of a course is a rare one. A more appropriate data source, though
         significantly less available, would be course syllabi.
     </p>
+
+    <div>
+        <table>
+            <caption>topic model</caption>
+            <thead>
+                <tr>
+                    <th>documents</th>
+                    <th>topics</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@components.int(numDocs)</td>
+                    <td>@components.int(numTopics)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div>
         @components.bucketstats(rawDataSetStats)

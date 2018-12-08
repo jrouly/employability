@@ -21,7 +21,7 @@
         @for(WordFrequency(word, frequency) <- topic.wordFrequency.toList.sortBy(_.frequency).reverse) {
             <tr>
                 <td>@word</td>
-                <td>@("%.8f".format(frequency))</td>
+                <td>@double(frequency)</td>
             </tr>
         }
         </tbody>

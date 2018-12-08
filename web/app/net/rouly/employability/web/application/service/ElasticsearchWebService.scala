@@ -51,8 +51,8 @@ class ElasticsearchWebService(elasticsearch: ElasticsearchModule)(implicit ec: E
     execute {
       val kinds = termsAggregation("kinds").field("kind").size(2)
       val topics = nestedAggregation("topics", path = "weightedTopics")
-      val relevantTopics = filterAggregation("relevantTopics").query(rangeQuery("weightedTopics.weight").gt(0.5))
-      val relevantTopicIds = termsAggregation("relevant_topic_ids").field("weightedTopics.topic.id").size(100)
+      val relevantTopics = filterAggregation("relevantTopics").query(rangeQuery("weightedTopics.weight").gt(0.01))
+      val relevantTopicIds = termsAggregation("relevant_topic_ids").field("weightedTopics.topic.id").size(1000)
       val aggs = kinds.subaggs(topics.subaggs(relevantTopics.subaggs(relevantTopicIds)))
       search(elasticsearch.config.modeledDocumentIndex).size(0).aggregations(aggs)
     }.map { response => response.result.aggregations.to[OverlapAggregation].overlapStats }
