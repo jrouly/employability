@@ -31,7 +31,7 @@ You can import a static dataset to run the vis server locally yourself without i
 Start up elasticsearch and the vis server, then import the latest dataset.
 
     docker-compose up -d elasticsearch web
-    ./elasticsearch/bin/import-data 500-topics
+    ./elasticsearch/bin/import-data small  # {small|medium|large}
 
 You should be able to acccess the vis server at [localhost:9000](localhost:9000) once the import completes.
 
@@ -52,23 +52,13 @@ Execute the data pipelines.
     sbt ingest/run
     sbt preprocess/run
 
-Execute LDA.
+### Executing LDA
+
+Execute LDA with default parameters.
 
     sbt analysis/run
 
-#### Exporting data
-
-In the same way that you can import an online snapshot of the Elasticsearch data, you can also export your own snapshot.
-
-    ./elasticsearch/bin/export-data <new-snapshot-id>
-
-This will do several things:
-
-  * create a `local` snapshot repository in your Elasticsearch cluster
-  * create a new snapshot in the `local` repository
-  * compress your snapshot repository to a portable `./snapshots.tar.gz` file
-
-##### Configuring LDA
+#### Configuring LDA
 
 You can modify the behavior of LDA through environment variables.
 Some pre-defined configurations are made available for you.
@@ -77,6 +67,18 @@ Some pre-defined configurations are made available for you.
     source ./analysis/config/small
     source ./analysis/config/medium
     source ./analysis/config/large
+
+#### Exporting data
+
+In the same way that you can import an online snapshot of the Elasticsearch data, you can also export your own snapshot.
+
+    ./elasticsearch/bin/export-data NEW_SNAPSHOT_ID
+
+This will do several things:
+
+  * create a `local` snapshot repository in your Elasticsearch cluster
+    * this lives on your local filesystem: `./data/elasticsearch-snapshots/local/`
+  * create a new snapshot `NEW_SNAPSHOT_ID` in the `local` repository
 
 ## Project Modules
 
