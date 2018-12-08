@@ -23,19 +23,23 @@ Using `docker-compose`, start the background services:
 
     docker-compose up -d elasticsearch
 
-## Execution
+## Importing data
 
-### Running the vis server
+You can import a static dataset locally without ingesting and processing the raw data.
+Start up elasticsearch, then import the latest dataset.
 
-You can import a static dataset to run the vis server locally yourself without ingesting and processing the raw data.
-Start up elasticsearch and the vis server, then import the latest dataset.
-
-    docker-compose up -d elasticsearch web
+    docker-compose up -d elasticsearch
     ./elasticsearch/bin/import-data small  # {small|medium|large}
 
-You should be able to acccess the vis server at [localhost:9000](localhost:9000) once the import completes.
+## Running the vis server
 
-### Data Ingestion
+Start the vis server container.
+
+    docker-compose up -d web
+
+You should be able to acccess the vis server at [`localhost:9000`](http://localhost:9000).
+
+## Data Ingestion
 
 If you would like to run the whole ingestion and analysis process, there are a few more steps.
 
@@ -52,13 +56,13 @@ Execute the data pipelines.
     sbt ingest/run
     sbt preprocess/run
 
-### Executing LDA
+## Executing LDA
 
 Execute LDA with default parameters.
 
     sbt analysis/run
 
-#### Configuring LDA
+### Configuring LDA
 
 You can modify the behavior of LDA through environment variables.
 Some pre-defined configurations are made available for you.
@@ -68,7 +72,7 @@ Some pre-defined configurations are made available for you.
     source ./analysis/config/medium
     source ./analysis/config/large
 
-#### Exporting data
+### Exporting data
 
 In the same way that you can import an online snapshot of the Elasticsearch data, you can also export your own snapshot.
 
