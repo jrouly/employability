@@ -13,7 +13,7 @@ lazy val commonSettings = Seq(
   resolvers += Resolver.bintrayRepo("jrouly", "sbt-release"),
   organization := "net.rouly",
   scalaVersion := "2.11.12",
-  version := "0.9",
+  version := "1.0",
   name := s"employability-${name.value}"
 ) ++ Bintray.settings
 
