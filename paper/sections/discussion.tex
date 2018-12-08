@@ -1,3 +1,16 @@
 \section{Discussion}
 
-Discussion.
+Perhaps the most striking result is that only four topics of five hundred total can be considered strictly overlapping.
+An additional eighteen topics (for a total of twenty two) can be considered weakly overlapping for the same threshold of 1\%.
+There are several ways to interpret this.
+
+The most direct reading of the data indicates, simply, that universities are not teaching to what the workforce expects.
+Of the five hundred extracted topics, some are expressed by curricular data, some are expressed by career data, but the degree of overlap is low.
+The Jaccard index of the two sets is only 0.044, indicating a significant dissimilarity.
+
+However, perhaps the most probable interpretation is that the number of extracted topics was simply significantly too low.
+Considering that almost fifty thousand documents were modeled across the two corpora, and considering that any given document can express many different topics, five hundred topics is simplty too low a number.
+Increasing that count to several hundred thousand would most likely garner significantly higher levels of overlap.
+The LDA process is storage and memory bound.
+Increasing the number of topics significantly beyond five hundred would require significant computational resources.
+This is a future goal for this work.

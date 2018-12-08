@@ -37,7 +37,7 @@ These documents are even more concise than syllabi, but are collected in ``catal
 This makes course descriptions an ideal target for data collection.
 Additionally, previous work has expressed success building web scrapers to extract course data from publicly available websites.~\cite{rouly2015}
 The present work involved the creation of web scrapers to ingest a course description dataset of almost 20,000 course descriptions from various American universities.
-A detailed breakdown of sources is available online at \href{http://employability.rouly.net}{employability.rouly.net}.
+A detailed breakdown of sources is available online\footnote{\href{http://employability.rouly.net}{employability.rouly.net}}.
 
 \subsection{Data cleaning}
 
@@ -62,4 +62,5 @@ After modeling the corpora of documents, a measure of overlap between the two wa
 The guiding notion in this analysis is that the proportional frequency with which topics are expressed in a corpus represents the prevalence, or importance, of that topic to the corpus.
 In other words, the more frequently a topic comes up, the more relevant it is as a whole to the corpus.
 Elasticsearch was used to perform an aggregation over all the modeled documents.
-{\color{red}TODO.}
+Corpus topic frequency was converted into a percentage for analysis.
+Results are discussed in the following sections.

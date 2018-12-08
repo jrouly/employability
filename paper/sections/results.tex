@@ -1,3 +1,77 @@
 \section{Results}
 
-Results.
+\subsection{Topic Models}
+
+The first result of performing LDA is the inferred topic models.
+Because LDA is an unsupervised process there are no labels or summaries associated with the topics, only a nominal identifier.
+To directly judge the semantics of a topic a human must interpret the terms and their associated frequency and extrapolate shared semantics.
+Over several runs of LDA with various parameterization, different quality topics were extracted.
+Table~\ref{tab:topics} displays a small selection of topics --- in this run, five hundred topics were inferred across the corpora.
+The complete list of inferred topics is available online\footnote{\href{http://employability.rouly.net/web/topics}{employability.rouly.net/web/topics}}.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l r}
+    \multicolumn{2}{c}{\small{\textbf{Topic 16}}} \\
+    {\small\textit{Term}} & {\small\textit{Frequency}} \\
+    \hline
+    test & 0.0132 \\
+    data & 0.0128 \\
+    software & 0.0115 \\
+    design & 0.0107
+  \end{tabular}
+  \begin{tabular}{l r}
+    \multicolumn{2}{c}{\small{\textbf{Topic 273}}} \\
+    {\small\textit{Term}} & {\small\textit{Frequency}} \\
+    \hline
+    market & 0.0250 \\
+    product & 0.0113 \\
+    strategi & 0.0107 \\
+    digit & 0.0103
+  \end{tabular}
+  \begin{tabular}{l r}
+    \multicolumn{2}{c}{\small{\textbf{Topic 418}}} \\
+    {\small\textit{Term}} & {\small\textit{Frequency}} \\
+    \hline
+    branch & 0.0224 \\
+    rental & 0.0167 \\
+    enterpris & 0.0155 \\
+    manageri & 0.0146
+  \end{tabular}
+  \begin{tabular}{l r}
+    \multicolumn{2}{c}{\small{\textbf{Topic 424}}} \\
+    {\small\textit{Term}} & {\small\textit{Frequency}} \\
+    \hline
+    care & 0.0346 \\
+    nurs & 0.0179 \\
+    health & 0.0168 \\
+    clinic & 0.0117
+  \end{tabular}
+  \caption{Four inferred topics.}~\label{tab:topics}
+\end{table}
+
+\subsection{Domain Overlap}
+
+From an LDA run with five hundred topics, only four topics were identified as ``strictly overlapping'' for a certain threshold.
+Overlapping is used to mean the topic was present for a proportion of documents in either corpus at a rate greater than some threshold.
+Strict overlapping is used similarly, but the topic must be present in both corpora at a rate greater than the threshold.
+Table~\ref{tab:overlap} displays the strictly overlapping topics for the highest possible overlap threshold.
+Notice that the topics in Table~\ref{tab:topics} and Table~\ref{tab:overlap} are the same.
+
+The Jaccard index of these two sets can be found by dividing the cardinality of the strictly overlapping set (ostensibly the intersection) by the number of extracted topics.
+This gives us an index of 0.044, which is an exceptionally low measure of the similarity between the career topics and curricular topics.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l r r r r}
+    & \multicolumn{4}{c}{\small{\textbf{Topic Expression}}} \\
+    & \multicolumn{2}{c}{\small{\textbf{Career Data}}} & \multicolumn{2}{c}{\small{\textbf{Curricular Data}}} \\
+    {\small\textit{Topic}} & {\small\textit{Count}} & {\small\textit{\%}} & {\small\textit{Count}} & {\small\textit{\%}} \\
+    \hline
+    16 & 9,571 & 2.57 & 620 & 1.31 \\
+    73 & 9,377 & 2.52 & 648 & 1.37 \\
+    18 & 4,713 & 1.27 & 580 & 1.23 \\
+    24 & 6,181 & 1.66 & 568 & 1.20
+  \end{tabular}
+  \caption{Strictly overlapping topics for a threshold of 1\%.}~\label{tab:overlap}
+\end{table}
