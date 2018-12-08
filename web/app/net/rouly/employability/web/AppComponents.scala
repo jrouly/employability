@@ -11,21 +11,16 @@ import net.rouly.employability.web.application.{ElasticsearchController, StaticP
 import net.rouly.employability.web.echo.EchoController
 import net.rouly.employability.web.elasticsearch.{DocumentService, TopicService}
 import play.api.BuiltInComponents
-import play.api.cache.Cached
-import play.api.cache.ehcache.EhCacheComponents
 import play.api.routing.Router
 import router.Routes
 
 trait AppComponents
   extends AppServerComponents
-  with AssetsComponents
-  with EhCacheComponents {
+  with AssetsComponents {
 
   self: BuiltInComponents =>
 
   implicit val implicitActorSystem: ActorSystem = actorSystem
-
-  private lazy val cached: Cached = new Cached(defaultCacheApi)
 
   lazy val elasticsearch: ElasticsearchModule = wire[ElasticsearchModule]
 

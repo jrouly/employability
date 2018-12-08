@@ -5,7 +5,6 @@ import akka.stream.scaladsl.Sink
 import net.rouly.employability.web.application.model.{BucketStats, OverlapEntry, OverlapStats}
 import net.rouly.employability.web.application.service.ElasticsearchWebService
 import net.rouly.employability.web.elasticsearch.{DocumentService, TopicService}
-import play.api.cache.Cached
 import play.api.mvc.{AbstractController, ControllerComponents}
 import views.html.application
 
@@ -13,13 +12,12 @@ import scala.concurrent.ExecutionContext
 
 class ElasticsearchController(
   cc: ControllerComponents,
-  cached: Cached,
   topicService: TopicService,
   documentService: DocumentService,
   webService: ElasticsearchWebService
 )(implicit mat: Materializer, ec: ExecutionContext) extends AbstractController(cc) {
 
-  def data = cached("app.data") {
+  def data = {
     Action.async {
       for {
         rawKindStats <- webService.bucket("kind.keyword", rawDocuments = true)
@@ -39,7 +37,7 @@ class ElasticsearchController(
     }
   }
 
-  def allTopics = cached("app.allTopics") {
+  def allTopics = {
     Action.async {
       for {
         topics <- topicService.topicSource.runWith(Sink.collection)
@@ -47,7 +45,7 @@ class ElasticsearchController(
     }
   }
 
-  def topicById(id: String) = cached(s"app.topicById.$id") {
+  def topicById(id: String) = {
     Action.async {
       for {
         topic <- topicService.topicSource.filter(_.id == id).runWith(Sink.headOption)
@@ -58,7 +56,7 @@ class ElasticsearchController(
     }
   }
 
-  def allDocuments = cached("app.allDocuments") {
+  def allDocuments = {
     Action.async {
       for {
         docs <- documentService.documentSource.take(5).runWith(Sink.collection)
@@ -67,7 +65,7 @@ class ElasticsearchController(
     }
   }
 
-  def docById(id: String) = cached(s"app.docById.$id") {
+  def docById(id: String) = {
     Action.async {
       for {
         doc <- documentService.documentSource.filter(_.id == id).runWith(Sink.headOption)
@@ -75,7 +73,7 @@ class ElasticsearchController(
     }
   }
 
-  def overlap = cached("app.overlap") {
+  def overlap = {
     def vegasHtml(stats: OverlapStats): String = {
       import vegas._
       import vegas.render.HTMLRenderer
@@ -102,9 +100,9 @@ class ElasticsearchController(
         .encodeX("Topic", Nominal, axis = Axis(grid = true))
         .encodeY("Proportion", Quantitative, axis = Axis(grid = true, format = "%"))
         .encodeColor(
-          field="Key",
-          dataType=Nominal,
-          legend=Legend(title = "Corpus")
+          field = "Key",
+          dataType = Nominal,
+          legend = Legend(title = "Corpus")
         )
 
       HTMLRenderer(plot.toJson).plotHTML()
