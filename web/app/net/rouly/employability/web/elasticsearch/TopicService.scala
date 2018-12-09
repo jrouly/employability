@@ -25,4 +25,10 @@ class TopicService(elasticsearch: ElasticsearchModule)(implicit ec: ExecutionCon
       .map(_.to[Topic])
   }
 
+  def topicById(topicId: String): Future[Topic] = {
+    execute {
+      get(topicId).from(elasticsearch.config.topicIndex)
+    }.map(_.result.to[Topic])
+  }
+
 }

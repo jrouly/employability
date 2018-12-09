@@ -39,20 +39,21 @@ class ElasticsearchController(
 
   def allTopics = {
     Action.async {
-      for {
-        topics <- topicService.topicSource.runWith(Sink.collection)
-      } yield Ok(application.topics(topics.toList.sortBy(_.id.toInt))).cached
+      topicService
+        .topicSource
+        .runWith(Sink.collection)
+        .map(_.toList.sortBy(_.id.toInt))
+        .as(application.topics.apply)
+        .cached
     }
   }
 
   def topicById(id: String) = {
     Action.async {
       for {
-        topic <- topicService.topicSource.filter(_.id == id).runWith(Sink.headOption)
+        topic <- topicService.topicById(id)
         docs <- documentService.documentsByTopic(id).take(10).runWith(Sink.collection)
-      } yield {
-        topic.render(application.topic(_, docs.toList)).cached
-      }
+      } yield Ok(application.topic(topic, docs.toList)).cached
     }
   }
 
@@ -67,9 +68,10 @@ class ElasticsearchController(
 
   def docById(id: String) = {
     Action.async {
-      for {
-        doc <- documentService.documentSource.filter(_.id == id).runWith(Sink.headOption)
-      } yield doc.render(application.document.apply).cached
+      documentService
+        .documentById(id)
+        .as(application.document.apply)
+        .cached
     }
   }
 

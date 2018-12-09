@@ -26,6 +26,12 @@ class DocumentService(elasticsearch: ElasticsearchModule)(implicit ec: Execution
       .map(_.to[ModeledDocument])
   }
 
+  def documentById(docId: String): Future[ModeledDocument] = {
+    execute {
+      get(docId).from(elasticsearch.config.modeledDocumentIndex)
+    }.map(_.result.to[ModeledDocument])
+  }
+
   def documentsByTopic(topicId: String): Source[ModeledDocument, NotUsed] = {
     val weightQuery = rangeQuery("weightedTopics.weight").gt(0.1)
     val topicIdQuery = termQuery("weightedTopics.topic.id", topicId)
