@@ -52,14 +52,14 @@ The complete list of inferred topics is available online\footnote{\href{https://
 
 \subsection{Domain Overlap}
 
-From an LDA run with five hundred topics, only four topics were identified as ``strictly overlapping'' for a certain threshold.
-Overlapping is used to mean the topic was present for a proportion of documents in either corpus at a rate greater than some threshold.
-Strict overlapping is used similarly, but the topic must be present in both corpora at a rate greater than the threshold.
-Table~\ref{tab:overlap} displays the strictly overlapping topics for the highest possible overlap threshold.
-Notice that the topics in Table~\ref{tab:topics} and Table~\ref{tab:overlap} are the same.
+From an LDA run with five hundred topics, ten topics were identified as ``strictly overlapping'' for certain thresholds.
+Namely, $|\Omega(\rho=0.02, \theta=0.055)| = 10$.
+For a set of five hundred total topics, this produces a Jaccard index of 0.02.
+Table~\ref{tab:overlap} displays some of the strictly overlapping topics for the highest possible overlap threshold.
+Notice that the topics in Table~\ref{tab:topics} are the same as in Table~\ref{tab:overlap}.
+Figure~\ref{fig:overlap} gives a visual reference of the complete strictly overlapping set of topics.
+The closer the two bars are to equal for a given topic, the more similar that topic's distribution is within each data set.
 
-The Jaccard index of these two sets can be found by dividing the cardinality of the strictly overlapping set (ostensibly the intersection) by the number of extracted topics.
-This gives us an index of 0.044, which is an exceptionally low measure of the similarity between the career topics and curricular topics.
 
 \begin{table}
   \centering
@@ -68,10 +68,17 @@ This gives us an index of 0.044, which is an exceptionally low measure of the si
     & \multicolumn{2}{c}{\small{\textbf{Career Data}}} & \multicolumn{2}{c}{\small{\textbf{Curricular Data}}} \\
     {\small\textit{Topic}} & {\small\textit{Count}} & {\small\textit{\%}} & {\small\textit{Count}} & {\small\textit{\%}} \\
     \hline
-    16 & 9,571 & 2.57 & 620 & 1.31 \\
-    73 & 9,377 & 2.52 & 648 & 1.37 \\
-    18 & 4,713 & 1.27 & 580 & 1.23 \\
-    24 & 6,181 & 1.66 & 568 & 1.20
+    16 & 9,274 & 23.43 & 568 & 9.77 \\
+    273 & 8,873 & 22.42 & 583 & 10.02 \\
+    418 & 3,069 & 7.75 & 426 & 7.32 \\
+    424 & 5,561 & 14.05 & 499 & 8.58
   \end{tabular}
-  \caption{Strictly overlapping topics for a threshold of 1\%.}~\label{tab:overlap}
+  \caption{Strictly overlapping topics for $\rho=0.02$ and $\theta=0.055$}~\label{tab:overlap}
 \end{table}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{figs/strict-overlap}
+  \caption{Strictly overlapping topics for $\rho=0.02$ and $\theta=0.055$}~\label{fig:overlap}
+\end{figure}

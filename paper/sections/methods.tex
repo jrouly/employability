@@ -64,3 +64,27 @@ In other words, the more frequently a topic comes up, the more relevant it is as
 Elasticsearch was used to perform an aggregation over all the modeled documents.
 Corpus topic frequency was converted into a percentage for analysis.
 Results are discussed in the following sections.
+
+\subsection{Metric}
+
+For a given topic $T_i$, the number $N(T_i, D_j, \rho)$ of documents in a dataset $D_j$ expressing topic $T_i$ with weight above a certain relevance threshold $\rho > 0$ is divided by the total size of the dataset $|D_j|$ to get the expression ratio $\epsilon(T_i, D_j, \rho)$, see Equation~\ref{eq:expr}.
+This is the ratio with which document set $D_j$ expresses topic $T_i$ in the context of the minimum relevance parameter $\rho$.
+
+\begin{equation}
+  \epsilon(T_i, D_j, \theta) = \frac{N(T_i, D_j, \theta)}{|D_j|}
+  \label{eq:expr}
+\end{equation}
+
+A topic $T_i$ is said to be ``strictly overlapping'' ($T_i \in \Omega(\rho, \theta)$) if for all datasets $D_j$, $\epsilon(T_i, D_j, \rho) > \theta > 0$ holds true.
+The intersection parameter $\theta$ is a measure of topic ubiquity within a dataset and will limit which relevant topics (relevant under $\rho$) will be considered overlapping.
+Using the set of strictly overlapping topics $\Omega(\rho, \theta)$ as a substitute for intersection, we can compute the Jaccard index for the distance between the set of topics expressed mainly by course descriptions and the set of topics expressed mainly by job descriptions (see Equation~\ref{eq:jaccard}).
+This formulation is useful to get around a strict set membership definition of either group of topics on their own.
+Lowering the weight threshold $\theta$ will have the effect of increasing the Jaccard similarity index.
+Increasing the number of topics $k$ will, to a certain point, also have the effect of increasing the index, until a certain optimal point when it should begin to decrease in value again.
+Further experimentation is required to identify the optimal value of $k$.
+
+\begin{equation}
+  J(A, B) = \frac{|A \cap B|}{|A \cup B|} = \frac{|\Omega(\rho, \theta)|}{|T|}
+  \label{eq:jaccard}
+\end{equation}
+
