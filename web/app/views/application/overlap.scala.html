@@ -2,7 +2,7 @@
 @import net.rouly.employability.web.application.model.OverlapStats
 @import net.rouly.employability.web.application.routes
 
-@(stats: OverlapStats, topics: List[Topic], plot: String, theta: Double)
+@(stats: OverlapStats, topics: List[Topic], plot: String, theta: Double, strict: Boolean)
 
 @relevantEntries(theta: Double, strict: Boolean) = @{
   stats.entries.filter { entry =>
@@ -38,7 +38,7 @@
                 </tr>
             </thead>
             <tbody>
-            @for(entry <- relevantEntries(theta = theta, strict = true).sortBy(_.topicId)) {
+            @for(entry <- relevantEntries(theta = theta, strict = strict).sortBy(_.topicId)) {
                 <tr>
                     <td><a href="@routes.ElasticsearchController.topicById(entry.topicId.toString)">@entry.topicId</a></td>
                     <td>@components.int(entry.jobDescriptionCount)</td>

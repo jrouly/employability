@@ -88,7 +88,7 @@ class ElasticsearchController(
       }
 
       val data = stats.entries
-        .filter(relevant(strict = true, theta = parameters.theta))
+        .filter(relevant(strict = parameters.strictOverlap, theta = parameters.theta))
         .sortBy(_.topicId)
         .flatMap { entry =>
           List(
@@ -118,7 +118,7 @@ class ElasticsearchController(
         jdCount <- webService.countByKind(DocumentKind.JobDescription)
         cdCount <- webService.countByKind(DocumentKind.CourseDescription)
         overlap <- webService.overlap(jdCount, cdCount, parameters.rho)
-      } yield Ok(application.overlap(overlap, topics.toList, vegasHtml(overlap), parameters.theta)).cached
+      } yield Ok(application.overlap(overlap, topics.toList, vegasHtml(overlap), parameters.theta, parameters.strictOverlap)).cached
     }
   }
 

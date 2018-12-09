@@ -14,4 +14,9 @@ class Parameters(config: Configuration) {
     */
   val theta: Double = config.get("theta", "0.055").toDouble
 
+  /**
+    * Whether to consider overlap as a strict metric.
+    */
+  val strictOverlap: Boolean = config.getBoolean("strict", default = true)
+
 }
