@@ -22,15 +22,9 @@ object OverlapStats {
   case class KindsAggregationList(buckets: List[KindsAggregation])
   case class OverlapAggregation(kinds: KindsAggregationList) {
 
-    val overlapStats: OverlapStats = {
+    def overlapStats(jdCount: Long, cdCount: Long): OverlapStats = {
       type TopicAggregation = List[KindsAggregation]
       val (cds, jds) = kinds.buckets.partition(_.key == CourseDescription.kind)
-      def docCount(aggregation: TopicAggregation): Int = aggregation
-        .flatMap(_.topics.relevantTopics.relevant_topic_ids.buckets)
-        .map(_.doc_count)
-        .sum.toInt
-      def docProportion(topicCount: Int, aggregation: TopicAggregation): Double =
-        topicCount.toDouble / docCount(aggregation).toDouble
       val topicIds = kinds.buckets
         .flatMap(_.topics.relevantTopics.relevant_topic_ids.buckets)
         .map(_.key)
@@ -44,10 +38,10 @@ object OverlapStats {
         val cdTopicCount = topicCount(cds)
         OverlapEntry(
           topicId = topicId.toInt,
-          jobDescriptionCount = topicCount(jds),
-          jobDescriptionProportion = docProportion(jdTopicCount, jds),
-          courseDescriptionCount = topicCount(cds),
-          courseDescriptionProportion = docProportion(cdTopicCount, cds)
+          jobDescriptionCount = jdTopicCount,
+          jobDescriptionProportion = jdTopicCount.toDouble / jdCount.toDouble,
+          courseDescriptionCount = cdTopicCount,
+          courseDescriptionProportion = cdTopicCount.toDouble / cdCount.toDouble
         )
       }
       OverlapStats(entries)

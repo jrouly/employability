@@ -2,6 +2,7 @@ package net.rouly.employability.web.application
 
 import akka.stream.Materializer
 import akka.stream.scaladsl.Sink
+import net.rouly.employability.models.DocumentKind
 import net.rouly.employability.web.application.model.{BucketStats, OverlapEntry, OverlapStats}
 import net.rouly.employability.web.application.service.ElasticsearchWebService
 import net.rouly.employability.web.elasticsearch.{DocumentService, TopicService}
@@ -12,6 +13,7 @@ import scala.concurrent.ExecutionContext
 
 class ElasticsearchController(
   cc: ControllerComponents,
+  parameters: Parameters,
   topicService: TopicService,
   documentService: DocumentService,
   webService: ElasticsearchWebService
@@ -80,13 +82,13 @@ class ElasticsearchController(
       import vegas._
       import vegas.render.HTMLRenderer
 
-      def relevant(strict: Boolean, threshold: Double)(entry: OverlapEntry): Boolean = {
-        if (strict) entry.jobDescriptionProportion > threshold && entry.courseDescriptionProportion > threshold
-        else entry.jobDescriptionProportion > threshold || entry.courseDescriptionProportion > threshold
+      def relevant(strict: Boolean, theta: Double)(entry: OverlapEntry): Boolean = {
+        if (strict) entry.jobDescriptionProportion > theta && entry.courseDescriptionProportion > theta
+        else entry.jobDescriptionProportion > theta || entry.courseDescriptionProportion > theta
       }
 
       val data = stats.entries
-        .filter(relevant(strict = false, threshold = 0.01))
+        .filter(relevant(strict = true, theta = parameters.theta))
         .sortBy(_.topicId)
         .flatMap { entry =>
           List(
@@ -113,8 +115,10 @@ class ElasticsearchController(
     Action.async {
       for {
         topics <- topicService.topicSource.runWith(Sink.collection)
-        overlap <- webService.overlap
-      } yield Ok(application.overlap(overlap, topics.toList, vegasHtml(overlap))).cached
+        jdCount <- webService.countByKind(DocumentKind.JobDescription)
+        cdCount <- webService.countByKind(DocumentKind.CourseDescription)
+        overlap <- webService.overlap(jdCount, cdCount, parameters.rho)
+      } yield Ok(application.overlap(overlap, topics.toList, vegasHtml(overlap), parameters.theta)).cached
     }
   }
 

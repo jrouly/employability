@@ -2,12 +2,12 @@
 @import net.rouly.employability.web.application.model.OverlapStats
 @import net.rouly.employability.web.application.routes
 
-@(stats: OverlapStats, topics: List[Topic], plot: String)
+@(stats: OverlapStats, topics: List[Topic], plot: String, theta: Double)
 
-@relevantEntries(threshold: Double, strict: Boolean) = @{
+@relevantEntries(theta: Double, strict: Boolean) = @{
   stats.entries.filter { entry =>
-    val cdr = entry.courseDescriptionProportion >= threshold
-    val jdr = entry.jobDescriptionProportion >= threshold
+    val cdr = entry.courseDescriptionProportion >= theta
+    val jdr = entry.jobDescriptionProportion >= theta
     if (strict) cdr && jdr
     else cdr || jdr
   }
@@ -19,7 +19,7 @@
 
     <p>
         This table reports the percent proportion with which each topic is modeled in each corpus (job descriptions, course
-        descriptions). Topics are ordered by ID. Only the most relevant topics (greater than 1% in either corpus) are shown.
+        descriptions). Topics are ordered by ID. Only the most relevant topics (greater than @components.percent(theta) in both corpora) are shown.
         It is shown first in graphical form.
     </p>
 
@@ -38,7 +38,7 @@
                 </tr>
             </thead>
             <tbody>
-            @for(entry <- relevantEntries(0.01, strict = false).sortBy(_.topicId)) {
+            @for(entry <- relevantEntries(theta = theta, strict = true).sortBy(_.topicId)) {
                 <tr>
                     <td><a href="@routes.ElasticsearchController.topicById(entry.topicId.toString)">@entry.topicId</a></td>
                     <td>@components.int(entry.jobDescriptionCount)</td>

@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.AggReader
 import com.sksamuel.elastic4s.http.ElasticDsl._
 import com.sksamuel.elastic4s.searches.SearchRequest
 import net.rouly.employability.elasticsearch.ElasticsearchModule
+import net.rouly.employability.models.DocumentKind
 import net.rouly.employability.web.application.model.OverlapStats._
 import net.rouly.employability.web.application.model.{BucketEntry, OverlapStats}
 import play.api.libs.json._
@@ -24,6 +25,7 @@ class ElasticsearchWebService(elasticsearch: ElasticsearchModule)(implicit ec: E
           .terms(aggName)
           .buckets
           .map(bucket => BucketEntry(bucket.key, bucket.docCount))
+          .sortBy(_.dataSet)
       )
   }
 
@@ -47,15 +49,19 @@ class ElasticsearchWebService(elasticsearch: ElasticsearchModule)(implicit ec: E
     override def read(json: String): Try[T] = Try(Json.parse(json).validate[T].get)
   }
 
-  def overlap: Future[OverlapStats] = {
+  def countByKind(kind: DocumentKind): Future[Long] =
+    execute(count(elasticsearch.config.modeledDocumentIndex).query(termQuery("kind", kind.kind)))
+      .map(_.result.count)
+
+  def overlap(jdCount: Long, cdCount: Long, rho: Double): Future[OverlapStats] = {
     execute {
       val kinds = termsAggregation("kinds").field("kind").size(2)
       val topics = nestedAggregation("topics", path = "weightedTopics")
-      val relevantTopics = filterAggregation("relevantTopics").query(rangeQuery("weightedTopics.weight").gt(0.01))
+      val relevantTopics = filterAggregation("relevantTopics").query(rangeQuery("weightedTopics.weight").gt(rho))
       val relevantTopicIds = termsAggregation("relevant_topic_ids").field("weightedTopics.topic.id").size(1000)
       val aggs = kinds.subaggs(topics.subaggs(relevantTopics.subaggs(relevantTopicIds)))
       search(elasticsearch.config.modeledDocumentIndex).size(0).aggregations(aggs)
-    }.map { response => response.result.aggregations.to[OverlapAggregation].overlapStats }
+    }.map { response => response.result.aggregations.to[OverlapAggregation].overlapStats(jdCount, cdCount) }
   }
 
 }

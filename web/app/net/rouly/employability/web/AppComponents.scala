@@ -7,7 +7,7 @@ import net.rouly.common.server.play.module.AppServerComponents
 import net.rouly.employability.elasticsearch.ElasticsearchModule
 import net.rouly.employability.web.api.ApiController
 import net.rouly.employability.web.application.service.ElasticsearchWebService
-import net.rouly.employability.web.application.{ElasticsearchController, StaticPagesController}
+import net.rouly.employability.web.application.{ElasticsearchController, Parameters, StaticPagesController}
 import net.rouly.employability.web.echo.EchoController
 import net.rouly.employability.web.elasticsearch.{DocumentService, TopicService}
 import play.api.BuiltInComponents
@@ -22,6 +22,7 @@ trait AppComponents
 
   implicit val implicitActorSystem: ActorSystem = actorSystem
 
+  lazy val parameters: Parameters = wire[Parameters]
   lazy val elasticsearch: ElasticsearchModule = wire[ElasticsearchModule]
 
   lazy val documentService: DocumentService = wire[DocumentService]
